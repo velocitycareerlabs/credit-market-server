@@ -3,7 +3,7 @@ name: velocitycareerlabs/credit-market-server Points Fineract Build
 on:
   push:
     branches:
-      - velocitycareerlabs/credit-market-server
+      - github-workflow
 
 jobs:
   build:
