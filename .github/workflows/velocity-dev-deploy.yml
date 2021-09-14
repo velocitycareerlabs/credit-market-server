@@ -31,3 +31,9 @@ jobs:
       - name: Build with Gradles
         run: ./gradlew clean war
 
+      - uses: actions/upload-artifact@v2
+        with:
+          name: fineract-provider.war
+          path: build/libs/
+          if-no-files-found: error
+
