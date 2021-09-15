@@ -28,15 +28,12 @@ jobs:
       - name: Gradlew Validation
         uses: gradle/wrapper-validation-action@v1
 
-      - name: Build with Gradles
-        run: ./gradlew clean war
-
-      - uses: actions/upload-artifact@v2
-        with:
-          name: fineract-provider.war
-          path: fineract-provider/build/libs/
-          env-url: WAR
-          if-no-files-found: error
-      - name: Echo artifact URL
-        run: echo "${{ env.WAR }}"
-
+      - name: build and deploy site
+        run: |
+            ./gradlew clean war
+            echo "$DOTBANK_TESTSERVER_SSH_KEY" > key.pem
+            chmod 400 key.pem
+            echo "Not rsync war file to server...!!!"
+        env:
+          VELOCITY_TEST_SSH_KEY: ${{ secrets.VELOCITY_TEST_SSH_KEY }}
+          VELOCITY_TEST_HOST_URL: ${{ secrets.VELOCITY_TEST_HOST_URL }}
