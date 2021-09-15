@@ -30,7 +30,7 @@ jobs:
       - name: deploy the war file
         uses: garygrossgarten/github-action-scp@release
         with:
-          host: ${{ secrets.VELOCITY_TEST_HOST_URL }}
+          host: '3.238.240.136'
           username: ec2-user
           privateKey: ${{ secrets.VELOCITY_TEST_SSH_KEY }}
           local: "fineract-provider/build/libs/fineract-provider.war"
