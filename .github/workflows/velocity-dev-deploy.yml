@@ -31,9 +31,11 @@ jobs:
       - name: build and deploy site
         run: |
             ./gradlew clean war
-            echo "$DOTBANK_TESTSERVER_SSH_KEY" > key.pem
+            echo "$VELOCITY_TEST_SSH_KEY" > key.pem
             chmod 400 key.pem
-            echo "Not rsync war file to server...!!!"
+            echo "Now rsync war file to server...!!!"
+            rsync -avz -e "ssh -i key -o StrictHostKeyChecking=no" fineract-provider/build/libs/fineract-provider.war $VELOCITY_TEST_SSH_USER@$VELOCITY_TEST_HOST_URL:~/deployments/docker/fineract/fineract-provider.war
         env:
           VELOCITY_TEST_SSH_KEY: ${{ secrets.VELOCITY_TEST_SSH_KEY }}
           VELOCITY_TEST_HOST_URL: ${{ secrets.VELOCITY_TEST_HOST_URL }}
+          VELOCITY_TEST_SSH_USER: ${{ secrets.VELOCITY_TEST_SSH_USER }}
