@@ -31,13 +31,9 @@ jobs:
       - name: Build with Gradles
         run: ./gradlew clean war
 
-
-      - name: Copy war file to remote url
-        uses: garygrossgarten/github-action-scp@release
+      - uses: actions/upload-artifact@v2
         with:
-          local: fineract-provider/build/libs/fineract-provider.war
-          remote: ~/deployments/docker/fineract/fineract-provider.war
-          host: ${{ secrets.VELOCITY_TEST_HOST_URL }}
-          username: ${{ secrets.VELOCITY_TEST_SSH_USER }}
-          privateKey: ${{ secrets.VELOCITY_TEST_SSH_KEY }}
+          name: fineract-provider.war
+          path: fineract-provider/build/libs/
+          if-no-files-found: error
 
