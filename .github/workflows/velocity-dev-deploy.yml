@@ -34,7 +34,7 @@ jobs:
         uses: garygrossgarten/github-action-scp@release
         with:
           host: ${{ secrets.VELOCITY_TEST_HOST_URL }}
-          username: ${{ secrets.VELOCITY_TEST_SSH_USER }}
+          username: ec2-user
           privateKey: ${{ secrets.VELOCITY_TEST_SSH_KEY }}
           local: "fineract-provider/build/libs/fineract-provider.war"
           remote: "~/deployments/docker/fineract/fineract-provider.war"
