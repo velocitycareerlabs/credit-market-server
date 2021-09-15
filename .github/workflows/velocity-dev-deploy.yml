@@ -33,7 +33,7 @@ jobs:
             echo "$VELOCITY_TEST_SSH_KEY" > key.pem
             chmod 400 key.pem
             echo "Now rsync war file to server...!!!"
-            rsync -avz -e "ssh -i key.pem -o StrictHostKeyChecking=no" fineract-provider/build/libs/fineract-provider.war $VELOCITY_TEST_SSH_USER@$VELOCITY_TEST_HOST_URL:~/deployments/docker/fineract/fineract-provider.war
+            rsync -avz -e "ssh -i key.pem -l $VELOCITY_TEST_SSH_USER -o StrictHostKeyChecking=no" fineract-provider/build/libs/fineract-provider.war $VELOCITY_TEST_HOST_URL:~/deployments/docker/fineract/fineract-provider.war
         env:
           VELOCITY_TEST_SSH_KEY: ${{ secrets.VELOCITY_TEST_SSH_KEY }}
           VELOCITY_TEST_HOST_URL: ${{ secrets.VELOCITY_TEST_HOST_URL }}
