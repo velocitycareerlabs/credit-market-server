@@ -36,4 +36,7 @@ jobs:
           name: fineract-provider.war
           path: fineract-provider/build/libs/
           if-no-files-found: error
+          env-url: WAR
+      - name: Use URL for something
+        run: echo "${{ env.WAR }}"
 
