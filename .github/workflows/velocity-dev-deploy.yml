@@ -27,6 +27,9 @@ jobs:
       - name: Gradlew Validation
         uses: gradle/wrapper-validation-action@v1
 
+      - name: create the war file
+        run: ./gradlew clean war
+
       - name: deploy the war file
         uses: garygrossgarten/github-action-scp@release
         with:
