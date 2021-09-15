@@ -27,14 +27,11 @@ jobs:
       - name: Gradlew Validation
         uses: gradle/wrapper-validation-action@v1
 
-      - name: build and deploy site
-        run: |
-            ./gradlew clean war
-            echo "$VELOCITY_TEST_SSH_KEY" > key.pem
-            chmod 400 key.pem
-            echo "Now rsync war file to server...!!!"
-            scp -i key.pem $VELOCITY_TEST_SSH_USER@$VELOCITY_TEST_HOST_URL:fineract-provider/build/libs/fineract-provider.war ~/deployments/docker/fineract/fineract-provider.war
-        env:
-          VELOCITY_TEST_SSH_KEY: ${{ secrets.VELOCITY_TEST_SSH_KEY }}
-          VELOCITY_TEST_HOST_URL: ${{ secrets.VELOCITY_TEST_HOST_URL }}
-          VELOCITY_TEST_SSH_USER: ${{ secrets.VELOCITY_TEST_SSH_USER }}
+      - name: deploy the war file
+        uses: garygrossgarten/github-action-scp@release
+        with:
+          host: ${{ secrets.VELOCITY_TEST_HOST_URL }}
+          username: ec2-user
+          privateKey: ${{ secrets.VELOCITY_TEST_SSH_KEY }}
+          local: "fineract-provider/build/libs/fineract-provider.war"
+          remote: "~/deployments/docker/fineract/fineract-provider.war"
