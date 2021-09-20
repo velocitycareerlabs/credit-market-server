@@ -29,6 +29,7 @@ jobs:
 
       - name: create the war file
         run: ./gradlew clean war
+        
 
       - name: deploy the war file
         uses: garygrossgarten/github-action-scp@release
