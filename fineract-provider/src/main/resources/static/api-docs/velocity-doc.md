@@ -4,7 +4,7 @@
 Fineract APIs are secured and depending on the security options available in fineract, any api request would require some form of authentication and authorization. Checkout this documentation for more information about available authentication protocols. 
 
 [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/api-docs/apiLive.htm#authentication_overview</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/api-docs/apiLive.htm#authentication_overview)  
-NOTE: Staging instance currently uses Basic Authentication and as such base 64 encoded username and password passed in the Authorization headers of any http request should guarantee access/authorization. 
+NOTE: Dev instance currently uses Basic Authentication and as such base 64 encoded username and password passed in the Authorization headers of any http request should guarantee access/authorization. 
 
 
 **Product configuration**
