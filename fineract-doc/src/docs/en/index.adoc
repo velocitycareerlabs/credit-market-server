@@ -16,6 +16,8 @@ include::02_architecture.adoc[]
 
 include::03_oauth.adoc[]
 
+include::03a_auth0.adoc[]
+
 // include::04_api.adoc[]
 
 include::05_client.adoc[]

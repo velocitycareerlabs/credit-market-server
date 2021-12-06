@@ -39,7 +39,8 @@ services:
       context: .
       target: fineract
     ports:
-      - 8443:8443
+      - "8443:8443"
+      - "8000:8000"
     depends_on:
       - fineractmysql
     environment:
@@ -55,6 +56,22 @@ services:
       - FINERACT_DEFAULT_TENANTDB_UID=root
       - FINERACT_DEFAULT_TENANTDB_PWD=skdcnwauicn2ucnaecasdsajdnizucawencascdca
       - FINERACT_DEFAULT_TENANTDB_CONN_PARAMS=
+      # NOTE:
+      # - for testing... https://localhost:8443/fineract-provider/api/v1/clients?limit=15&offset=0
+      # - below settings for Velocity (fill in client secret)
+      # - get a token see: https://devregistrarapp.velocitynetwork.foundation/
+      - FINERACT_SECURITY_AUTH0_DOMAIN=vnf-dev.us.auth0.com
+      - FINERACT_SECURITY_AUTH0_ISSUER_URI=https://vnf-dev.us.auth0.com/
+      - FINERACT_SECURITY_AUTH0_CLIENT_ID=L6vvLMubgh4ellWr78NvzEf5RCwkARD2
+      - FINERACT_SECURITY_AUTH0_CLIENT_SECRET=
+      - FINERACT_SECURITY_AUTH0_AUDIENCE=https://vnf-dev.us.auth0.com/userinfo
+      - FINERACT_SECURITY_AUTH0_SCOPE=openid,profile
+    entrypoint:
+      - "java"
+      - "-agentlib:jdwp=transport=dt_socket,server=y,address=*:8000,suspend=n"
+      - "-Dloader.path=/app/libs/"
+      - "-jar"
+      - "/app/fineract-provider.jar"
 
   # Frontend service
   community-app:
