@@ -1,6 +1,6 @@
 ## API documentation.
 
-### **Authentication**
+## **Authentication**
 Fineract APIs are secured and depending on the security options available in fineract, any api request would require some form of authentication and authorization. Checkout this documentation for more information about available authentication protocols. 
 
 [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/api-docs/apiLive.htm#authentication_overview</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/api-docs/apiLive.htm#authentication_overview)  
@@ -19,212 +19,62 @@ Products can be created at once from back-office and always fetched/referenced p
 >**fineract-platform-tenantid:** default 
 >**Response**
 ```json
-{
-   "id":8,
-   "accountNo":"000000008",
-   "depositType":{
-      "id":100,
-      "code":"depositAccountType.savingsDeposit",
-      "value":"Savings"
-   },
-   "externalId":"VCR-273E-4FF0-A494",
-   "clientId":5,
-   "clientName":"Velocity Test Client",
-   "savingsProductId":1,
-   "savingsProductName":"Velocity (USD)",
-   "fieldOfficerId":0,
-   "status":{
-      "id":300,
-      "code":"savingsAccountStatusType.active",
-      "value":"Active",
-      "submittedAndPendingApproval":false,
-      "approved":false,
-      "rejected":false,
-      "withdrawnByApplicant":false,
-      "active":true,
-      "closed":false,
-      "prematureClosed":false,
-      "transferInProgress":false,
-      "transferOnHold":false,
-      "matured":false
-   },
-   "subStatus":{
-      "id":0,
-      "code":"SavingsAccountSubStatusEnum.none",
-      "value":"None",
-      "none":true,
-      "inactive":false,
-      "dormant":false,
-      "escheat":false,
-      "block":false,
-      "blockCredit":false,
-      "blockDebit":false
-   },
-   "timeline":{
-      "submittedOnDate":[
-         2021,
-         11,
-         11
-      ],
-      "submittedByUsername":"mifos",
-      "submittedByFirstname":"App",
-      "submittedByLastname":"Administrator",
-      "approvedOnDate":[
-         2021,
-         11,
-         11
-      ],
-      "approvedByUsername":"mifos",
-      "approvedByFirstname":"App",
-      "approvedByLastname":"Administrator",
-      "activatedOnDate":[
-         2021,
-         11,
-         11
-      ],
-      "activatedByUsername":"mifos",
-      "activatedByFirstname":"App",
-      "activatedByLastname":"Administrator"
-   },
-   "currency":{
-      "code":"USD",
-      "name":"US Dollar",
+[
+  {
+    "id":2,
+    "name":"Velocity Credits",
+    "shortName":"VCR",
+    "description":"This holds Credits",
+    "currency":{
+      "code":"CRD",
+      "name":"Velocity Credits",
       "decimalPlaces":2,
       "inMultiplesOf":1,
-      "displaySymbol":"$",
-      "nameCode":"currency.USD",
-      "displayLabel":"US Dollar ($)"
-   },
-   "nominalAnnualInterestRate":0.000000,
-   "interestCompoundingPeriodType":{
+      "nameCode":"currency.CRD",
+      "displayLabel":"Velocity Credits [CRD]"
+    },
+    "nominalAnnualInterestRate":0,
+    "interestCompoundingPeriodType":{
       "id":1,
       "code":"savings.interest.period.savingsCompoundingInterestPeriodType.daily",
       "value":"Daily"
-   },
-   "interestPostingPeriodType":{
+    },
+    "interestPostingPeriodType":{
       "id":4,
       "code":"savings.interest.posting.period.savingsPostingInterestPeriodType.monthly",
       "value":"Monthly"
-   },
-   "interestCalculationType":{
+    },
+    "interestCalculationType":{
       "id":1,
       "code":"savingsInterestCalculationType.dailybalance",
       "value":"Daily Balance"
-   },
-   "interestCalculationDaysInYearType":{
+    },
+    "interestCalculationDaysInYearType":{
       "id":365,
       "code":"savingsInterestCalculationDaysInYearType.days365",
       "value":"365 Days"
-   },
-   "withdrawalFeeForTransfers":false,
-   "allowOverdraft":false,
-   "enforceMinRequiredBalance":false,
-   "withHoldTax":false,
-   "lastActiveTransactionDate":[
-      2021,
-      11,
-      13
-   ],
-   "isDormancyTrackingActive":false,
-   "summary":{
-      "currency":{
-         "code":"USD",
-         "name":"US Dollar",
-         "decimalPlaces":2,
-         "inMultiplesOf":1,
-         "displaySymbol":"$",
-         "nameCode":"currency.USD",
-         "displayLabel":"US Dollar ($)"
-      },
-      "totalDeposits":1000.000000,
-      "totalInterestPosted":0,
-      "accountBalance":1000.000000,
-      "totalOverdraftInterestDerived":0,
-      "interestNotPosted":0,
-      "availableBalance":1000.000000
-   },
-   "transactions":[
-      {
-         "id":68,
-         "transactionType":{
-            "id":1,
-            "code":"savingsAccountTransactionType.deposit",
-            "value":"Deposit",
-            "deposit":true,
-            "dividendPayout":false,
-            "withdrawal":false,
-            "interestPosting":false,
-            "feeDeduction":false,
-            "initiateTransfer":false,
-            "approveTransfer":false,
-            "withdrawTransfer":false,
-            "rejectTransfer":false,
-            "overdraftInterest":false,
-            "writtenoff":false,
-            "overdraftFee":true,
-            "withholdTax":false,
-            "escheat":false,
-            "amountHold":false,
-            "amountRelease":false
-         },
-         "accountId":8,
-         "accountNo":"000000008",
-         "date":[
-            2021,
-            11,
-            13
-         ],
-         "currency":{
-            "code":"USD",
-            "name":"US Dollar",
-            "decimalPlaces":2,
-            "inMultiplesOf":1,
-            "displaySymbol":"$",
-            "nameCode":"currency.USD",
-            "displayLabel":"US Dollar ($)"
-         },
-         "amount":1000.000000,
-         "runningBalance":1000.000000,
-         "reversed":false,
-         "transfer":{
-            "id":3,
-            "reversed":false,
-            "currency":{
-               "code":"USD",
-               "name":"US Dollar",
-               "decimalPlaces":2,
-               "inMultiplesOf":1,
-               "displaySymbol":"$",
-               "nameCode":"currency.USD",
-               "displayLabel":"US Dollar ($)"
-            },
-            "transferAmount":1000.000000,
-            "transferDate":[
-               2021,
-               11,
-               13
-            ],
-            "transferDescription":"test"
-         },
-         "submittedOnDate":[
-            2021,
-            12,
-            1
-         ],
-         "interestedPostedAsOn":false,
-         "submittedByUsername":"mifos"
-      }
-   ]
-}
+    },
+    "withdrawalFeeForTransfers":false,
+    "allowOverdraft":false,
+    "enforceMinRequiredBalance":false,
+    "withHoldTax":false,
+    "accountingRule":{
+      "id":2,
+      "code":"accountingRuleType.cash",
+      "value":"CASH BASED"
+    },
+    "isDormancyTrackingActive":false
+  }
+]
 ```
 There’s currently two types of products, one is credits (Credits as currency) and the other for coupons (USD as currency).
 
 
-### **Criteria for testing** 
+## **Criteria for testing** 
 In the use-cases provided below, copy payloads, make minimal recommended changes and post in swagger descriptors to test out the apis. Ensure to also read specific api instructions in swagger descriptors especially concerning mandatory fields and unique ones. Note that some of these examples have already been posted on staging server and will need slight changes like external Id, names to get them to work.
-###End to end use-cases
+##End to end use-cases
 
-###1.  POST business/organisation
+##1.  POST business/organisation
 
 > Swagger
 > [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Client/create_6</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Client/create_6)  
@@ -265,7 +115,7 @@ Response
 }
 ```
 
-###2.  Close Client  
+##2.  Close Client  
 > Swagger
 > [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Client/activate_1</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Client/activate_1)
 >
@@ -292,7 +142,7 @@ Response
 }
 ```
 
-###3.  Close Account  
+##3.  Close Account  
 > Swagger  
 > [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Account/handleCommands_6</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Account/handleCommands_6)
 > 8 is savings account Id  
@@ -322,7 +172,7 @@ Response
 }
 ```
 
-###4.  POST coupons account  
+##4.  POST coupons account  
 > Swagger
 > [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Account/submitApplication_2</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Account/submitApplication_2)  
 > **Note**: product Id for coupons is 1 and it’s in USD
@@ -365,7 +215,7 @@ Response
 }
 ```
 
-###5.  POST credits account  
+##5.  POST credits account  
 > Swagger
 > [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Account/submitApplication_2</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Account/submitApplication_2)  
 > **Note:** product Id for credits is 2
@@ -404,7 +254,7 @@ Response
     "gsimId": 0
 }
 ```
-###6.  GET accounts  
+##6.  GET accounts  
 > Swagger
 > [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Account/retrieveOne_24</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Account/retrieveOne_24)  
 > 8 is the account id, could be coupon or credit
@@ -624,8 +474,7 @@ Response
 > As for the transactions, the paging query parameters
 > *pageNumber=1&pageSize=15* would determine how many transactions are
 > fetched.
-
-###7.  Approve Accounts  
+##7.  Approve Accounts  
 > Swagger
 > [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Account/handleCommands_6</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Account/handleCommands_6)
 >
@@ -675,7 +524,7 @@ Response
 
 ```
 
-###8.  Activate Accounts
+##8.  Activate Accounts
 
 > Swagger
 > [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Account/handleCommands_6</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Account/handleCommands_6)
@@ -724,7 +573,7 @@ Response
 }
 ```
 
-###9.  Make Transactions  
+##9.  Make Transactions  
 > Swagger
 > [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Account/handleCommands_6</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Account/handleCommands_6)**  
 > **POST
@@ -752,7 +601,7 @@ Response
 "changes": {}
 }
 ```
-###10. Make Transfers  
+##10. Make Transfers  
 > Swagger  
 > [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Account%20Transfers/create_4</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Account%20Transfers/create_4)
 >
@@ -787,7 +636,7 @@ Response
 }
 ```
 
-###11. Add Coupons  
+##11. Add Coupons  
 > This uses the concept of data tables, check out swagger
 > documentation for more details  
 > [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Data%20Tables/createDatatableEntry</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Data%20Tables/createDatatableEntry)
@@ -822,7 +671,7 @@ Response
 
 ```
 
-###12. Get Coupons associated with an account
+##12. Get Coupons associated with an account
 
 > Swagger  
 > [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Data%20Tables/getDatatable_1</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Data%20Tables/getDatatable_1)
