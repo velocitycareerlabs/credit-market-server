@@ -74,7 +74,7 @@ There’s currently two types of products, one is credits (Credits as currency) 
 In the use-cases provided below, copy payloads, make minimal recommended changes and post in swagger descriptors to test out the apis. Ensure to also read specific api instructions in swagger descriptors especially concerning mandatory fields and unique ones. Note that some of these examples have already been posted on staging server and will need slight changes like external Id, names to get them to work.
 ##End to end use-cases
 
-## 1.  POST business/organisation
+### 1.  POST business/organisation
 > Swagger
 > [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Client/create_6</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Client/create_6)
 > NOTE: **exernalId**, **fullname** and **MobileNo** are all unique. The
