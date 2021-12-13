@@ -18,18 +18,20 @@
 --
 
 INSERT IGNORE INTO `x_registered_table` (`registered_table_name`, `application_table_name`, `category`)
-VALUES ('Voucher', 'm_client', 100);
+VALUES ('Voucher_item', 'm_client', 100);
 
-CREATE TABLE IF NOT EXISTS `Voucher` (
+CREATE TABLE IF NOT EXISTS `Voucher_item` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `client_id` bigint(20) NOT NULL,
   `couponBundleId` varchar(255) DEFAULT NULL,
+  `batch_id` bigint(20) NOT NULL,
   `symbol` varchar(100) DEFAULT NULL,
-  `quantity` int(11) DEFAULT NULL,
   `used` bit(1) DEFAULT NULL,
   `expiry` date DEFAULT NULL,
-  `updatedAt` datetime DEFAULT NULL,
+  `at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_client_id` (`client_id`),
-  CONSTRAINT `fk_voucher_client_id` FOREIGN KEY (`client_id`) REFERENCES `m_client` (`id`)
+  KEY `fk_batch_id` (`batch_id`),
+  CONSTRAINT `fk_voucher_item_client_id` FOREIGN KEY (`client_id`) REFERENCES `m_client` (`id`),
+  CONSTRAINT `fk_voucher_item_batch_id` FOREIGN KEY (`batch_id`) REFERENCES `Voucher` (`id`)
 );

@@ -17,19 +17,17 @@
 -- under the License.
 --
 
-INSERT IGNORE INTO `x_registered_table` (`registered_table_name`, `application_table_name`, `category`)
-VALUES ('Voucher', 'm_client', 100);
-
-CREATE TABLE IF NOT EXISTS `Voucher` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `client_id` bigint(20) NOT NULL,
-  `couponBundleId` varchar(255) DEFAULT NULL,
-  `symbol` varchar(100) DEFAULT NULL,
-  `quantity` int(11) DEFAULT NULL,
-  `used` bit(1) DEFAULT NULL,
-  `expiry` date DEFAULT NULL,
-  `updatedAt` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_client_id` (`client_id`),
-  CONSTRAINT `fk_voucher_client_id` FOREIGN KEY (`client_id`) REFERENCES `m_client` (`id`)
-);
+INSERT INTO `m_permission`
+(`grouping`,
+`code`,
+`entity_name`,
+`action_name`,
+`can_maker_checker`)
+VALUES
+('datatable', 'CREATE_Voucher_item', 'Voucher_item', 'CREATE', 1),
+('datatable', 'CREATE_Voucher_item_CHECKER', 'Voucher_item', 'CREATE', 0),
+('datatable', 'READ_Voucher_item', 'Voucher_item', 'READ', 0),
+('datatable', 'UPDATE_Voucher_item', 'Voucher_item', 'UPDATE', 1),
+('datatable', 'UPDATE_Voucher_item_CHECKER', 'Voucher_item', 'UPDATE', 0),
+('datatable', 'DELETE_Voucher_item', 'Voucher_item', 'DELETE', 1),
+('datatable', 'DELETE_Voucher_item_CHECKER', 'Voucher_item', 'DELETE', 0);
