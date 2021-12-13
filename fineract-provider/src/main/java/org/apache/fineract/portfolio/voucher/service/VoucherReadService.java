@@ -19,7 +19,6 @@
 package org.apache.fineract.portfolio.voucher.service;
 
 import java.util.List;
-
 import org.apache.fineract.portfolio.voucher.data.VoucherBalanceDTO;
 import org.apache.fineract.portfolio.voucher.data.VoucherDTO;
 
