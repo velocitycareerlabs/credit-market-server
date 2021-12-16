@@ -1,10 +1,10 @@
 ## API documentation.
 
 ## **Authentication**
-Fineract APIs are secured and depending on the security options available in fineract, any api request would require some form of authentication and authorization. Checkout this documentation for more information about available authentication protocols. 
+Fineract APIs are secured and depending on the security options available in fineract, any api request would require some form of authentication and authorization. Checkout this documentation for more information about available authentication protocols.
 
-[<u>https://devcredits.velocitycareerlabs.io/fineract-provider/api-docs/apiLive.htm#authentication_overview</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/api-docs/apiLive.htm#authentication_overview)  
-NOTE: Dev instance currently uses Basic Authentication and as such base 64 encoded username and password passed in the Authorization headers of any http request should guarantee access/authorization. 
+[<u>https://devcredits.velocitycareerlabs.io/fineract-provider/api-docs/apiLive.htm#authentication_overview</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/api-docs/apiLive.htm#authentication_overview)
+NOTE: Dev instance currently uses Basic Authentication and as such base 64 encoded username and password passed in the Authorization headers of any http request should guarantee access/authorization.
 
 
 **Product configuration**
@@ -12,16 +12,16 @@ Products can be created at once from back-office and always fetched/referenced p
 
 
 
->API for fetching these products is as also available in the swagger descriptor below [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Product/retrieveAll_34</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Product/retrieveAll_34) 
->Request URL: [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/api/v1/savingsproducts</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/api/v1/savingsproducts) 
->**Request Method:** GET 
->**Authorization:** Basic bWlmb3M6cGFzc3dvcmQ= 
->**fineract-platform-tenantid:** default 
+>API for fetching these products is as also available in the swagger descriptor below [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Product/retrieveAll_34</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Product/retrieveAll_34)
+>Request URL: [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/api/v1/savingsproducts</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/api/v1/savingsproducts)
+>**Request Method:** GET
+>**Authorization:** Basic bWlmb3M6cGFzc3dvcmQ=
+>**fineract-platform-tenantid:** default
 >**Response**
 ```json
 [
   {
-    "id":2,
+    "id":1,
     "name":"Velocity Credits",
     "shortName":"VCR",
     "description":"This holds Credits",
@@ -70,21 +70,20 @@ Products can be created at once from back-office and always fetched/referenced p
 There’s currently two types of products, one is credits (Credits as currency) and the other for coupons (USD as currency).
 
 
-## **Criteria for testing** 
+## **Criteria for testing**
 In the use-cases provided below, copy payloads, make minimal recommended changes and post in swagger descriptors to test out the apis. Ensure to also read specific api instructions in swagger descriptors especially concerning mandatory fields and unique ones. Note that some of these examples have already been posted on staging server and will need slight changes like external Id, names to get them to work.
 ##End to end use-cases
 
-##1.  POST business/organisation
-
+### 1.  POST business/organisation
 > Swagger
-> [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Client/create_6</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Client/create_6)  
+> [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Client/create_6</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Client/create_6)
 > NOTE: **exernalId**, **fullname** and **MobileNo** are all unique. The
 > example already exists in the system so there's a need to change those
-> fields to get this to work.  
->   
+> fields to get this to work.
+>
 > Office id is default 1, legalFormId is 2 for institutions according to
-> fineract configurations.  
->   
+> fineract configurations.
+>
 > POST /fineract-provider/api/v1/clients HTTP/1.1
 > Host: devcredits.velocitycareerlabs.io
 > fineract-platform-tenantid: default
@@ -93,7 +92,7 @@ In the use-cases provided below, copy payloads, make minimal recommended changes
 Payload
 {
    "address":[
-      
+
    ],
    "officeId":1,
    "legalFormId":2,
@@ -115,16 +114,16 @@ Response
 }
 ```
 
-##2.  Close Client  
+### 2.  Close Client
 > Swagger
 > [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Client/activate_1</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Client/activate_1)
 >
-> 12 is a client id  
+> 12 is a client id
 > Request URL:
-> [<u>/fineract-provider/api/v1/clients/12?command=close</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/api/v1/clients/12?command=close)  
-> Request Method: POST  
-> Status Code: 200 <br> 
-> authorization: Basic bWlmb3M6cGFzc3dvcmQ=<br>  
+> [<u>/fineract-provider/api/v1/clients/12?command=close</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/api/v1/clients/12?command=close)
+> Request Method: POST
+> Status Code: 200 <br>
+> authorization: Basic bWlmb3M6cGFzc3dvcmQ=<br>
 > fineract-platform-tenantid: default
 ```json
 Payload
@@ -142,15 +141,15 @@ Response
 }
 ```
 
-##3.  Close Account  
-> Swagger  
+### 3.  Close Account
+> Swagger
 > [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Account/handleCommands_6</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Account/handleCommands_6)
-> 8 is savings account Id  
+> 8 is savings account Id
 > Request URL:
-> [<u>/fineract-provider/api/v1/savingsaccounts/8?command=close</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/api/v1/clients/12?command=close)  
-> Request Method: POST  
-> Status Code: 200  
-> authorization: Basic bWlmb3M6cGFzc3dvcmQ=  
+> [<u>/fineract-provider/api/v1/savingsaccounts/8?command=close</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/api/v1/clients/12?command=close)
+> Request Method: POST
+> Status Code: 200
+> authorization: Basic bWlmb3M6cGFzc3dvcmQ=
 > fineract-platform-tenantid: default
 >
 ```json
@@ -172,52 +171,46 @@ Response
 }
 ```
 
-##4.  POST coupons account  
-> Swagger
-> [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Account/submitApplication_2</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Account/submitApplication_2)  
-> **Note**: product Id for coupons is 1 and it’s in USD
-> POST /fineract-provider/api/v1/savingsaccounts HTTP/1.1<br>
-> Host: devcredits.velocitycareerlabs.io<br>
-> fineract-platform-tenantid: default<br>
-> Authorization: Basic bWlmb3M6cGFzc3dvcmQ=
+### 4.  POST coupons/vouchers
+> This uses the concept of data tables, check out swagger
+> documentation for more details
+> [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Data%20Tables/createDatatableEntry</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Data%20Tables/createDatatableEntry)
+>
+> With id 3 as the client Id, we can add coupons/vouchers to it in the
+> following way
+>
+> POST
+> /fineract-provider/api/v1/datatables/Voucher/3?genericResultSet=true
+> Host: devcredits.velocitycareerlabs.io
+> Status Code: 200 <br>
+> authorization: Basic bWlmb3M6cGFzc3dvcmQ= <br>
+> fineract-platform-tenantid: default
 >
 ```json
 Payload
 {
-   "productId":1,
-   "nominalAnnualInterestRate":0,
-   "withdrawalFeeForTransfers":false,
-   "allowOverdraft":false,
-   "enforceMinRequiredBalance":false,
-   "withHoldTax":false,
-   "interestCompoundingPeriodType":1,
-   "interestPostingPeriodType":4,
-   "interestCalculationType":1,
-   "interestCalculationDaysInYearType":365,
-   "externalId":"VCO-273E-4FF0-A494",
-   "submittedOnDate":"12 November 2021",
-   "locale":"en",
-   "dateFormat":"dd MMMM yyyy",
-   "monthDayFormat":"dd MMM",
-   "charges":[
-      
-   ],
-   "clientId":"5"
+  "couponBundleId":"edhg-98987-j86990-mder",
+  "symbol":"VCC",
+  "quantity":"500",
+  "used":"false",
+  "locale":"en",
+  "dateFormat":"dd MMMM yyyy HH:mm",
+  "expiry":"24 March 2022 00:00",
+  "at":"09 December 2021 12:14",
+  "updatedAt":"09 December 2021 12:14"
 }
 
 Response
 {
-   "officeId":1,
-   "clientId":5,
-   "savingsId":7,
-   "resourceId":7,
-   "gsimId":0
+  "officeId":1,
+  "clientId":3,
+  "resourceId":3
 }
 ```
 
-##5.  POST credits account  
+### 5.  POST credits account
 > Swagger
-> [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Account/submitApplication_2</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Account/submitApplication_2)  
+> [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Account/submitApplication_2</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Account/submitApplication_2)
 > **Note:** product Id for credits is 2
 > POST /fineract-provider/api/v1/savingsaccounts HTTP/1.1
 > Host: devcredits.velocitycareerlabs.io
@@ -226,23 +219,23 @@ Response
 ```json
 Payload
 {
-	"productId": 2,
-	"nominalAnnualInterestRate": 0,
-	"withdrawalFeeForTransfers": false,
-	"allowOverdraft": false,
-	"enforceMinRequiredBalance": false,
-	"withHoldTax": false,
-	"interestCompoundingPeriodType": 1,
-	"interestPostingPeriodType": 4,
-	"interestCalculationType": 1,
-	"interestCalculationDaysInYearType": 365,
-	"externalId": "VCR-273E-4FF0-A494",
-	"submittedOnDate": "12 November 2021",
-	"locale": "en",
-	"dateFormat": "dd MMMM yyyy",
-	"monthDayFormat": "dd MMM",
-	"charges": [],
-	"clientId": "5"
+    "productId": 2,
+    "nominalAnnualInterestRate": 0,
+    "withdrawalFeeForTransfers": false,
+    "allowOverdraft": false,
+    "enforceMinRequiredBalance": false,
+    "withHoldTax": false,
+    "interestCompoundingPeriodType": 1,
+    "interestPostingPeriodType": 4,
+    "interestCalculationType": 1,
+    "interestCalculationDaysInYearType": 365,
+    "externalId": "VCR-273E-4FF0-A494",
+    "submittedOnDate": "12 November 2021",
+    "locale": "en",
+    "dateFormat": "dd MMMM yyyy",
+    "monthDayFormat": "dd MMM",
+    "charges": [],
+    "clientId": "5"
 }
 Response
 
@@ -254,9 +247,9 @@ Response
     "gsimId": 0
 }
 ```
-##6.  GET accounts  
+### 6.  GET accounts
 > Swagger
-> [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Account/retrieveOne_24</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Account/retrieveOne_24)  
+> [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Account/retrieveOne_24</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Account/retrieveOne_24)
 > 8 is the account id, could be coupon or credit
 >
 > GET
@@ -474,7 +467,7 @@ Response
 > As for the transactions, the paging query parameters
 > *pageNumber=1&pageSize=15* would determine how many transactions are
 > fetched.
-##7.  Approve Accounts  
+### 7.  Approve Accounts
 > Swagger
 > [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Account/handleCommands_6</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Account/handleCommands_6)
 >
@@ -524,7 +517,7 @@ Response
 
 ```
 
-##8.  Activate Accounts
+### 8.  Activate Accounts
 
 > Swagger
 > [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Account/handleCommands_6</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Account/handleCommands_6)
@@ -573,9 +566,9 @@ Response
 }
 ```
 
-##9.  Make Transactions  
+### 9.  Make Transactions
 > Swagger
-> [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Account/handleCommands_6</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Account/handleCommands_6)**  
+> [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Account/handleCommands_6</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Account/handleCommands_6)**
 > **POST
 > /fineract-provider/api/v1/savingsaccounts/7/transactions?command=deposit
 > HTTP/1.1
@@ -601,8 +594,8 @@ Response
 "changes": {}
 }
 ```
-##10. Make Transfers  
-> Swagger  
+### 10. Make Transfers
+> Swagger
 > [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Account%20Transfers/create_4</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Account%20Transfers/create_4)
 >
 > POST /fineract-provider/api/v1/accounttransfers HTTP/1.1<br>
@@ -614,19 +607,19 @@ Response
 ```json
 Payload
 {
-	"fromAccountId": "7",
-	"fromAccountType": 2,
-	"toOfficeId": 1,
-	"toAccountType": 2,
-	"toClientId": 5,
-	"toAccountId": 8,
-	"transferAmount": "1000",
-	"transferDate": "14 November 2021",
-	"transferDescription": "test",
-	"locale": "en",
-	"dateFormat": "dd MMMM yyyy",
-	"fromClientId": 5,
-	"fromOfficeId": 1
+    "fromAccountId": "7",
+    "fromAccountType": 2,
+    "toOfficeId": 1,
+    "toAccountType": 2,
+    "toClientId": 5,
+    "toAccountId": 8,
+    "transferAmount": "1000",
+    "transferDate": "14 November 2021",
+    "transferDescription": "test",
+    "locale": "en",
+    "dateFormat": "dd MMMM yyyy",
+    "fromClientId": 5,
+    "fromOfficeId": 1
 }
 
 Response
@@ -634,116 +627,4 @@ Response
     "savingsId": 7,
     "resourceId": 3
 }
-```
-
-##11. Add Coupons  
-> This uses the concept of data tables, check out swagger
-> documentation for more details  
-> [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Data%20Tables/createDatatableEntry</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Data%20Tables/createDatatableEntry)
-
-> **  
-> **With id 8 as the coupons account Id, we can add coupons to it in the
-> following way
->
-> POST
-> /fineract-provider/api/v1/datatables/Account%20Coupons/8?genericResultSet=true  
-> Host: devcredits.velocitycareerlabs.io  
-> Status Code: 200 <br>
-> authorization: Basic bWlmb3M6cGFzc3dvcmQ= <br> 
-> fineract-platform-tenantid: default
->
-```json
-Payload
-{
-   "Is Used":"false",
-   "locale":"en",
-   "dateFormat":"dd MMMM yyyy",
-   "Expiry Date":"27 January 2022"
-}
-
-Response
-{
-   "officeId":1,
-   "clientId":5,
-   "savingsId":8,
-   "resourceId":8
-}
-
-```
-
-##12. Get Coupons associated with an account
-
-> Swagger  
-> [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Data%20Tables/getDatatable_1</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Data%20Tables/getDatatable_1)
->
->If 8 is an account Id
->
->GET
->/fineract-provider/api/v1/datatables/Account%20Coupons/8?genericResultSet=true  
->Host: devcredits.velocitycareerlabs.io  
->Status Code: 200  <br>
->authorization: Basic bWlmb3M6cGFzc3dvcmQ=  <br>
->fineract-platform-tenantid: default
->
-```json
-Response
-{
-   "columnHeaders":[
-      {
-         "columnName":"id",
-         "columnType":"bigint",
-         "columnLength":0,
-         "columnDisplayType":"INTEGER",
-         "isColumnNullable":false,
-         "isColumnPrimaryKey":true,
-         "columnValues":[
-            
-         ]
-      },
-      {
-         "columnName":"savings_account_id",
-         "columnType":"bigint",
-         "columnLength":0,
-         "columnDisplayType":"INTEGER",
-         "isColumnNullable":false,
-         "isColumnPrimaryKey":false,
-         "columnValues":[
-            
-         ]
-      },
-      {
-         "columnName":"Expiry Date",
-         "columnType":"date",
-         "columnLength":0,
-         "columnDisplayType":"DATE",
-         "isColumnNullable":true,
-         "isColumnPrimaryKey":false,
-         "columnValues":[
-            
-         ]
-      },
-      {
-         "columnName":"Is Used",
-         "columnType":"bit",
-         "columnLength":0,
-         "columnDisplayType":"BOOLEAN",
-         "isColumnNullable":true,
-         "isColumnPrimaryKey":false,
-         "columnValues":[
-            
-         ]
-      }
-   ],
-   "data":[
-      {
-         "row":[
-            "3",
-            "8",
-            "2022-01-27",
-            "false"
-         ]
-      }
-   ]
-}
-
 ```
