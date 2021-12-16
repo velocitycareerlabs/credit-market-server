@@ -3336,4 +3336,17 @@ public class CommandWrapperBuilder {
         return this;
     }
 
+    public CommandWrapperBuilder createVoucherTransaction(final Long clientId) {
+        this.actionName = "CREATE";
+        this.entityName = "VOUCHER_TRANSACTION";
+        this.entityId = clientId;
+        this.clientId = clientId;
+        if (clientId == null) {
+            this.href = "/vouchers/" + clientId;
+        } else {
+            this.href = "/vouchers/" + clientId;
+        }
+        return this;
+    }
+
 }
