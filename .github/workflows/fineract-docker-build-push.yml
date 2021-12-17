@@ -12,7 +12,6 @@ on:
 jobs:
   # Version Packages
   build-server-images:
-    needs: publish-packages
     name: Build Server Images
     runs-on: ubuntu-latest
     steps:
