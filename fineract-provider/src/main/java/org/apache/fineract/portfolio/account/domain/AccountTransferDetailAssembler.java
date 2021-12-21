@@ -104,14 +104,12 @@ public class AccountTransferDetailAssembler {
         final Long fromOfficeId = this.fromApiJsonHelper.extractLongNamed(fromOfficeIdParamName, element);
         final Office fromOffice = this.officeRepositoryWrapper.findOneWithNotFoundDetection(fromOfficeId);
 
-        final Long fromClientId = this.fromApiJsonHelper.extractLongNamed(fromClientIdParamName, element);
-        final Client fromClient = this.clientRepository.findOneWithNotFoundDetection(fromClientId);
+        final Client fromClient = this.clientRepository.findOneWithNotFoundDetection(fromSavingsAccount.clientId());
 
         final Long toOfficeId = this.fromApiJsonHelper.extractLongNamed(toOfficeIdParamName, element);
         final Office toOffice = this.officeRepositoryWrapper.findOneWithNotFoundDetection(toOfficeId);
 
-        final Long toClientId = this.fromApiJsonHelper.extractLongNamed(toClientIdParamName, element);
-        final Client toClient = this.clientRepository.findOneWithNotFoundDetection(toClientId);
+        final Client toClient = this.clientRepository.findOneWithNotFoundDetection(toSavingsAccount.clientId());
 
         final Integer transfertype = this.fromApiJsonHelper.extractIntegerNamed(transferTypeParamName, element, Locale.getDefault());
 
