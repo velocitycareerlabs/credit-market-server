@@ -31,14 +31,18 @@ RUN ./gradlew --no-daemon -q -x rat -x compileTestJava -x test -x spotlessJavaCh
 # The commented out lines in the docker-compose.yml illustrate how to do this.
 WORKDIR /fineract/libs
 RUN wget -q https://repo1.maven.org/maven2/mysql/mysql-connector-java/8.0.23/mysql-connector-java-8.0.23.jar
-
 # =========================================
 
 FROM gcr.io/distroless/java:11 as fineract
 
 COPY --from=builder /fineract/fineract-provider/build/libs /app
 COPY --from=builder /fineract/libs /app/libs
-
+ENV DRIVERCLASS_NAME=com.mysql.cj.jdbc.Driver
+ENV PROTOCOL=jdbc
+ENV SUB_PROTOCOL=mysql
+ENV fineract_tenants_uid=admin
+ENV FINERACT_DEFAULT_TENANTDB_PORT=3306
+ENV fineract_tenants_driver=com.mysql.jdbc.Driver
 WORKDIR /app
 
 ENTRYPOINT ["java", "-Dloader.path=/app/libs/", "-jar", "/app/fineract-provider.jar"]
