@@ -1,0 +1,90 @@
+== Auth0
+
+=== Build
+
+You must re-build the distribution JAR using the special `-Psecurity=auth0` flag:
+
+[source,bash]
+----
+./gradlew bootJAR -Psecurity=auth0
+java -jar build/libs/fineract-provider.jar
+----
+
+=== Authenticate with Auth0
+
+TBD
+
+=== Invoke Fineract REST endpoint with access token
+
+[source,bash]
+----
+----
+
+=== Role mapping
+
+|===
+|Name |Description
+
+|fineract:super_user
+|This role provides all application permissions
+
+|fineract:finance_admin
+|Manages all financial activities
+
+|fineract:system_user
+|Readonly permissions
+
+|fineract:operations
+|Has all read and write privileges for different accounts
+
+|fineract:broker
+|Creates accounts and initiates transactions across all accounts
+
+|fineract:registrar
+|Creates accounts and clients
+|===
+
+=== Enable RBAC and Permissions
+
+TBD
+
+TODO: figure out with Nassan how roles are added from Velocity's side (see also my rule script).
+
+=== Edit Rule
+
+[source,javascript]
+----
+function(user, context, callback) {
+  const namespace = 'https://velocity.fineract.io';
+
+  if (context.authorization && context.authorization.roles) {
+    const assignedRoles = context.authorization.roles;
+
+    if (context.idToken) {
+      const idTokenClaims = context.idToken;
+      idTokenClaims[`${namespace}/roles`] = assignedRoles;
+      context.idToken = idTokenClaims;
+    }
+
+    if (context.accessToken) {
+      const accessTokenClaims = context.accessToken;
+      accessTokenClaims[`${namespace}/roles`] = assignedRoles;
+      context.accessToken = accessTokenClaims;
+    }
+  }
+
+  callback(null, user, context);
+}
+----
+
+=== Test
+
+NOTE: Only machine to machine tokens are working right and probably this will be the only token type we need. In general we can expect that any token that is provided will contain the proper "fineract:xxx" scopes.
+
+[source,bash]
+----
+curl --request POST \
+--url https://vnf-dev.us.auth0.com/oauth/token \
+--header 'content-type: application/json' \
+--data '{"client_id":"L6vvLMubgh4ellWr78NvzEf5RCwkARD2","client_secret":"****","audience":"https://fineract.velocitycareerlabs.io","grant_type":"client_credentials"}'
+----
