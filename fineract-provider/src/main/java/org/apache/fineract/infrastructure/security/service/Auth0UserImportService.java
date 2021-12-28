@@ -88,7 +88,8 @@ public class Auth0UserImportService {
 
         final Set<GrantedAuthority> authorities = new HashSet<>();
 
-        authorities.addAll(Arrays.asList(jwt.getClaimAsString("scope").split(" ")).stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+        authorities.addAll(Arrays.asList(jwt.getClaimAsString("scope").split(" ")).stream().map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList()));
 
         Set<Role> fineractRoles = resolveRolesFromAuthorities(authorities);
 
