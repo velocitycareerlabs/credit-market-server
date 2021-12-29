@@ -26,7 +26,6 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.JdbcTemplateAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -47,8 +46,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  */
 @Configuration
 @Import({ WebXmlConfiguration.class, WebXmlOauthConfiguration.class, WebXmlAuth0Configuration.class,
-        OAuth2ResourceServerAutoConfiguration.class, OAuth2ClientAutoConfiguration.class, WebFrontEndConfiguration.class,
-        MessagingConfiguration.class, WebTwoFactorXmlConfiguration.class })
+        OAuth2ResourceServerAutoConfiguration.class, WebFrontEndConfiguration.class, MessagingConfiguration.class,
+        WebTwoFactorXmlConfiguration.class })
 @ImportResource({ "classpath*:META-INF/spring/appContext.xml" })
 @PropertySource(value = "classpath:META-INF/spring/jdbc.properties")
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class,

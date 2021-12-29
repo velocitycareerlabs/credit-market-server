@@ -20,8 +20,6 @@ package org.apache.fineract.infrastructure.core.boot;
 
 import com.sun.jersey.spi.spring.container.servlet.SpringServlet;
 import org.apache.fineract.infrastructure.security.filter.TenantAwareAuth0Filter;
-import org.apache.fineract.infrastructure.security.service.Auth0LogoutHandler;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
@@ -40,7 +38,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -50,13 +47,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableGlobalMethodSecurity(jsr250Enabled = true)
 @Order(SecurityProperties.BASIC_AUTH_ORDER)
 public class WebXmlAuth0Configuration extends WebSecurityConfigurerAdapter {
-
-    private final ClientRegistrationRepository clientRegistrationRepository;
-
-    @Autowired
-    public WebXmlAuth0Configuration(ClientRegistrationRepository clientRegistrationRepository) {
-        this.clientRegistrationRepository = clientRegistrationRepository;
-    }
 
     @Bean
     public ServletRegistrationBean jersey() {
@@ -85,11 +75,6 @@ public class WebXmlAuth0Configuration extends WebSecurityConfigurerAdapter {
                 registry.addMapping("/**").allowedOrigins("*");
             }
         };
-    }
-
-    @Bean
-    public Auth0LogoutHandler auth0LogoutHandler() {
-        return new Auth0LogoutHandler(clientRegistrationRepository);
     }
 
     @Bean
