@@ -22,7 +22,7 @@ RUN apt-get update -qq && apt-get install -y wget
 COPY . fineract
 WORKDIR /fineract
 
-RUN ./gradlew --no-daemon -q -x rat -x compileTestJava -x test -x spotlessJavaCheck -x spotlessJava bootJar
+RUN ./gradlew -Psecurity=auth0 --no-daemon -q -x rat -x compileTestJava -x test -x spotlessJavaCheck -x spotlessJava bootJar
 
 # https://issues.apache.org/jira/browse/LEGAL-462
 # https://issues.apache.org/jira/browse/FINERACT-762
@@ -43,6 +43,19 @@ ENV SUB_PROTOCOL=mysql
 ENV fineract_tenants_uid=admin
 ENV FINERACT_DEFAULT_TENANTDB_PORT=3306
 ENV fineract_tenants_driver=com.mysql.jdbc.Driver
+
+ARG FINERACT_SECURITY_AUTH0_SCOPE
+ENV FINERACT_SECURITY_AUTH0_SCOPE = ${FINERACT_SECURITY_AUTH0_SCOPE}
+
+ARG FINERACT_SECURITY_AUTH0_DOMAIN
+ENV FINERACT_SECURITY_AUTH0_DOMAIN = ${FINERACT_SECURITY_AUTH0_DOMAIN}
+
+ARG FINERACT_SECURITY_AUTH0_ISSUER_URI
+ENV FINERACT_SECURITY_AUTH0_ISSUER_URI = ${FINERACT_SECURITY_AUTH0_ISSUER_URI}
+
+ARG FINERACT_SECURITY_AUTH0_AUDIENCE
+ENV FINERACT_SECURITY_AUTH0_AUDIENCE = ${FINERACT_SECURITY_AUTH0_AUDIENCE}
+
 WORKDIR /app
 
 ENTRYPOINT ["java", "-Dloader.path=/app/libs/", "-jar", "/app/fineract-provider.jar"]

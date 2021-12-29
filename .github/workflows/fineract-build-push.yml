@@ -30,11 +30,11 @@ jobs:
         if: github.ref == 'refs/heads/dev'
       # Set Staging Variables
       - name: Set Staging Variables
-        run: bash ./eng/environments/staging.sh 
+        run: bash ./eng/environments/staging.sh
         if: github.ref == 'refs/heads/staging'
       # Set Prod Variables
       - name: Set Prod Variables
-        run: bash ./eng/environments/prod.sh 
+        run: bash ./eng/environments/prod.sh
         if: github.ref == 'refs/heads/master'
       # Create GitHub Container Tags
       - name: Create GitHub Container Tags
@@ -85,11 +85,11 @@ jobs:
         if: github.ref == 'refs/heads/dev'
       # Set Staging Variables
       - name: Set Staging Variables
-        run: bash ./eng/environments/staging.sh 
+        run: bash ./eng/environments/staging.sh
         if: github.ref == 'refs/heads/staging'
       # Set Prod Variables
       - name: Set Prod Variables
-        run: bash ./eng/environments/prod.sh 
+        run: bash ./eng/environments/prod.sh
         if: github.ref == 'refs/heads/master'
       # Create GitHub Container Tags
       - name: Create GitHub Container Tags

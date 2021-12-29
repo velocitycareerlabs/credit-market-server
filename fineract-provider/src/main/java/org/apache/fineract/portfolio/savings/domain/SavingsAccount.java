@@ -813,7 +813,7 @@ public class SavingsAccount extends AbstractPersistableCustom {
         return listOfTransactionsSorted;
     }
 
-    protected void recalculateDailyBalances(final Money openingAccountBalance, final LocalDate interestPostingUpToDate) {
+    public void recalculateDailyBalances(final Money openingAccountBalance, final LocalDate interestPostingUpToDate) {
 
         Money runningBalance = openingAccountBalance.copy();
 
@@ -3038,6 +3038,10 @@ public class SavingsAccount extends AbstractPersistableCustom {
 
     public void updateSavingsAccountSummary(final List<SavingsAccountTransaction> transactions) {
         this.summary.updateSummary(this.currency, this.savingsAccountTransactionSummaryWrapper, transactions);
+    }
+
+    public void updateSavingsAccountSummary() {
+        this.summary.updateSummary(this.currency, this.savingsAccountTransactionSummaryWrapper, this.transactions);
     }
 
     public Map<String, Object> block() {
