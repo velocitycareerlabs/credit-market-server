@@ -57,6 +57,12 @@ jobs:
           tags: |
             ${{ env.GITHUB_MAIN_TAG }}
             ${{ env.GITHUB_VER_TAG }}
+          build-args: |
+            FINERACT_SECURITY_AUTH0_SCOPE=${{ env.FINERACT_SECURITY_AUTH0_SCOPE }}
+            FINERACT_DEFAULT_TENANTDB_HOSTNAME=${{ env.FINERACT_DEFAULT_TENANTDB_HOSTNAME }}
+            FINERACT_SECURITY_AUTH0_ISSUER_URI=${{ env.FINERACT_SECURITY_AUTH0_ISSUER_URI }}
+            FINERACT_SECURITY_AUTH0_AUDIENCE=${{ env.FINERACT_SECURITY_AUTH0_AUDIENCE }}
+
   push-to-ecr:
     needs: build-server-images
     name: Push to ECR
