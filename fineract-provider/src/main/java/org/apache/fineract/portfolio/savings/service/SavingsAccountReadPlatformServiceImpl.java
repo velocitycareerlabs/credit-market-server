@@ -21,6 +21,8 @@ package org.apache.fineract.portfolio.savings.service;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -103,6 +105,8 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
 
     // pagination
     private final PaginationHelper<SavingsAccountData> paginationHelper = new PaginationHelper<>();
+
+    private final PaginationHelper<SavingsAccountTransactionData> paginationHelperForTransaction = new PaginationHelper<>();
 
     private final EntityDatatableChecksReadService entityDatatableChecksReadService;
     private final ColumnValidator columnValidator;
@@ -1239,5 +1243,60 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
         } catch (final EmptyResultDataAccessException e) {
             throw new SavingsAccountNotFoundException(accountId, e);
         }
+    }
+
+    @Override
+    public Page<SavingsAccountTransactionData> retrieveAllSavingAccTransactions(Long accountId, SearchParameters searchParameters) {
+        List<Object> paramList = new ArrayList<>();
+        paramList.add(accountId);
+        paramList.add(DepositAccountType.SAVINGS_DEPOSIT.getValue());
+        final StringBuilder sqlBuilder = new StringBuilder(200);
+        sqlBuilder.append("select SQL_CALC_FOUND_ROWS ");
+        sqlBuilder.append(this.transactionsMapper.schema());
+        sqlBuilder.append(" where sa.id = ? and sa.deposit_type_enum = ? ");
+        if (searchParameters != null) {
+            if (searchParameters.getFromDate() != null || searchParameters.getToDate() != null) {
+                final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                String fromDateString = null;
+                String toDateString = null;
+                if (searchParameters.getFromDate() != null && searchParameters.getToDate() != null) {
+                    fromDateString = df.format(searchParameters.getFromDate());
+                    toDateString = df.format(searchParameters.getToDate());
+
+                    sqlBuilder.append(" and tr.transaction_date between ?");
+                    paramList.add(fromDateString);
+                    sqlBuilder.append(" and ?");
+                    paramList.add(toDateString);
+
+                } else if (searchParameters.getFromDate() != null) {
+                    fromDateString = df.format(searchParameters.getFromDate());
+                    sqlBuilder.append(" and tr.transaction_date >= ?");
+                    paramList.add(fromDateString);
+
+                } else if (searchParameters.getToDate() != null) {
+                    toDateString = df.format(searchParameters.getToDate());
+                    sqlBuilder.append(" and tr.transaction_date <= ?");
+                    paramList.add(toDateString);
+                }
+            }
+
+            sqlBuilder.append(" order by tr.transaction_date DESC, tr.created_date DESC, tr.id DESC ");
+
+            if (searchParameters.getOffset() != null && searchParameters.getLimit() != null) {
+                int offset = searchParameters.getOffset() < 2 ? 0 : (searchParameters.getOffset() - 1) * searchParameters.getLimit();
+                if (searchParameters.isLimited()) {
+                    sqlBuilder.append(" limit ").append(searchParameters.getLimit());
+                    if (searchParameters.isOffset()) {
+                        sqlBuilder.append(" offset ").append(offset);
+                    }
+                }
+            }
+        } else {
+            sqlBuilder.append(" order by tr.transaction_date DESC, tr.created_date DESC, tr.id DESC ");
+        }
+
+        final String sqlCountRows = "SELECT FOUND_ROWS()";
+        return this.paginationHelperForTransaction.fetchPage(this.jdbcTemplate, sqlCountRows, sqlBuilder.toString(), paramList.toArray(),
+                this.transactionsMapper);
     }
 }

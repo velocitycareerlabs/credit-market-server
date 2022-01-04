@@ -62,4 +62,6 @@ public interface SavingsAccountReadPlatformService {
 
     String retrieveAccountNumberByAccountId(Long accountId);
 
+    Page<SavingsAccountTransactionData> retrieveAllSavingAccTransactions(Long accountId, SearchParameters searchParameters);
+
 }

@@ -20,8 +20,11 @@ package org.apache.fineract.portfolio.voucher.service;
 
 import java.util.Date;
 import java.util.List;
+import org.apache.fineract.infrastructure.core.service.Page;
+import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.portfolio.voucher.data.VoucherBalanceDTO;
 import org.apache.fineract.portfolio.voucher.data.VoucherDTO;
+import org.apache.fineract.portfolio.voucher.data.VoucherTransactionDTO;
 
 public interface VoucherReadService {
 
@@ -31,4 +34,5 @@ public interface VoucherReadService {
 
     List<VoucherDTO> retrieveExpiringByDate(final Long clientId, final Date date);
 
+    Page<VoucherTransactionDTO> retrieveAllVoucherTransactions(Long clientId, SearchParameters searchParameters);
 }

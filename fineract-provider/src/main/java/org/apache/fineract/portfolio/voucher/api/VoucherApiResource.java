@@ -20,6 +20,7 @@ package org.apache.fineract.portfolio.voucher.api;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.Date;
 import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -27,15 +28,24 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
+import org.apache.fineract.accounting.journalentry.api.DateParam;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
 import org.apache.fineract.commands.service.PortfolioCommandSourceWritePlatformService;
+import org.apache.fineract.infrastructure.core.api.ApiRequestParameterHelper;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
+import org.apache.fineract.infrastructure.core.serialization.ApiRequestJsonSerializationSettings;
 import org.apache.fineract.infrastructure.core.serialization.DefaultToApiJsonSerializer;
+import org.apache.fineract.infrastructure.core.service.Page;
+import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.voucher.data.VoucherBalanceDTO;
 import org.apache.fineract.portfolio.voucher.data.VoucherDTO;
+import org.apache.fineract.portfolio.voucher.data.VoucherTransactionDTO;
 import org.apache.fineract.portfolio.voucher.service.VoucherReadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -51,16 +61,19 @@ public class VoucherApiResource {
     private final VoucherReadService voucherReadService;
     private final String resourceNameForPermissions = "VOUCHER";
     private final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService;
-    private final DefaultToApiJsonSerializer<VoucherDTO> toApiJsonSerializer;
+    private final DefaultToApiJsonSerializer<VoucherTransactionDTO> toApiJsonSerializer;
+    private final ApiRequestParameterHelper apiRequestParameterHelper;
 
     @Autowired
     public VoucherApiResource(final PlatformSecurityContext context, final VoucherReadService voucherReadService,
             final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService,
-            final DefaultToApiJsonSerializer<VoucherDTO> toApiJsonSerializer) {
+            final DefaultToApiJsonSerializer<VoucherTransactionDTO> toApiJsonSerializer,
+            final ApiRequestParameterHelper apiRequestParameterHelper) {
         this.context = context;
         this.voucherReadService = voucherReadService;
         this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
         this.toApiJsonSerializer = toApiJsonSerializer;
+        this.apiRequestParameterHelper = apiRequestParameterHelper;
     }
 
     @GET
@@ -91,6 +104,43 @@ public class VoucherApiResource {
                 .build();
         CommandProcessingResult result = this.commandsSourceWritePlatformService.logCommandSource(commandRequest);
         return this.toApiJsonSerializer.serialize(result);
+    }
+
+    @GET
+    @Consumes({ MediaType.APPLICATION_JSON })
+    @Produces({ MediaType.APPLICATION_JSON })
+    public String retrieveAllVoucherTransactions(@Context final UriInfo uriInfo, @PathParam("clientId") final Long clientId,
+            @QueryParam("pageNumber") final Integer pageNumber, @QueryParam("pageSize") final Integer pageSize,
+            @QueryParam("fromDate") @Parameter(description = "fromDate") final DateParam fromDateParam,
+            @QueryParam("toDate") @Parameter(description = "toDate") final DateParam toDateParam,
+            @QueryParam("dateFormat") @Parameter(description = "dateFormat") final String dateFormat,
+            @QueryParam("locale") @Parameter(description = "locale") final String locale) {
+
+        this.context.authenticatedUser().validateHasReadPermission(this.resourceNameForPermissions);
+        SearchParameters searchParameters = pageNumber != null && pageSize != null ? SearchParameters.forPagination(pageNumber, pageSize)
+                : null;
+
+        Date fromDate = null;
+        if (fromDateParam != null) {
+            fromDate = fromDateParam.getDate("fromDate", dateFormat, locale);
+        }
+        Date toDate = null;
+        if (toDateParam != null) {
+            toDate = toDateParam.getDate("toDate", dateFormat, locale);
+        }
+
+        if (searchParameters == null) {
+            searchParameters = SearchParameters.forDateRage(fromDate, toDate);
+        } else {
+            searchParameters.addFromDate(fromDate);
+            searchParameters.addToDate(toDate);
+        }
+
+        final Page<VoucherTransactionDTO> voucherTransactions = this.voucherReadService.retrieveAllVoucherTransactions(clientId,
+                searchParameters);
+        final ApiRequestJsonSerializationSettings settings = this.apiRequestParameterHelper.process(uriInfo.getQueryParameters());
+
+        return this.toApiJsonSerializer.serialize(settings, voucherTransactions);
     }
 
 }

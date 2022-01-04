@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.infrastructure.core.service;
 
+import java.util.Date;
 import org.apache.commons.lang3.StringUtils;
 
 public final class SearchParameters {
@@ -49,6 +50,8 @@ public final class SearchParameters {
     private final Long productId;
     private final Long categoryId;
     private final boolean isSelfUser;
+    private Date fromDate;
+    private Date toDate;
 
     public static SearchParameters from(final String sqlSearch, final Long officeId, final String externalId, final String name,
             final String hierarchy) {
@@ -568,5 +571,52 @@ public final class SearchParameters {
 
         return new SearchParameters(null, null, null, null, null, null, null, offset, maxLimitAllowed, orderBy, sortOrder, null, null, null,
                 null, null, false);
+    }
+
+    public static SearchParameters forDateRage(final Date fromDate, final Date toDate) {
+        return new SearchParameters(fromDate, toDate);
+    }
+
+    public void addFromDate(final Date date) {
+        this.fromDate = date;
+    }
+
+    public void addToDate(final Date date) {
+        this.toDate = date;
+    }
+
+    private SearchParameters(final Date fromDate, final Date toDate) {
+        this.sqlSearch = null;
+        this.officeId = null;
+        this.externalId = null;
+        this.name = null;
+        this.hierarchy = null;
+        this.firstname = null;
+        this.lastname = null;
+        this.offset = null;
+        this.limit = null;
+        this.orderBy = null;
+        this.sortOrder = null;
+        this.staffId = null;
+        this.accountNo = null;
+        this.loanId = null;
+        this.savingsId = null;
+        this.orphansOnly = null;
+        this.currencyCode = null;
+        this.provisioningEntryId = null;
+        this.productId = null;
+        this.categoryId = null;
+        this.isSelfUser = false;
+        this.status = null;
+        this.fromDate = fromDate;
+        this.toDate = toDate;
+    }
+
+    public Date getFromDate() {
+        return fromDate;
+    }
+
+    public Date getToDate() {
+        return toDate;
     }
 }
