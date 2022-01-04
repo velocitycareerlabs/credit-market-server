@@ -27,10 +27,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
+import org.apache.fineract.infrastructure.core.service.Page;
+import org.apache.fineract.infrastructure.core.service.PaginationHelper;
 import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.voucher.data.VoucherBalanceDTO;
 import org.apache.fineract.portfolio.voucher.data.VoucherDTO;
+import org.apache.fineract.portfolio.voucher.data.VoucherTransactionDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -41,11 +45,14 @@ public class VoucherReadServiceImpl implements VoucherReadService {
 
     private final JdbcTemplate jdbcTemplate;
     private final PlatformSecurityContext context;
+    private final PaginationHelper<VoucherTransactionDTO> paginationHelperForTransaction = new PaginationHelper<>();
+    private final VoucherTransactionsMapper transactionsMapper;
 
     @Autowired
     public VoucherReadServiceImpl(final PlatformSecurityContext context, final RoutingDataSource dataSource) {
         this.context = context;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.transactionsMapper = new VoucherTransactionsMapper();
     }
 
     @Override
@@ -107,6 +114,20 @@ public class VoucherReadServiceImpl implements VoucherReadService {
         }
     }
 
+    private static final class VoucherTransactionsMapper implements RowMapper<VoucherTransactionDTO> {
+
+        @Override
+        public VoucherTransactionDTO mapRow(final ResultSet rs, @SuppressWarnings("unused") final int rowNum) throws SQLException {
+            final Long id = rs.getLong("id");
+            final Long clientId = rs.getLong("client_id");
+            final Integer quantity = rs.getInt("quantity");
+            LocalDate updatedAt = JdbcSupport.getLocalDate(rs, "updatedAt");
+            LocalDate createdAt = JdbcSupport.getLocalDate(rs, "createdAt");
+
+            return new VoucherTransactionDTO(id, clientId, quantity, updatedAt, createdAt);
+        }
+    }
+
     private static final class VoucherBalanceMapper implements RowMapper<VoucherBalanceDTO> {
 
         @Override
@@ -115,4 +136,60 @@ public class VoucherReadServiceImpl implements VoucherReadService {
             return new VoucherBalanceDTO(balance);
         }
     }
+
+    @Override
+    public Page<VoucherTransactionDTO> retrieveAllVoucherTransactions(Long clientId, SearchParameters searchParameters) {
+        List<Object> paramList = new ArrayList<>();
+        paramList.add(clientId);
+        final StringBuilder sqlBuilder = new StringBuilder(200);
+        sqlBuilder.append("select SQL_CALC_FOUND_ROWS ");
+        sqlBuilder.append(" id, client_id, quantity, updatedAt, createdAt FROM Voucher_Transaction");
+        sqlBuilder.append(" where client_id = ? ");
+        if (searchParameters != null) {
+            if (searchParameters.getFromDate() != null || searchParameters.getToDate() != null) {
+                final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                String fromDateString = null;
+                String toDateString = null;
+                if (searchParameters.getFromDate() != null && searchParameters.getToDate() != null) {
+                    fromDateString = df.format(searchParameters.getFromDate());
+                    toDateString = df.format(searchParameters.getToDate());
+
+                    sqlBuilder.append(" and createdAt between ?");
+                    paramList.add(fromDateString);
+                    sqlBuilder.append(" and ?");
+                    paramList.add(toDateString);
+
+                } else if (searchParameters.getFromDate() != null) {
+                    fromDateString = df.format(searchParameters.getFromDate());
+                    sqlBuilder.append(" and createdAt >= ?");
+                    paramList.add(fromDateString);
+
+                } else if (searchParameters.getToDate() != null) {
+                    toDateString = df.format(searchParameters.getToDate());
+                    sqlBuilder.append(" and createdAt <= ?");
+                    paramList.add(toDateString);
+                }
+            }
+
+            sqlBuilder.append(" order by createdAt DESC, id DESC ");
+
+            if (searchParameters.getOffset() != null && searchParameters.getLimit() != null) {
+                int offset = searchParameters.getOffset() < 2 ? 0 : (searchParameters.getOffset() - 1) * searchParameters.getLimit();
+                if (searchParameters.isLimited()) {
+                    sqlBuilder.append(" limit ").append(searchParameters.getLimit());
+                    if (searchParameters.isOffset()) {
+                        sqlBuilder.append(" offset ").append(offset);
+                    }
+                }
+            }
+        } else {
+            sqlBuilder.append(" order by createdAt DESC, id DESC ");
+        }
+
+        final String sqlCountRows = "SELECT FOUND_ROWS()";
+        return this.paginationHelperForTransaction.fetchPage(this.jdbcTemplate, sqlCountRows, sqlBuilder.toString(), paramList.toArray(),
+                this.transactionsMapper);
+
+    }
+
 }
