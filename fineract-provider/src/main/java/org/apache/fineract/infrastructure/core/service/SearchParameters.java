@@ -52,6 +52,7 @@ public final class SearchParameters {
     private final boolean isSelfUser;
     private Date fromDate;
     private Date toDate;
+    private String description;
 
     public static SearchParameters from(final String sqlSearch, final Long officeId, final String externalId, final String name,
             final String hierarchy) {
@@ -618,5 +619,13 @@ public final class SearchParameters {
 
     public Date getToDate() {
         return toDate;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

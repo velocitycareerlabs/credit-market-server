@@ -1280,6 +1280,12 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
                 }
             }
 
+            if (searchParameters.getDescription() != null) {
+                paramList.add(searchParameters.getDescription());
+                paramList.add(searchParameters.getDescription());
+                sqlBuilder.append(" and nt.note LIKE ? or fromtran.description LIKE ?");
+            }
+
             sqlBuilder.append(" order by tr.transaction_date DESC, tr.created_date DESC, tr.id DESC ");
 
             if (searchParameters.getOffset() != null && searchParameters.getLimit() != null) {
@@ -1291,6 +1297,7 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
                     }
                 }
             }
+
         } else {
             sqlBuilder.append(" order by tr.transaction_date DESC, tr.created_date DESC, tr.id DESC ");
         }
