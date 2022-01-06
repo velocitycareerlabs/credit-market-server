@@ -54,7 +54,7 @@ import org.springframework.stereotype.Component;
 @Path("/vouchers/{clientId}")
 @Component
 @Scope("singleton")
-@Tag(name = "Vouchers", description = "This is used to both load and update vouvhers")
+@Tag(name = "Vouchers", description = "This is used to both load and update vouchers")
 public class VoucherApiResource {
 
     private final PlatformSecurityContext context;
@@ -141,6 +141,17 @@ public class VoucherApiResource {
         final ApiRequestJsonSerializationSettings settings = this.apiRequestParameterHelper.process(uriInfo.getQueryParameters());
 
         return this.toApiJsonSerializer.serialize(settings, voucherTransactions);
+    }
+
+    @POST
+    @Path("create")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    @Produces({ MediaType.APPLICATION_JSON })
+    public String createVoucher(@PathParam("clientId") @Parameter(description = "clientId") final Long clientId,
+            final String apiRequestBodyAsJson) {
+        final CommandWrapper commandRequest = new CommandWrapperBuilder().createVoucher(clientId).withJson(apiRequestBodyAsJson).build();
+        CommandProcessingResult result = this.commandsSourceWritePlatformService.logCommandSource(commandRequest);
+        return this.toApiJsonSerializer.serialize(result);
     }
 
 }
