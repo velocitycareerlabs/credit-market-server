@@ -27,6 +27,9 @@ public class VoucherConstants {
     public static final String monthDayFormatParamName = "monthDayFormat";
 
     public static final String submittedOnDateParamName = "submittedOnDate";
+    public static final String expiryDateParamName = "expiry";
+    public static final String couponBundleIdParamName = "couponBundleId";
+    public static final String symbolParamName = "symbol";
     public static final String quantityParamName = "quantity";
 
 }

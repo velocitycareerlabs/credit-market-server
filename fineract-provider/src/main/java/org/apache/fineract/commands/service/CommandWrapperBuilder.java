@@ -3349,4 +3349,13 @@ public class CommandWrapperBuilder {
         return this;
     }
 
+    public CommandWrapperBuilder createVoucher(final Long clientId) {
+        this.actionName = "CREATE";
+        this.entityName = "VOUCHER";
+        this.entityId = clientId;
+        this.clientId = clientId;
+        this.href = "/vouchers/" + clientId;
+        return this;
+    }
+
 }

@@ -120,4 +120,18 @@ public class Voucher extends AbstractPersistableCustom {
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
+
+    public Voucher() {}
+
+    public Voucher(Long clientId, String couponBundleId, String symbol, Integer quantity, Integer used, Date expiryDate, Date updatedAt,
+            Date createdAt) {
+        this.clientId = clientId;
+        this.couponBundleId = couponBundleId;
+        this.symbol = symbol;
+        this.quantity = quantity;
+        this.used = used;
+        this.expiryDate = expiryDate;
+        this.updatedAt = updatedAt;
+        this.createdAt = createdAt;
+    }
 }

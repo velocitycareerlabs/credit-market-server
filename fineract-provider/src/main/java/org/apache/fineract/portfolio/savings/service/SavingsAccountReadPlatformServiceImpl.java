@@ -791,9 +791,11 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
             sqlBuilder.append("fromtran.id as fromTransferId, fromtran.is_reversed as fromTransferReversed,");
             sqlBuilder.append("fromtran.transaction_date as fromTransferDate, fromtran.amount as fromTransferAmount,");
             sqlBuilder.append("fromtran.description as fromTransferDescription,");
+            sqlBuilder.append("fromtran.to_savings_transaction_id as toSavingsTransactionId,");
             sqlBuilder.append("totran.id as toTransferId, totran.is_reversed as toTransferReversed,");
             sqlBuilder.append("totran.transaction_date as toTransferDate, totran.amount as toTransferAmount,");
             sqlBuilder.append("totran.description as toTransferDescription,");
+            sqlBuilder.append("totran.from_savings_transaction_id as fromSavingsTransactionId,");
             sqlBuilder.append("sa.id as savingsId, sa.account_no as accountNo,");
             sqlBuilder.append("pd.payment_type_id as paymentType,pd.account_number as accountNumber,pd.check_number as checkNumber, ");
             sqlBuilder.append("pd.receipt_number as receiptNumber, pd.bank_number as bankNumber,pd.routing_code as routingCode, ");
@@ -869,17 +871,19 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
                 final BigDecimal fromTransferAmount = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "fromTransferAmount");
                 final boolean fromTransferReversed = rs.getBoolean("fromTransferReversed");
                 final String fromTransferDescription = rs.getString("fromTransferDescription");
+                final Long toSavingsTransactionId = JdbcSupport.getLong(rs, "toSavingsTransactionId");
 
                 transfer = AccountTransferData.transferBasicDetails(fromTransferId, currency, fromTransferAmount, fromTransferDate,
-                        fromTransferDescription, fromTransferReversed);
+                        fromTransferDescription, fromTransferReversed, null, toSavingsTransactionId);
             } else if (toTransferId != null) {
                 final LocalDate toTransferDate = JdbcSupport.getLocalDate(rs, "toTransferDate");
                 final BigDecimal toTransferAmount = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "toTransferAmount");
                 final boolean toTransferReversed = rs.getBoolean("toTransferReversed");
                 final String toTransferDescription = rs.getString("toTransferDescription");
+                final Long fromSavingsTransactionId = JdbcSupport.getLong(rs, "fromSavingsTransactionId");
 
                 transfer = AccountTransferData.transferBasicDetails(toTransferId, currency, toTransferAmount, toTransferDate,
-                        toTransferDescription, toTransferReversed);
+                        toTransferDescription, toTransferReversed, fromSavingsTransactionId, null);
             }
             final String submittedByUsername = rs.getString("submittedByUsername");
             final String note = rs.getString("transactionNote");
@@ -1249,6 +1253,7 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
     public Page<SavingsAccountTransactionData> retrieveAllSavingAccTransactions(Long accountId, SearchParameters searchParameters) {
         List<Object> paramList = new ArrayList<>();
         paramList.add(accountId);
+
         paramList.add(DepositAccountType.SAVINGS_DEPOSIT.getValue());
         final StringBuilder sqlBuilder = new StringBuilder(200);
         sqlBuilder.append("select SQL_CALC_FOUND_ROWS ");

@@ -23,6 +23,8 @@ import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 
 public interface VoucherWriteService {
 
+    CommandProcessingResult createVoucher(Long clientId, final JsonCommand command);
+
     CommandProcessingResult useVoucher(final Long clientId, final JsonCommand command);
 
 }
