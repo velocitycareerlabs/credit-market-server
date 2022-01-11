@@ -219,7 +219,8 @@ public class SavingsAccountTransactionsApiResource {
             @QueryParam("toDate") @Parameter(description = "toDate") final DateParam toDateParam,
             @QueryParam("dateFormat") @Parameter(description = "dateFormat") final String dateFormat,
             @QueryParam("locale") @Parameter(description = "locale") final String locale,
-            @QueryParam("description") @Parameter(description = "description") final String description) {
+            @QueryParam("description") @Parameter(description = "description") final String description,
+            @QueryParam("transfersOnly") @Parameter(description = "transfersOnly") final Boolean transfersOnly) {
 
         this.context.authenticatedUser().validateHasReadPermission(SavingsApiConstants.SAVINGS_ACCOUNT_RESOURCE_NAME);
         SearchParameters searchParameters = pageNumber != null && pageSize != null ? SearchParameters.forPagination(pageNumber, pageSize)
@@ -243,6 +244,10 @@ public class SavingsAccountTransactionsApiResource {
 
         if (description != null) {
             searchParameters.setDescription(description);
+        }
+
+        if (transfersOnly != null) {
+            searchParameters.setTransfersOnly(transfersOnly);
         }
 
         final Page<SavingsAccountTransactionData> savingsAccountTransactionData = this.savingsAccountReadPlatformService

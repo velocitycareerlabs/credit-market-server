@@ -53,6 +53,7 @@ public final class SearchParameters {
     private Date fromDate;
     private Date toDate;
     private String description;
+    private boolean transfersOnly = false;
 
     public static SearchParameters from(final String sqlSearch, final Long officeId, final String externalId, final String name,
             final String hierarchy) {
@@ -627,5 +628,13 @@ public final class SearchParameters {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public boolean isTransfersOnly() {
+        return transfersOnly;
+    }
+
+    public void setTransfersOnly(boolean transfersOnly) {
+        this.transfersOnly = transfersOnly;
     }
 }

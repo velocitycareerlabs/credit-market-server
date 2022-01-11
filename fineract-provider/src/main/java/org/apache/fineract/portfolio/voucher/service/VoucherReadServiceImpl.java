@@ -59,7 +59,7 @@ public class VoucherReadServiceImpl implements VoucherReadService {
     public VoucherBalanceDTO retrieveBalance(final Long clientId) {
         this.context.authenticatedUser();
         final VoucherReadServiceImpl.VoucherBalanceMapper rm = new VoucherReadServiceImpl.VoucherBalanceMapper();
-        final String sql = "SELECT sum(`quantity` - `used`) balance FROM Voucher where `expiry`  >= NOW() AND `quantity`>`used` AND `client_id` = ? group by `client_id`";
+        final String sql = "SELECT COALESCE((SELECT sum(`quantity` - `used`) balance FROM Voucher where `expiry`  >= NOW() AND `quantity`>`used` AND `client_id` = ? group by `client_id`), 0) balance";
         return this.jdbcTemplate.queryForObject(sql, rm, new Object[] { clientId });
     }
 
