@@ -52,17 +52,17 @@ VALUES
 
 -- adding product mappings
 INSERT IGNORE INTO `acc_product_mapping` (
-  `id`, `gl_account_id`, `product_id`,
+  `gl_account_id`, `product_id`,
   `product_type`, `payment_type`,
   `charge_id`, `financial_account_type`
 )
 VALUES
-  (10, 3, 1, 2, NULL, NULL, 1),
-  (11, 25, 1, 2, NULL, NULL, 11),
-  (12, 94, 1, 2, NULL, NULL, 4),
-  (13, 88, 1, 2, NULL, NULL, 5),
-  (14, 107, 1, 2, NULL, NULL, 12),
-  (15, 109, 1, 2, NULL, NULL, 3),
-  (16, 114, 1, 2, NULL, NULL, 13),
-  (17, 43, 1, 2, NULL, NULL, 2),
-  (18, 47, 1, 2, NULL, NULL, 10);
+  ('1', '1', '2', NULL, NULL, '1'),
+  ('2', '1', '2', NULL, NULL, '2');
+
+-- transfers activity account mappings
+INSERT IGNORE INTO `acc_gl_financial_activity_account`
+(`gl_account_id`,
+`financial_activity_type`)
+VALUES
+( '3', '200');
