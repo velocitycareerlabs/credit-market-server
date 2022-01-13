@@ -36,7 +36,6 @@ VALUES
   );
 
 -- Insert accounting entries for this transaction
-
 INSERT INTO `acc_gl_journal_entry` (
   `account_id`, `office_id`, `reversal_id`,
   `currency_code`, `transaction_id`,
@@ -54,7 +53,7 @@ INSERT INTO `acc_gl_journal_entry` (
 )
 VALUES
   (
-    '3', '1', NULL, 'CRD', 'S1', NULL,
+    '1', '1', NULL, 'CRD', 'S1', NULL,
     '1', NULL, '0', NULL, '0', now(),
     '2', '100000000000.000000', NULL,
     '2', '12', '1', '1', now(),
@@ -63,7 +62,7 @@ VALUES
     NULL
   ),
   (
-    '43', '1', NULL, 'CRD', 'S1',
+    '2', '1', NULL, 'CRD', 'S1',
     NULL, '1', NULL, '0', NULL, '0', now(),
     '1', '100000000000.000000', NULL,
     '2', '12', '1', '1', now(),
