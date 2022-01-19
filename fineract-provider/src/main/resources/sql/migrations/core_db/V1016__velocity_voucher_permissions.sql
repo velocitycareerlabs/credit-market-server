@@ -48,4 +48,3 @@ INSERT IGNORE INTO `m_role_permission` (`role_id`, `permission_id`)
 SELECT 15, id FROM m_permission where entity_name = 'Voucher';
 INSERT IGNORE INTO `m_role_permission` (`role_id`, `permission_id`)
 SELECT 15, id FROM m_permission where entity_name = 'Voucher_Transaction';
-
