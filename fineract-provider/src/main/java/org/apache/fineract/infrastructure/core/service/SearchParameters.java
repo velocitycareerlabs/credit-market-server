@@ -18,7 +18,9 @@
  */
 package org.apache.fineract.infrastructure.core.service;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
 public final class SearchParameters {
@@ -53,6 +55,7 @@ public final class SearchParameters {
     private Date fromDate;
     private Date toDate;
     private String description;
+    private List<String> descriptions;
     private boolean transfersOnly = false;
 
     public static SearchParameters from(final String sqlSearch, final Long officeId, final String externalId, final String name,
@@ -636,5 +639,13 @@ public final class SearchParameters {
 
     public void setTransfersOnly(boolean transfersOnly) {
         this.transfersOnly = transfersOnly;
+    }
+
+    public Collection<String> getDescriptions() {
+        return descriptions;
+    }
+
+    public void setDescriptions(List<String> descriptions) {
+        this.descriptions = descriptions;
     }
 }
