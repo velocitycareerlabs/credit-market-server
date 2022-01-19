@@ -1285,10 +1285,9 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
                 }
             }
 
-            if (searchParameters.getDescription() != null) {
-                paramList.add("%" + searchParameters.getDescription() + "%");
-                paramList.add("%" + searchParameters.getDescription() + "%");
-                sqlBuilder.append(" and nt.note LIKE ? or fromtran.description LIKE ?");
+            if (!org.apache.commons.collections4.CollectionUtils.isEmpty(searchParameters.getDescriptions())) {
+                sqlBuilder.append(" and nt.note IN(").append(String.join(", ", searchParameters.getDescriptions()))
+                        .append(") or fromtran.description IN(").append(String.join(", ", searchParameters.getDescriptions())).append(")");
             }
 
             if (searchParameters.isTransfersOnly()) {
