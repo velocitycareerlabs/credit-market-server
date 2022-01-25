@@ -133,8 +133,8 @@ public class TenantAwareAuth0Filter extends OncePerRequestFilter {
 
                     try {
                         userDetails = userDetailsService.loadUserByUsername(jwt.getSubject());
-                        // TODO: should we update the user?
-                        // auth0UserImportService.updateUser(jwt, userDetails);
+                        //update the user
+                        auth0UserImportService.updateUser(jwt, userDetails);
 
                         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(),
                                 auth0UserImportService.resolveAuthoritiesFromUserDetails(userDetails).getLeft());
@@ -155,7 +155,7 @@ public class TenantAwareAuth0Filter extends OncePerRequestFilter {
                     try {
                         userDetails = userDetailsService.loadUserByUsername(((OidcUser) auth0Authentication.getPrincipal()).getName());
                         // TODO: should we update the user?
-                        // auth0UserImportService.updateUser((OidcUser) auth0Authentication, userDetails);
+                        auth0UserImportService.updateUser((OidcUser) auth0Authentication, userDetails);
 
                         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(),
                                 auth0UserImportService.resolveAuthoritiesFromUserDetails(userDetails).getLeft());
