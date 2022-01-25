@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -39,6 +40,7 @@ import org.apache.fineract.useradministration.domain.Permission;
 import org.apache.fineract.useradministration.domain.Role;
 import org.apache.fineract.useradministration.domain.RoleRepository;
 import org.apache.fineract.useradministration.domain.UserDomainService;
+import org.apache.fineract.useradministration.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
@@ -66,10 +68,10 @@ public class Auth0UserImportService {
     @Autowired
     private AppUserRepository appUserRepository;
 
-    @Value("${auth0.audience}")
+    @Value("${auth0.audience }")
     private String audience;
 
-    @Value("${auth0.domain}")
+    @Value("${auth0.domain:vnf-dev.us.auth0.com}")
     private String domain;
 
     public AppUser importPrincipal(Jwt jwt) {
@@ -160,6 +162,46 @@ public class Auth0UserImportService {
         return appUser;
     }
 
+    public AppUser updateUser(Jwt jwt, UserDetails userDetails) {
+        final Set<GrantedAuthority> authorities = new HashSet<>();
+
+        authorities.addAll(Arrays.asList(jwt.getClaimAsString("scope").split(" ")).stream().map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList()));
+
+        return updateUserAuthorities(authorities, userDetails);
+    }
+
+    public AppUser updateUser(OidcUser oidcUser, UserDetails userDetails) {
+        final Set<GrantedAuthority> authorities = new HashSet<>();
+
+        authorities.addAll(oidcUser.getAuthorities());
+
+        return updateUserAuthorities(authorities, userDetails);
+    }
+
+    private AppUser updateUserAuthorities(Set<GrantedAuthority> authorities, UserDetails userDetails) {
+        // Now pass granted authority names as roles and resolve these with pre-existing fineract
+        // roles in a resolver class
+        Set<Role> allRoles = resolveRolesFromAuthorities(authorities);
+        // keycloak authorities
+        final Pair<Collection<GrantedAuthority>, Set<String>> keycloakAuthorities = populateGrantedAuthorities(allRoles);
+        // fineract authorities
+        final Pair<Collection<GrantedAuthority>, Set<String>> mifosAuthorities = resolveAuthoritiesFromUserDetails(userDetails);
+
+        AppUser appUser = (AppUser) userDetails;
+        AppUser userToUpdate = null;
+        if (!mifosAuthorities.getRight().containsAll(keycloakAuthorities.getRight())
+                || !keycloakAuthorities.getRight().containsAll(mifosAuthorities.getRight())) {
+            userToUpdate = this.appUserRepository.findById(appUser.getId()).orElseThrow(() -> new UserNotFoundException(appUser.getId()));
+            userToUpdate.updateRoles(allRoles);
+            appUserRepository.saveAndFlush(userToUpdate);
+        } else {
+            userToUpdate = appUser;
+        }
+
+        return userToUpdate;
+    }
+
     public Pair<Collection<GrantedAuthority>, Set<String>> resolveAuthoritiesFromUserDetails(UserDetails userDetails) {
         final Collection<GrantedAuthority> authorities = new ArrayList<>();
         final Set<String> permissionNames = new HashSet<>();
@@ -175,5 +217,19 @@ public class Auth0UserImportService {
     private Set<Role> resolveRolesFromAuthorities(Collection<? extends GrantedAuthority> role) {
         return role.stream().map(ga -> roleRepository.getRoleByName(ga.getAuthority())).filter(Objects::nonNull)
                 .collect(Collectors.toSet());
+    }
+
+    private Pair<Collection<GrantedAuthority>, Set<String>> populateGrantedAuthorities(Set<Role> roles) {
+        final List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+        final Set<String> permissionNames = new HashSet<>();
+        for (final Role role : roles) {
+            final Collection<Permission> permissions = role.getPermissions();
+            for (final Permission permission : permissions) {
+                grantedAuthorities.add(new SimpleGrantedAuthority(permission.getCode()));
+                permissionNames.add(permission.getCode());
+            }
+        }
+
+        return Pair.of(grantedAuthorities, permissionNames);
     }
 }
