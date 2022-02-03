@@ -20,11 +20,9 @@ package org.apache.fineract.portfolio.account.data;
 
 import static org.apache.fineract.portfolio.account.AccountDetailConstants.fromAccountIdParamName;
 import static org.apache.fineract.portfolio.account.AccountDetailConstants.fromAccountTypeParamName;
-import static org.apache.fineract.portfolio.account.AccountDetailConstants.fromClientIdParamName;
 import static org.apache.fineract.portfolio.account.AccountDetailConstants.fromOfficeIdParamName;
 import static org.apache.fineract.portfolio.account.AccountDetailConstants.toAccountIdParamName;
 import static org.apache.fineract.portfolio.account.AccountDetailConstants.toAccountTypeParamName;
-import static org.apache.fineract.portfolio.account.AccountDetailConstants.toClientIdParamName;
 import static org.apache.fineract.portfolio.account.AccountDetailConstants.toOfficeIdParamName;
 
 import com.google.gson.JsonElement;
@@ -51,9 +49,6 @@ public class AccountTransfersDetailDataValidator {
         final Long fromOfficeId = this.fromApiJsonHelper.extractLongNamed(fromOfficeIdParamName, element);
         baseDataValidator.reset().parameter(fromOfficeIdParamName).value(fromOfficeId).notNull().integerGreaterThanZero();
 
-        final Long fromClientId = this.fromApiJsonHelper.extractLongNamed(fromClientIdParamName, element);
-        baseDataValidator.reset().parameter(fromClientIdParamName).value(fromClientId).notNull().integerGreaterThanZero();
-
         final Long fromAccountId = this.fromApiJsonHelper.extractLongNamed(fromAccountIdParamName, element);
         baseDataValidator.reset().parameter(fromAccountIdParamName).value(fromAccountId).notNull().integerGreaterThanZero();
 
@@ -63,9 +58,6 @@ public class AccountTransfersDetailDataValidator {
 
         final Long toOfficeId = this.fromApiJsonHelper.extractLongNamed(toOfficeIdParamName, element);
         baseDataValidator.reset().parameter(toOfficeIdParamName).value(toOfficeId).notNull().integerGreaterThanZero();
-
-        final Long toClientId = this.fromApiJsonHelper.extractLongNamed(toClientIdParamName, element);
-        baseDataValidator.reset().parameter(toClientIdParamName).value(toClientId).notNull().integerGreaterThanZero();
 
         final Long toAccountId = this.fromApiJsonHelper.extractLongNamed(toAccountIdParamName, element);
         baseDataValidator.reset().parameter(toAccountIdParamName).value(toAccountId).notNull().integerGreaterThanZero();

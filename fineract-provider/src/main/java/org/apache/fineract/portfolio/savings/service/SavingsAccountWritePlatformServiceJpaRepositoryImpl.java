@@ -1597,7 +1597,16 @@ public class SavingsAccountWritePlatformServiceJpaRepositoryImpl implements Savi
         SavingsAccountTransaction transacton = this.savingsAccountTransactionDataValidator.validateHoldAndAssembleForm(command.json(),
                 account, submittedBy);
 
+        account.addTransaction(transacton);
+
+        // update existing transactions so derived balance fields are
+        // correct.
+        account.recalculateDailyBalances(Money.zero(account.getCurrency()), LocalDate.now(DateUtils.getDateTimeZoneOfTenant()));
+
         this.savingsAccountTransactionRepository.save(transacton);
+
+        account.updateSavingsAccountSummary();
+
         this.savingAccountRepositoryWrapper.saveAndFlush(account);
 
         return new CommandProcessingResultBuilder().withEntityId(transacton.getId()).withOfficeId(account.officeId())

@@ -65,6 +65,9 @@ public final class SavingsAccountSummary {
     @Column(name = "account_balance_derived", scale = 6, precision = 19)
     private BigDecimal accountBalance = BigDecimal.ZERO;
 
+    @Column(name = "total_savings_amount_on_hold", scale = 6, precision = 19)
+    private BigDecimal totalSavingsAmountOnHold = BigDecimal.ZERO;
+
     // TODO: AA do we need this data to be persisted.
     @Transient
     private BigDecimal totalFeeChargesWaived = BigDecimal.ZERO;
@@ -100,6 +103,7 @@ public final class SavingsAccountSummary {
         this.totalPenaltyChargesWaived = wrapper.calculateTotalPenaltyChargeWaived(currency, transactions);
         this.totalOverdraftInterestDerived = wrapper.calculateTotalOverdraftInterest(currency, transactions);
         this.totalWithholdTax = wrapper.calculateTotalWithholdTaxWithdrawal(currency, transactions);
+        this.totalSavingsAmountOnHold = wrapper.calculateTotalWithheldAmount(currency, transactions);
 
         this.accountBalance = Money.of(currency, this.totalDeposits).plus(this.totalInterestPosted).minus(this.totalWithdrawals)
                 .minus(this.totalWithdrawalFees).minus(this.totalAnnualFees).minus(this.totalFeeCharge).minus(this.totalPenaltyCharge)
