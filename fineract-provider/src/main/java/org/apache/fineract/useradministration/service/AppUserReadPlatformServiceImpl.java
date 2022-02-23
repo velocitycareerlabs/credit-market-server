@@ -24,8 +24,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.security.data.AuthenticatedUserData;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.organisation.office.data.OfficeData;
 import org.apache.fineract.organisation.office.service.OfficeReadPlatformService;
@@ -44,6 +46,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -224,5 +229,37 @@ public class AppUserReadPlatformServiceImpl implements AppUserReadPlatformServic
             return false;
         }
         return true;
+    }
+
+    @Override
+    public AuthenticatedUserData retrieveUserDetails() {
+        final AppUser user = this.context.authenticatedUser();
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        final Collection<String> permissions = new ArrayList<>();
+        final Collection<GrantedAuthority> authorities = new ArrayList<>(authentication.getAuthorities());
+
+        for (final GrantedAuthority grantedAuthority : authorities) {
+            permissions.add(grantedAuthority.getAuthority());
+        }
+
+        final Collection<RoleData> roles = new ArrayList<>();
+        final Set<Role> userRoles = user.getRoles();
+        for (final Role role : userRoles) {
+            roles.add(role.toData());
+        }
+
+        final Long officeId = user.getOffice().getId();
+        final String officeName = user.getOffice().getName();
+
+        final Long staffId = user.getStaffId();
+        final String staffDisplayName = user.getStaffDisplayName();
+
+        final EnumOptionData organisationalRole = user.organisationalRoleData();
+
+        boolean isTwoFactorRequired = false;
+
+        return new AuthenticatedUserData(user.getUsername(), officeId, officeName, staffId, staffDisplayName, organisationalRole, roles,
+                permissions, user.getId(), null, isTwoFactorRequired, null);
     }
 }
