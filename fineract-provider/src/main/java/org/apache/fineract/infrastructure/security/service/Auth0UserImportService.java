@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.fineract.infrastructure.security.exception.NoAuthorizationException;
 import org.apache.fineract.organisation.office.domain.Office;
 import org.apache.fineract.organisation.office.domain.OfficeRepositoryWrapper;
 import org.apache.fineract.organisation.staff.domain.Staff;
@@ -165,14 +166,21 @@ public class Auth0UserImportService {
     public AppUser updateUser(Jwt jwt, UserDetails userDetails) {
         final Set<GrantedAuthority> authorities = new HashSet<>();
 
-        authorities.addAll(Arrays.asList(jwt.getClaimAsString("scope").split(" ")).stream().map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList()));
+        List<String> scopes = Arrays.asList(jwt.getClaimAsString("scope").split(" "));
+        if (CollectionUtils.isEmpty(scopes)) {
+            throw new NoAuthorizationException("No scopes exist in submitted token");
+        }
+        authorities.addAll(scopes.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
 
         return updateUserAuthorities(authorities, userDetails);
     }
 
     public AppUser updateUser(OidcUser oidcUser, UserDetails userDetails) {
         final Set<GrantedAuthority> authorities = new HashSet<>();
+
+        if (CollectionUtils.isEmpty(oidcUser.getAuthorities())) {
+            throw new NoAuthorizationException("No authorities exist in submitted token");
+        }
 
         authorities.addAll(oidcUser.getAuthorities());
 
@@ -183,6 +191,11 @@ public class Auth0UserImportService {
         // Now pass granted authority names as roles and resolve these with pre-existing fineract
         // roles in a resolver class
         Set<Role> allRoles = resolveRolesFromAuthorities(authorities);
+
+        if (CollectionUtils.isEmpty(allRoles)) {
+            throw new NoAuthorizationException("No fineract recognisable scopes exist with current user");
+        }
+
         // keycloak authorities
         final Pair<Collection<GrantedAuthority>, Set<String>> keycloakAuthorities = populateGrantedAuthorities(allRoles);
         // fineract authorities
