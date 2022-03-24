@@ -27,8 +27,8 @@ dependencies {
     //
 
     compile(
-        fileTree(dir: 'thirdparty', include: ['*.jar'])
-    )
+            fileTree(dir: 'thirdparty', include: ['*.jar'])
+            )
 
     implementation(
             //'ch.vorburger.mariaDB4j:mariaDB4j:2.4.0',

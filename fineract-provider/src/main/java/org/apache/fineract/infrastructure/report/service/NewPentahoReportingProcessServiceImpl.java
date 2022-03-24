@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
+import javax.sql.DataSource;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import org.apache.commons.lang3.StringUtils;
@@ -45,7 +46,6 @@ import org.pentaho.reporting.libraries.resourceloader.ResourceException;
 import org.pentaho.reporting.libraries.resourceloader.ResourceManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 //@Service
@@ -56,12 +56,13 @@ public class NewPentahoReportingProcessServiceImpl implements ReportingProcessSe
     public static final String MIFOS_BASE_DIR = System.getProperty("user.home") + File.separator + ".mifosx";
 
     private final PlatformSecurityContext context;
-    //private final DataSource tenantDataSource;
+    // private final DataSource tenantDataSource;
 
-    //@Autowired
-    public NewPentahoReportingProcessServiceImpl(final PlatformSecurityContext context, final @Qualifier("hikariTenantDataSource") DataSource tenantDataSource) {
+    // @Autowired
+    public NewPentahoReportingProcessServiceImpl(final PlatformSecurityContext context,
+            final @Qualifier("hikariTenantDataSource") DataSource tenantDataSource) {
         ClassicEngineBoot.getInstance().start();
-        //this.tenantDataSource = tenantDataSource;
+        // this.tenantDataSource = tenantDataSource;
         this.context = context;
     }
 
@@ -76,7 +77,8 @@ public class NewPentahoReportingProcessServiceImpl implements ReportingProcessSe
             outputType = outputTypeParam;
         }
 
-        if ((!outputType.equalsIgnoreCase("HTML") && !outputType.equalsIgnoreCase("PDF") && !outputType.equalsIgnoreCase("XLS") && !outputType.equalsIgnoreCase("XLSX") && !outputType.equalsIgnoreCase("CSV"))) {
+        if ((!outputType.equalsIgnoreCase("HTML") && !outputType.equalsIgnoreCase("PDF") && !outputType.equalsIgnoreCase("XLS")
+                && !outputType.equalsIgnoreCase("XLSX") && !outputType.equalsIgnoreCase("CSV"))) {
             throw new PlatformDataIntegrityException("error.msg.invalid.outputType", "No matching Output Type: " + outputType);
         }
 
@@ -144,7 +146,8 @@ public class NewPentahoReportingProcessServiceImpl implements ReportingProcessSe
             // currently assuming they come in ok... and if not an error
             for (final ParameterDefinitionEntry paramDefEntry : paramsDefinition.getParameterDefinitions()) {
                 final var paramName = paramDefEntry.getName();
-                if ((!paramName.equals("tenantUrl") && (!paramName.equals("userhierarchy") && !paramName.equals("username") && (!paramName.equals("password") && !paramName.equals("userid"))))) {
+                if ((!paramName.equals("tenantUrl") && (!paramName.equals("userhierarchy") && !paramName.equals("username")
+                        && (!paramName.equals("password") && !paramName.equals("userid"))))) {
 
                     var outPutInfo2 = "paramName:" + paramName;
                     logger.info("paramName: {}", outPutInfo2);
@@ -178,12 +181,14 @@ public class NewPentahoReportingProcessServiceImpl implements ReportingProcessSe
             final var tenantConnection = tenant.getConnection();
 
             // Hitesh - changes
-            /*String protocol = toProtocol(this.tenantDataSource);
-            var tenantUrl = toJdbcUrl(protocol ,tenantConnection.getSchemaServer(), tenantConnection.getSchemaServerPort(),
-                    tenantConnection.getSchemaName(), tenantConnection.getSchemaConnectionParameters());*/
+            /*
+             * String protocol = toProtocol(this.tenantDataSource); var tenantUrl = toJdbcUrl(protocol
+             * ,tenantConnection.getSchemaServer(), tenantConnection.getSchemaServerPort(),
+             * tenantConnection.getSchemaName(), tenantConnection.getSchemaConnectionParameters());
+             */
 
             var tenantUrl = "jdbc:mysql://" + tenantConnection.getSchemaServer() + ":" + tenantConnection.getSchemaServerPort() + "/"
-                        + tenantConnection.getSchemaName() + "?useSSL=false";
+                    + tenantConnection.getSchemaName() + "?useSSL=false";
 
             ///
 
