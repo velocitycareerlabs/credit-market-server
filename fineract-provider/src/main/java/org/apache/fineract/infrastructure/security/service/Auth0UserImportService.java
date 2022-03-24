@@ -69,10 +69,10 @@ public class Auth0UserImportService {
     @Autowired
     private AppUserRepository appUserRepository;
 
-    @Value("${auth0.audience}")
+    @Value("${auth0.audience:https://fineract.velocitycareerlabs.io}")
     private String audience;
 
-    @Value("${auth0.domain}")
+    @Value("${auth0.domain:https://vnf-dev.us.auth0.com}")
     private String domain;
 
     public AppUser importPrincipal(Jwt jwt) {

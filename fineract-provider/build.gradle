@@ -246,7 +246,9 @@ task setBlankPassword {
 
 bootRun {
     jvmArgs = [
-        "-Dspring.output.ansi.enabled=ALWAYS"
+        "-Dspring.output.ansi.enabled=ALWAYS",
+        "-Dspring.profiles.active=auth0",
+        "-Dspring.security.oauth2.resourceserver.jwt.issuer-uri=https://vnf-dev.us.auth0.com/"
     ]
 }
 
