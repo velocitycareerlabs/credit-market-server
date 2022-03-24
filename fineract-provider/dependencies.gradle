@@ -25,6 +25,11 @@ dependencies {
 
     // implementation dependencies are directly used (compiled against) in src/main (and src/test)
     //
+
+    compile(
+        fileTree(dir: 'thirdparty', include: ['*.jar'])
+    )
+
     implementation(
             //'ch.vorburger.mariaDB4j:mariaDB4j:2.4.0',
 
