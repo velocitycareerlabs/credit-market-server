@@ -248,7 +248,7 @@ public final class ImportHandlerUtils {
         style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
         Sheet cache = workbook.createSheet(color.toString());
-        //workbook.setSheetVisibility(workbook.getSheetIndex(cache), SheetVisibility.VERY_HIDDEN);
+        // workbook.setSheetVisibility(workbook.getSheetIndex(cache), SheetVisibility.VERY_HIDDEN);
         Row row = cache.createRow(cellReference.getRow());
         Cell cell = row.createCell(cellReference.getCol());
         cell.setCellStyle(style);
@@ -300,7 +300,8 @@ public final class ImportHandlerUtils {
             for (Row row : sheet) {
                 for (Cell cell : row) {
                     if (name != null) {
-                        if (CellType.forInt(cell.getCellType()) == CellType.STRING && cell.getRichStringCellValue().getString().trim().equals(name)) {
+                        if (CellType.forInt(cell.getCellType()) == CellType.STRING
+                                && cell.getRichStringCellValue().getString().trim().equals(name)) {
                             if (sheetName.equals(TemplatePopulateImportConstants.OFFICE_SHEET_NAME)
                                     || sheetName.equals(TemplatePopulateImportConstants.GL_ACCOUNTS_SHEET_NAME)
                                     || sheetName.equals(TemplatePopulateImportConstants.EXTRAS_SHEET_NAME)
@@ -330,7 +331,8 @@ public final class ImportHandlerUtils {
                 for (int i = 0; i < 2; i++) {
                     if (name != null) {
                         Cell cell = row.getCell(i);
-                        if (CellType.forInt(cell.getCellType()) == CellType.STRING && cell.getRichStringCellValue().getString().trim().equals(name)) {
+                        if (CellType.forInt(cell.getCellType()) == CellType.STRING
+                                && cell.getRichStringCellValue().getString().trim().equals(name)) {
                             return ((Double) row.getCell(cell.getColumnIndex() - 1).getNumericCellValue()).longValue();
                         }
                     } else {
@@ -348,7 +350,8 @@ public final class ImportHandlerUtils {
             for (Row row : sheet) {
                 for (Cell cell : row) {
                     if (name != null) {
-                        if (CellType.forInt(cell.getCellType()) == CellType.STRING && cell.getRichStringCellValue().getString().trim().equals(name)) {
+                        if (CellType.forInt(cell.getCellType()) == CellType.STRING
+                                && cell.getRichStringCellValue().getString().trim().equals(name)) {
                             return row.getCell(cell.getColumnIndex() - 1).getStringCellValue().toString();
 
                         }
