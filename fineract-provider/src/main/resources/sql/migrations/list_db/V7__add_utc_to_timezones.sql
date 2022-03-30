@@ -17,7 +17,7 @@
 -- under the License.
 --
 
-INSERT INTO `timezones` VALUES (416,'UTC','UTC','');
+INSERT INTO `timezones` VALUES (416,'UT','UTC','');
 
 -- update timezone
 UPDATE `tenants` SET `timezone_id` = 'UTC', `country_id` = 416  WHERE (`id` = '1');
