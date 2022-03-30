@@ -244,6 +244,18 @@ task setBlankPassword {
     }
 }
 
+task deployPentahoReports() {
+    def pentahoReportDir = System.properties['user.home'] + System.properties['file.separator'] + '.mifosx' + System.properties['file.separator'] + 'pentahoReports'
+    copy {
+        from "src/main/pentahoReports"
+        into pentahoReportDir
+    }
+
+    doLast {
+        println ':deployPentahoReports - moving pentaho reports under: ' + pentahoReportDir
+    }
+}
+
 bootRun {
     jvmArgs = [
         "-Dspring.output.ansi.enabled=ALWAYS"
@@ -259,9 +271,11 @@ bootJar {
     manifest {
         attributes 'Main-Class': 'org.springframework.boot.loader.PropertiesLauncher'
     }
+    dependsOn deployPentahoReports
 }
 
 bootWar {
+    it.dependsOn deployPentahoReports
     enabled = false
 }
 

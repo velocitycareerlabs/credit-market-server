@@ -173,6 +173,23 @@ allprojects  {
             dependency "com.google.code.findbugs:jsr305:3.0.2"
             dependency "commons-codec:commons-codec:1.15"
 
+            //Pentaho
+            dependency 'org.pentaho.reporting.engine:classic-core:9.1.0.0-SNAPSHOT'
+            dependency 'org.pentaho.reporting.engine:classic-extensions:9.1.0.0-SNAPSHOT'
+            dependency 'org.pentaho.reporting.engine:classic-extensions-scripting:9.1.0.0-SNAPSHOT'
+            dependency 'org.pentaho.reporting.engine:wizard-core:9.1.0.0-SNAPSHOT'
+            dependency 'org.pentaho.reporting.designer:wizard-xul:9.1.0.0-SNAPSHOT'
+            dependency 'org.pentaho.reporting.library:libbase:9.1.0.0-SNAPSHOT'
+            dependency 'org.pentaho.reporting.library:libdocbundle:9.1.0.0-SNAPSHOT'
+            dependency 'org.pentaho.reporting.library:libfonts:9.1.0.0-SNAPSHOT'
+            dependency 'org.pentaho.reporting.library:libformat:9.1.0.0-SNAPSHOT'
+            dependency 'org.pentaho.reporting.library:libformula:9.1.0.0-SNAPSHOT'
+            dependency 'org.pentaho.reporting.library:libloader:9.1.0.0-SNAPSHOT'
+            dependency 'org.pentaho.reporting.library:librepository:9.1.0.0-SNAPSHOT'
+            dependency 'org.pentaho.reporting.library:libserializer:9.1.0.0-SNAPSHOT'
+            dependency 'org.pentaho.reporting.library:libsparkline:9.1.0.0-SNAPSHOT'
+            dependency 'org.pentaho.reporting.library:libxml:9.1.0.0-SNAPSHOT'
+
             dependency ('org.flywaydb:flyway-core:7.0.0') {
                 // https://issues.apache.org/jira/browse/FINERACT-1172
                 // https://github.com/apache/fineract/pull/1355
@@ -348,6 +365,14 @@ allprojects  {
             // Git build info
             "**/git.properties",
             ".mailmap",
+            // Pentaho reports
+            '**/*.prpt',
+            '**/*.properties',
+            '**/*.PROPERTIES',
+            //Pentaho Reports
+            "**/pentahoReports/**",
+            //ignoring jar files
+            "**/thirdparty/**"
         ]
     }
 }
