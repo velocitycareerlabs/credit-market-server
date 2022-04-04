@@ -65,6 +65,7 @@ services:
       - "java"
       - "-agentlib:jdwp=transport=dt_socket,server=y,address=*:8000,suspend=n"
       - "-Dloader.path=/app/libs/"
+      - "-Duser.timezone=UTC"
       - "-jar"
       - "/app/fineract-provider.jar"
 
