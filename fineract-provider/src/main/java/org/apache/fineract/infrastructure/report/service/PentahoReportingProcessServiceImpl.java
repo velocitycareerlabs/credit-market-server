@@ -28,6 +28,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.ApiParameterHelper;
+import org.apache.fineract.infrastructure.core.boot.JDBCDriverConfig;
 import org.apache.fineract.infrastructure.core.domain.FineractPlatformTenant;
 import org.apache.fineract.infrastructure.core.domain.FineractPlatformTenantConnection;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
@@ -78,6 +79,9 @@ public class PentahoReportingProcessServiceImpl implements ReportingProcessServi
 
     @Autowired
     private Environment env;
+
+    @Autowired
+    private JDBCDriverConfig driverConfig;
 
     @Autowired
     public PentahoReportingProcessServiceImpl(final PlatformSecurityContext context,
@@ -210,8 +214,10 @@ public class PentahoReportingProcessServiceImpl implements ReportingProcessServi
             final FineractPlatformTenant tenant = ThreadLocalContextUtil.getTenant();
             final FineractPlatformTenantConnection tenantConnection = tenant.getConnection();
 
-            String tenantUrl = "jdbc:mysql:thin://" + tenantConnection.getSchemaServer() + ":" + tenantConnection.getSchemaServerPort()
-                    + "/" + tenantConnection.getSchemaName();
+            // setting tenant url using properties instead of hard code values
+            String tenantUrl = this.driverConfig.constructProtocol(tenantConnection.getSchemaServer(),
+                    tenantConnection.getSchemaServerPort(), tenantConnection.getSchemaName(),
+                    tenantConnection.getSchemaConnectionParameters());
 
             rptParamValues.put("username", tenantConnection.getSchemaUsername());
             rptParamValues.put("password", tenantConnection.getSchemaPassword());
