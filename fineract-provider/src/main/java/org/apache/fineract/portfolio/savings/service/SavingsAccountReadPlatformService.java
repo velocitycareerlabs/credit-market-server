@@ -20,6 +20,7 @@ package org.apache.fineract.portfolio.savings.service;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
@@ -43,7 +44,8 @@ public interface SavingsAccountReadPlatformService {
 
     SavingsAccountTransactionData retrieveDepositTransactionTemplate(Long savingsId, DepositAccountType depositAccountType);
 
-    Collection<SavingsAccountTransactionData> retrieveAllTransactions(Long savingsId, DepositAccountType depositAccountType);
+    Collection<SavingsAccountTransactionData> retrieveAllTransactions(Long savingsId, DepositAccountType depositAccountType, Date fromDate,
+            Date toDate, String trxnId, String trxnType, String trxnAmount);
 
     // Collection<SavingsAccountAnnualFeeData>
     // retrieveAccountsWithAnnualFeeDue();
