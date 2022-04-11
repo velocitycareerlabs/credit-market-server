@@ -789,14 +789,14 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
             sqlBuilder.append(" and tr.amount = " + trxnAmount);
         }
 
-        //query to searc desc or notes
+        // query to searc desc or notes
         if (StringUtils.isNotBlank(notesOrdesc)) {
             sqlBuilder.append(" and ( ( nt.note like ? ) or ");
             sqlBuilder.append(" ( fromtran.description like  ? )  or ");
             sqlBuilder.append(" ( totran.description like ? ) ) ");
-            paramList.add("%"+notesOrdesc+"%");
-            paramList.add("%"+notesOrdesc+"%");
-            paramList.add("%"+notesOrdesc+"%");
+            paramList.add("%" + notesOrdesc + "%");
+            paramList.add("%" + notesOrdesc + "%");
+            paramList.add("%" + notesOrdesc + "%");
         }
 
         sqlBuilder.append(" order by tr.transaction_date DESC, tr.created_date DESC, tr.id DESC");

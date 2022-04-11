@@ -206,9 +206,9 @@ public class SavingsAccountsApiResource {
             @DefaultValue("false") @QueryParam("staffInSelectedOfficeOnly") @Parameter(description = "staffInSelectedOfficeOnly") final boolean staffInSelectedOfficeOnly,
             @DefaultValue("all") @QueryParam("chargeStatus") @Parameter(description = "chargeStatus") final String chargeStatus,
             @QueryParam("fromDate") final DateParam fromDateParam, @QueryParam("toDate") final DateParam toDateParam,
-            @QueryParam("trxnId") final String trxnId, @QueryParam("notesOrdesc") final String notesOrdesc, @QueryParam("trxnType") final String trxnType,
-            @QueryParam("trxnAmount") final String trxnAmount, @QueryParam("locale") final String locale,
-            @QueryParam("dateFormat") final String dateFormat, @Context final UriInfo uriInfo) {
+            @QueryParam("trxnId") final String trxnId, @QueryParam("notesOrdesc") final String notesOrdesc,
+            @QueryParam("trxnType") final String trxnType, @QueryParam("trxnAmount") final String trxnAmount,
+            @QueryParam("locale") final String locale, @QueryParam("dateFormat") final String dateFormat, @Context final UriInfo uriInfo) {
 
         this.context.authenticatedUser().validateHasReadPermission(SavingsApiConstants.SAVINGS_ACCOUNT_RESOURCE_NAME);
 
