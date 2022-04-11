@@ -206,7 +206,7 @@ public class SavingsAccountsApiResource {
             @DefaultValue("false") @QueryParam("staffInSelectedOfficeOnly") @Parameter(description = "staffInSelectedOfficeOnly") final boolean staffInSelectedOfficeOnly,
             @DefaultValue("all") @QueryParam("chargeStatus") @Parameter(description = "chargeStatus") final String chargeStatus,
             @QueryParam("fromDate") final DateParam fromDateParam, @QueryParam("toDate") final DateParam toDateParam,
-            @QueryParam("trxnId") final String trxnId, @QueryParam("trxnType") final String trxnType,
+            @QueryParam("trxnId") final String trxnId, @QueryParam("notesOrdesc") final String notesOrdesc, @QueryParam("trxnType") final String trxnType,
             @QueryParam("trxnAmount") final String trxnAmount, @QueryParam("locale") final String locale,
             @QueryParam("dateFormat") final String dateFormat, @Context final UriInfo uriInfo) {
 
@@ -229,7 +229,7 @@ public class SavingsAccountsApiResource {
 
         final Set<String> mandatoryResponseParameters = new HashSet<>();
         final SavingsAccountData savingsAccountTemplate = populateTemplateAndAssociations(accountId, savingsAccount,
-                staffInSelectedOfficeOnly, chargeStatus, uriInfo, mandatoryResponseParameters, fromDate, toDate, trxnId, trxnType,
+                staffInSelectedOfficeOnly, chargeStatus, uriInfo, mandatoryResponseParameters, fromDate, toDate, notesOrdesc, trxnType,
                 trxnAmount);
 
         final ApiRequestJsonSerializationSettings settings = this.apiRequestParameterHelper.process(uriInfo.getQueryParameters(),
@@ -240,7 +240,7 @@ public class SavingsAccountsApiResource {
 
     private SavingsAccountData populateTemplateAndAssociations(final Long accountId, final SavingsAccountData savingsAccount,
             final boolean staffInSelectedOfficeOnly, final String chargeStatus, final UriInfo uriInfo,
-            final Set<String> mandatoryResponseParameters, Date startDate, Date endDate, String trxnId, String trxnType,
+            final Set<String> mandatoryResponseParameters, Date startDate, Date endDate, String notesOrdesc, String trxnType,
             String trxnAmount) {
 
         Collection<SavingsAccountTransactionData> transactions = null;
@@ -256,7 +256,7 @@ public class SavingsAccountsApiResource {
             if (associationParameters.contains(SavingsApiConstants.transactions)) {
                 mandatoryResponseParameters.add(SavingsApiConstants.transactions);
                 final Collection<SavingsAccountTransactionData> currentTransactions = this.savingsAccountReadPlatformService
-                        .retrieveAllTransactions(accountId, DepositAccountType.SAVINGS_DEPOSIT, startDate, endDate, trxnId, trxnType,
+                        .retrieveAllTransactions(accountId, DepositAccountType.SAVINGS_DEPOSIT, startDate, endDate, notesOrdesc, trxnType,
                                 trxnAmount);
                 if (!CollectionUtils.isEmpty(currentTransactions)) {
                     transactions = currentTransactions;

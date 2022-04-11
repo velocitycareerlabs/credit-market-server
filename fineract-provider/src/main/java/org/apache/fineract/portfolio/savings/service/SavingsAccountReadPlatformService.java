@@ -45,7 +45,7 @@ public interface SavingsAccountReadPlatformService {
     SavingsAccountTransactionData retrieveDepositTransactionTemplate(Long savingsId, DepositAccountType depositAccountType);
 
     Collection<SavingsAccountTransactionData> retrieveAllTransactions(Long savingsId, DepositAccountType depositAccountType, Date fromDate,
-            Date toDate, String trxnId, String trxnType, String trxnAmount);
+            Date toDate, String notesOrdesc, String trxnType, String trxnAmount);
 
     // Collection<SavingsAccountAnnualFeeData>
     // retrieveAccountsWithAnnualFeeDue();

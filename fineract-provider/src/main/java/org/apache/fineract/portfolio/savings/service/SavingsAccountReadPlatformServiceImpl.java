@@ -751,7 +751,7 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
 
     @Override
     public Collection<SavingsAccountTransactionData> retrieveAllTransactions(final Long savingsId, DepositAccountType depositAccountType,
-            Date fromDate, Date toDate, String trxnId, String trxnType, String trxnAmount) {
+            Date fromDate, Date toDate, String notesOrdesc, String trxnType, String trxnAmount) {
 
         List<Object> paramList = new ArrayList<>();
         paramList.add(savingsId);
@@ -790,13 +790,13 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
         }
 
         //query to searc desc or notes
-        if (StringUtils.isNotBlank(trxnId)) {
+        if (StringUtils.isNotBlank(notesOrdesc)) {
             sqlBuilder.append(" and ( ( nt.note like ? ) or ");
             sqlBuilder.append(" ( fromtran.description like  ? )  or ");
             sqlBuilder.append(" ( totran.description like ? ) ) ");
-            paramList.add("%"+trxnId+"%");
-            paramList.add("%"+trxnId+"%");
-            paramList.add("%"+trxnId+"%");
+            paramList.add("%"+notesOrdesc+"%");
+            paramList.add("%"+notesOrdesc+"%");
+            paramList.add("%"+notesOrdesc+"%");
         }
 
         sqlBuilder.append(" order by tr.transaction_date DESC, tr.created_date DESC, tr.id DESC");
