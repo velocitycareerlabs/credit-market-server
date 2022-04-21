@@ -3358,4 +3358,13 @@ public class CommandWrapperBuilder {
         return this;
     }
 
+    public CommandWrapperBuilder changeActivationDate(final Long accountId) {
+        this.actionName = "CHANGEACTIVATIONDATE";
+        this.entityName = "SAVINGSACCOUNT";
+        this.savingsId = accountId;
+        this.entityId = null;
+        this.href = "/savingsaccounts/" + accountId + "?command=changeActivationDate";
+        return this;
+    }
+
 }
