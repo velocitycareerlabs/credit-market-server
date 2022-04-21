@@ -21,7 +21,7 @@ UPDATE `m_client`
 SET
 `submittedon_date` = '2021-12-31',
 `activation_date` = '2021-12-31',
-`office_joining_date` = '2021-12-31';
+`office_joining_date` = '2021-12-31'
 WHERE
 `id` = 3;
 
@@ -37,7 +37,7 @@ UPDATE `m_client`
 SET
 `submittedon_date` = '2021-12-31',
 `activation_date` = '2021-12-31',
-`office_joining_date` = '2021-12-31';
+`office_joining_date` = '2021-12-31'
 WHERE
 `id` = 4;
 
@@ -53,7 +53,7 @@ UPDATE `m_client`
 SET
 `submittedon_date` = '2021-12-31',
 `activation_date` = '2021-12-31',
-`office_joining_date` = '2021-12-31';
+`office_joining_date` = '2021-12-31'
 WHERE
 `id` = 5;
 
@@ -69,7 +69,7 @@ UPDATE `m_client`
 SET
 `submittedon_date` = '2021-12-31',
 `activation_date` = '2021-12-31',
-`office_joining_date` = '2021-12-31';
+`office_joining_date` = '2021-12-31'
 WHERE
 `id` = 6;
 

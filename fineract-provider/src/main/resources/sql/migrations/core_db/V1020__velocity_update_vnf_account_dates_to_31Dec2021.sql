@@ -21,7 +21,7 @@ UPDATE `m_client`
 SET
 `submittedon_date` = '2021-12-31',
 `activation_date` = '2021-12-31',
-`office_joining_date` = '2021-12-31';
+`office_joining_date` = '2021-12-31'
 WHERE
 `id` = 1;
 
