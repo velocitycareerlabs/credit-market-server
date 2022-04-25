@@ -17,48 +17,48 @@
 -- under the License.
 --
 
-UPDATE `m_client`
+UPDATE m_client
 SET
-`submittedon_date` = '2021-12-31',
-`activation_date` = '2021-12-31',
-`office_joining_date` = '2021-12-31'
+submittedon_date = '2021-12-31',
+activation_date = '2021-12-31',
+office_joining_date = '2021-12-31'
 WHERE
-`id` = 2;
+id = 2;
 
-UPDATE `m_savings_account`
+UPDATE m_savings_account
 SET
-`submittedon_date` = '2021-12-31',
-`approvedon_date` = '2021-12-31',
-`activatedon_date` = '2021-12-31'
+submittedon_date = '2021-12-31',
+approvedon_date = '2021-12-31',
+activatedon_date = '2021-12-31'
 WHERE
-`id` = 2;
+id = 2;
 
-UPDATE `m_savings_account_transaction`
+UPDATE m_savings_account_transaction
 SET
-`transaction_date` = '2021-12-31',
-`balance_end_date_derived` = '2021-12-31',
-`created_date` = '2021-12-31'
+transaction_date = '2021-12-31',
+balance_end_date_derived = '2021-12-31',
+created_date = '2021-12-31'
 WHERE
-`id` = 2;
+id = 2;
 
-UPDATE `m_savings_account_transaction`
+UPDATE m_savings_account_transaction
 SET
-`transaction_date` = '2021-12-31',
-`balance_end_date_derived` = '2021-12-31',
-`created_date` = '2021-12-31'
+transaction_date = '2021-12-31',
+balance_end_date_derived = '2021-12-31',
+created_date = '2021-12-31'
 WHERE
-`id` = 3;
+id = 3;
 
-UPDATE `m_account_transfer_transaction`
+UPDATE m_account_transfer_transaction
 SET
-`transaction_date` = '2021-12-31',
+transaction_date = '2021-12-31'
 WHERE
-`account_transfer_details_id`=1
+account_transfer_details_id = 1;
 
-UPDATE `acc_gl_journal_entry`
+UPDATE acc_gl_journal_entry
 SET
-`entry_date` = '2021-12-31',
-`created_date` = '2021-12-31',
-`lastmodified_date` = '2021-12-31'
+entry_date = '2021-12-31',
+created_date = '2021-12-31',
+lastmodified_date = '2021-12-31'
 WHERE
-`transaction_id` in  ('S2','S3');
+transaction_id in  ('S2','S3');

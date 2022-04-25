@@ -17,66 +17,66 @@
 -- under the License.
 --
 
-UPDATE `m_client`
+UPDATE m_client
 SET
-`submittedon_date` = '2021-12-31',
-`activation_date` = '2021-12-31',
-`office_joining_date` = '2021-12-31'
+submittedon_date = '2021-12-31',
+activation_date = '2021-12-31',
+office_joining_date = '2021-12-31'
 WHERE
-`id` = 3;
+id = 3;
 
-UPDATE `m_savings_account`
+UPDATE m_savings_account
 SET
-`submittedon_date` = '2021-12-31',
-`approvedon_date` = '2021-12-31',
-`activatedon_date` = '2021-12-31'
+submittedon_date = '2021-12-31',
+approvedon_date = '2021-12-31',
+activatedon_date = '2021-12-31'
 WHERE
-`id` = 3;
+id = 3;
 
-UPDATE `m_client`
+UPDATE m_client
 SET
-`submittedon_date` = '2021-12-31',
-`activation_date` = '2021-12-31',
-`office_joining_date` = '2021-12-31'
+submittedon_date = '2021-12-31',
+activation_date = '2021-12-31',
+office_joining_date = '2021-12-31'
 WHERE
-`id` = 4;
+id = 4;
 
-UPDATE `m_savings_account`
+UPDATE m_savings_account
 SET
-`submittedon_date` = '2021-12-31',
-`approvedon_date` = '2021-12-31',
-`activatedon_date` = '2021-12-31'
+submittedon_date = '2021-12-31',
+approvedon_date = '2021-12-31',
+activatedon_date = '2021-12-31'
 WHERE
-`id` = 4;
+id = 4;
 
-UPDATE `m_client`
+UPDATE m_client
 SET
-`submittedon_date` = '2021-12-31',
-`activation_date` = '2021-12-31',
-`office_joining_date` = '2021-12-31'
+submittedon_date = '2021-12-31',
+activation_date = '2021-12-31',
+office_joining_date = '2021-12-31'
 WHERE
-`id` = 5;
+id = 5;
 
-UPDATE `m_savings_account`
+UPDATE m_savings_account
 SET
-`submittedon_date` = '2021-12-31',
-`approvedon_date` = '2021-12-31',
-`activatedon_date` = '2021-12-31'
+submittedon_date = '2021-12-31',
+approvedon_date = '2021-12-31',
+activatedon_date = '2021-12-31'
 WHERE
-`id` = 5;
+id = 5;
 
-UPDATE `m_client`
+UPDATE m_client
 SET
-`submittedon_date` = '2021-12-31',
-`activation_date` = '2021-12-31',
-`office_joining_date` = '2021-12-31'
+submittedon_date = '2021-12-31',
+activation_date = '2021-12-31',
+office_joining_date = '2021-12-31'
 WHERE
-`id` = 6;
+id = 6;
 
-UPDATE `m_savings_account`
+UPDATE m_savings_account
 SET
-`submittedon_date` = '2021-12-31',
-`approvedon_date` = '2021-12-31',
-`activatedon_date` = '2021-12-31'
+submittedon_date = '2021-12-31',
+approvedon_date = '2021-12-31',
+activatedon_date = '2021-12-31'
 WHERE
-`id` = 6;
+id = 6;
