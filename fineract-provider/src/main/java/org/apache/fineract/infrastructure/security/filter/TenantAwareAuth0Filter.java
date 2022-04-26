@@ -32,6 +32,7 @@ import org.apache.fineract.infrastructure.core.serialization.ToApiJsonSerializer
 import org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil;
 import org.apache.fineract.infrastructure.security.data.PlatformRequestLog;
 import org.apache.fineract.infrastructure.security.exception.InvalidTenantIdentiferException;
+import org.apache.fineract.infrastructure.security.exception.NoAuthorizationException;
 import org.apache.fineract.infrastructure.security.service.Auth0UserImportService;
 import org.apache.fineract.infrastructure.security.service.BasicAuthTenantDetailsService;
 import org.apache.fineract.notification.service.NotificationReadPlatformService;
@@ -186,11 +187,11 @@ public class TenantAwareAuth0Filter extends OncePerRequestFilter {
             }
 
             filterChain.doFilter(request, response);
-        } catch (final InvalidTenantIdentiferException e) {
+        } catch (final InvalidTenantIdentiferException | NoAuthorizationException e) {
             // deal with exception at low level
             SecurityContextHolder.getContext().setAuthentication(null);
 
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
         } finally {
             task.stop();
             final PlatformRequestLog log = PlatformRequestLog.from(task, request);

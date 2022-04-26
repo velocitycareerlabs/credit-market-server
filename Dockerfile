@@ -37,12 +37,18 @@ FROM gcr.io/distroless/java:11 as fineract
 
 COPY --from=builder /fineract/fineract-provider/build/libs /app
 COPY --from=builder /fineract/libs /app/libs
+
+#pentaho copy
+COPY --from=builder /fineract/fineract-provider/src/main/pentahoReports/*.properties /root/.mifosx/pentahoReports/
+COPY --from=builder /fineract/fineract-provider/src/main/pentahoReports/*.prpt /root/.mifosx/pentahoReports/
+
 ENV DRIVERCLASS_NAME=com.mysql.cj.jdbc.Driver
 ENV PROTOCOL=jdbc
 ENV SUB_PROTOCOL=mysql
 ENV fineract_tenants_uid=admin
 ENV FINERACT_DEFAULT_TENANTDB_PORT=3306
 ENV fineract_tenants_driver=com.mysql.jdbc.Driver
+ENV TZ="UTC"
 
 ARG FINERACT_SECURITY_AUTH0_DOMAIN
 ENV FINERACT_SECURITY_AUTH0_DOMAIN=${FINERACT_SECURITY_AUTH0_DOMAIN}
