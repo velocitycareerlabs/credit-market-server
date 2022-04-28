@@ -23,6 +23,7 @@ import static org.apache.fineract.portfolio.savings.SavingsApiConstants.activate
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.bankNumberParamName;
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.checkNumberParamName;
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.closedOnDateParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.noteParamName;
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.paymentTypeIdParamName;
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.receiptNumberParamName;
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.routingCodeParamName;
@@ -66,7 +67,7 @@ public class SavingsAccountTransactionDataValidator {
     private final FromJsonHelper fromApiJsonHelper;
     private static final Set<String> SAVINGS_ACCOUNT_HOLD_AMOUNT_REQUEST_DATA_PARAMETERS = new HashSet<>(
             Arrays.asList(transactionDateParamName, SavingsApiConstants.dateFormatParamName, SavingsApiConstants.localeParamName,
-                    transactionAmountParamName));
+                    transactionAmountParamName, noteParamName));
 
     @Autowired
     public SavingsAccountTransactionDataValidator(final FromJsonHelper fromApiJsonHelper) {

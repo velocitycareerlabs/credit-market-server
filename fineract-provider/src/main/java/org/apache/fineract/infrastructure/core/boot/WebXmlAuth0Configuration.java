@@ -72,7 +72,8 @@ public class WebXmlAuth0Configuration extends WebSecurityConfigurerAdapter {
 
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins("*");
+                registry.addMapping("/**").allowedOrigins("*").allowedMethods("GET", "POST", "PUT", "DELETE");
+
             }
         };
     }
