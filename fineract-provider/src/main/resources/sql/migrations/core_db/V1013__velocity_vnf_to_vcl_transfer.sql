@@ -70,7 +70,7 @@ INSERT IGNORE INTO `m_account_transfer_transaction` (
 )
 VALUES
   (
-    '1', '2', NULL, '3', NULL, '0', now() ,
+    '1', '2', NULL, '3', NULL, '0', '2022-01-13',
     'CRD', '2', '1', '60000000.000000',
     'VNF to VCL default transfer'
   );
