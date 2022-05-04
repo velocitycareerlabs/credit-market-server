@@ -72,7 +72,8 @@ public class ReportWritePlatformServiceImpl implements ReportWritePlatformServic
     public ReportWritePlatformServiceImpl(final PlatformSecurityContext context,
             final ReportCommandFromApiJsonDeserializer fromApiJsonDeserializer, final ReportRepository reportRepository,
             final ReportParameterRepository reportParameterRepository, final ReportParameterUsageRepository reportParameterUsageRepository,
-            final PermissionRepository permissionRepository, final ReportingProcessServiceProvider reportingProcessServiceProvider, final RoutingDataSource dataSource) {
+            final PermissionRepository permissionRepository, final ReportingProcessServiceProvider reportingProcessServiceProvider,
+            final RoutingDataSource dataSource) {
         this.context = context;
         this.fromApiJsonDeserializer = fromApiJsonDeserializer;
         this.reportRepository = reportRepository;
@@ -99,11 +100,13 @@ public class ReportWritePlatformServiceImpl implements ReportWritePlatformServic
             this.reportRepository.save(report);
 
             final Permission permission = new Permission("report", report.getReportName(), "READ");
-            //this.permissionRepository.save(permission); //got error while inserting below SQL because of grouping is keywork in MySQL 8
-            //INSERT INTO m_permission (action_name, can_maker_checker, code, entity_name, grouping)
-            //VALUES ('READ', 0, 'READ_Mifos Balance and Transactions Report', 'Mifos Balance and Transactions Report', 'report')
+            // this.permissionRepository.save(permission); //got error while inserting below SQL because of grouping is
+            // keywork in MySQL 8
+            // INSERT INTO m_permission (action_name, can_maker_checker, code, entity_name, grouping)
+            // VALUES ('READ', 0, 'READ_Mifos Balance and Transactions Report', 'Mifos Balance and Transactions Report',
+            // 'report')
 
-            //Insert using jdbcTemplate instead repository due to above reason
+            // Insert using jdbcTemplate instead repository due to above reason
             String insertPermissionSQL = new String(
                     "INSERT INTO `m_permission` (`action_name`, `can_maker_checker`, `code`,`entity_name`, `grouping`) VALUES (?, ?, ?, ?, ?)");
             this.jdbcTemplate.update(insertPermissionSQL, permission.getActionName(), permission.isCanMakerChecker() ? 1 : 0,
