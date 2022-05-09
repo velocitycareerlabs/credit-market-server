@@ -29,6 +29,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
@@ -749,12 +750,58 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
     }
 
     @Override
-    public Collection<SavingsAccountTransactionData> retrieveAllTransactions(final Long savingsId, DepositAccountType depositAccountType) {
+    public Collection<SavingsAccountTransactionData> retrieveAllTransactions(final Long savingsId, DepositAccountType depositAccountType,
+            Date fromDate, Date toDate, String notesOrdesc, String trxnType, String trxnAmount) {
 
-        final String sql = "select " + this.transactionsMapper.schema()
-                + " where sa.id = ? and sa.deposit_type_enum = ? order by tr.transaction_date DESC, tr.created_date DESC, tr.id DESC";
+        List<Object> paramList = new ArrayList<>();
+        paramList.add(savingsId);
+        paramList.add(depositAccountType.getValue());
 
-        return this.jdbcTemplate.query(sql, this.transactionsMapper, new Object[] { savingsId, depositAccountType.getValue() });
+        /*
+         * final String sql = "select " + this.transactionsMapper.schema() +
+         * " where sa.id = ? and sa.deposit_type_enum = ? order by tr.transaction_date DESC, tr.created_date DESC, tr.id DESC"
+         * ;
+         */
+
+        final StringBuilder sqlBuilder = new StringBuilder(200);
+        sqlBuilder.append("select " + this.transactionsMapper.schema() + " where sa.id = ? and sa.deposit_type_enum = ? ");
+
+        final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        if (fromDate != null) {
+            String fromDateString = df.format(fromDate);
+            fromDateString = "'" + fromDateString + "'";
+            sqlBuilder.append(" and tr.transaction_date >= ");
+            sqlBuilder.append(fromDateString);
+        }
+
+        if (toDate != null) {
+            String toDateString = df.format(toDate);
+            toDateString = "'" + toDateString + "'";
+            sqlBuilder.append(" and tr.transaction_date <= ");
+            sqlBuilder.append(toDateString);
+        }
+
+        if (StringUtils.isNotBlank(trxnType)) {
+            sqlBuilder.append(" and tr.transaction_type_enum = " + trxnType);
+        }
+
+        if (StringUtils.isNotBlank(trxnAmount)) {
+            sqlBuilder.append(" and tr.amount = " + trxnAmount);
+        }
+
+        // query to searc desc or notes
+        if (StringUtils.isNotBlank(notesOrdesc)) {
+            sqlBuilder.append(" and ( ( nt.note like ? ) or ");
+            sqlBuilder.append(" ( fromtran.description like  ? )  or ");
+            sqlBuilder.append(" ( totran.description like ? ) ) ");
+            paramList.add("%" + notesOrdesc + "%");
+            paramList.add("%" + notesOrdesc + "%");
+            paramList.add("%" + notesOrdesc + "%");
+        }
+
+        sqlBuilder.append(" order by tr.transaction_date DESC, tr.created_date DESC, tr.id DESC");
+
+        return this.jdbcTemplate.query(sqlBuilder.toString(), this.transactionsMapper, paramList.toArray());
     }
 
     @Override
