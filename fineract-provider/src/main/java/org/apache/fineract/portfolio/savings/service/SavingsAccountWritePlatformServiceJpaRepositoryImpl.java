@@ -1719,4 +1719,30 @@ public class SavingsAccountWritePlatformServiceJpaRepositoryImpl implements Savi
         }
 
     }
+
+    @Transactional
+    @Override
+    public CommandProcessingResult changeActivationDate(final Long savingsId, final JsonCommand command) {
+
+        final AppUser user = this.context.authenticatedUser();
+
+        this.savingsAccountTransactionDataValidator.validateActivation(command);
+
+        final SavingsAccount account = this.savingAccountAssembler.assembleFrom(savingsId);
+        checkClientOrGroupActive(account);
+        final Map<String, Object> changes = account.changeActivationDate(user, command, DateUtils.getLocalDateOfTenant());
+
+        if (!changes.isEmpty()) {
+            this.savingAccountRepositoryWrapper.saveAndFlush(account);
+        }
+
+        return new CommandProcessingResultBuilder() //
+                .withEntityId(savingsId) //
+                .withOfficeId(account.officeId()) //
+                .withClientId(account.clientId()) //
+                .withGroupId(account.groupId()) //
+                .withSavingsId(savingsId) //
+                .with(changes) //
+                .build();
+    }
 }

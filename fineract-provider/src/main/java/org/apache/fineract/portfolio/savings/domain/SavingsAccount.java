@@ -3296,4 +3296,105 @@ public class SavingsAccount extends AbstractPersistableCustom {
     private boolean isOverdraft() {
         return allowOverdraft;
     }
+
+    public Map<String, Object> changeActivationDate(final AppUser currentUser, final JsonCommand command,
+            final LocalDate tenantsTodayDate) {
+
+        final Map<String, Object> actualChanges = new LinkedHashMap<>();
+
+        final List<ApiParameterError> dataValidationErrors = new ArrayList<>();
+        final DataValidatorBuilder baseDataValidator = new DataValidatorBuilder(dataValidationErrors)
+                .resource(depositAccountType().resourceName() + SavingsApiConstants.activateAction);
+
+        final SavingsAccountStatusType currentStatus = SavingsAccountStatusType.fromInt(this.status);
+        if (!SavingsAccountStatusType.ACTIVE.hasStateOf(currentStatus)) {
+
+            baseDataValidator.reset().parameter(SavingsApiConstants.activatedOnDateParamName)
+                    .failWithCodeNoParameterAddedToErrorCode("not.in.active.state");
+
+            if (!dataValidationErrors.isEmpty()) {
+                throw new PlatformApiDataValidationException(dataValidationErrors);
+            }
+        }
+
+        if (this.getNominalAnnualInterestRate().compareTo(BigDecimal.ZERO) > 0
+                || this.product.nominalAnnualInterestRate.compareTo(BigDecimal.ZERO) > 0) {
+
+            baseDataValidator.reset().parameter(this.nominalAnnualInterestRate.toString()).value(this.nominalAnnualInterestRate.toString())
+                    .failWithCodeNoParameterAddedToErrorCode("interest.should.not.be.more.than.zero");
+
+            if (!dataValidationErrors.isEmpty()) {
+                throw new PlatformApiDataValidationException(dataValidationErrors);
+            }
+        }
+
+        final Locale locale = command.extractLocale();
+        final DateTimeFormatter fmt = DateTimeFormatter.ofPattern(command.dateFormat()).withLocale(locale);
+        final LocalDate activationDate = command.localDateValueOfParameterNamed(SavingsApiConstants.activatedOnDateParamName);
+
+        actualChanges.put(SavingsApiConstants.activatedOnDateParamName, activationDate.format(fmt));
+
+        if (activationDate.isAfter(getActivationLocalDate())) {
+
+            baseDataValidator.reset().parameter(SavingsApiConstants.activatedOnDateParamName).value(activationDate)
+                    .failWithCodeNoParameterAddedToErrorCode("cannot.be.after.current.activation.date");
+
+            if (!dataValidationErrors.isEmpty()) {
+                throw new PlatformApiDataValidationException(dataValidationErrors);
+            }
+        }
+        this.activatedOnDate = Date.from(activationDate.atStartOfDay(DateUtils.getDateTimeZoneOfTenant()).toInstant());
+        this.activatedBy = currentUser;
+        this.lockedInUntilDate = calculateDateAccountIsLockedUntil(getActivationLocalDate());
+
+        /*
+         * if (annualFeeSettingsSet()) { updateToNextAnnualFeeDueDateFrom(getActivationLocalDate()); }
+         */
+        if (this.client != null && this.client.isActivatedAfter(activationDate)) {
+            final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(command.dateFormat()).withLocale(command.extractLocale());
+            final String dateAsString = formatter.format(this.client.getActivationLocalDate());
+            baseDataValidator.reset().parameter(SavingsApiConstants.activatedOnDateParamName).value(dateAsString)
+                    .failWithCodeNoParameterAddedToErrorCode("cannot.be.before.client.activation.date");
+            if (!dataValidationErrors.isEmpty()) {
+                throw new PlatformApiDataValidationException(dataValidationErrors);
+            }
+        }
+
+        if (this.group != null && this.group.isActivatedAfter(activationDate)) {
+            final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(command.dateFormat()).withLocale(command.extractLocale());
+            final String dateAsString = formatter.format(this.client.getActivationLocalDate());
+            baseDataValidator.reset().parameter(SavingsApiConstants.activatedOnDateParamName).value(dateAsString)
+                    .failWithCodeNoParameterAddedToErrorCode("cannot.be.before.group.activation.date");
+            if (!dataValidationErrors.isEmpty()) {
+                throw new PlatformApiDataValidationException(dataValidationErrors);
+            }
+        }
+
+        if (activationDate.isAfter(tenantsTodayDate)) {
+
+            baseDataValidator.reset().parameter(SavingsApiConstants.activatedOnDateParamName).value(activationDate)
+                    .failWithCodeNoParameterAddedToErrorCode("cannot.be.a.future.date");
+
+            if (!dataValidationErrors.isEmpty()) {
+                throw new PlatformApiDataValidationException(dataValidationErrors);
+            }
+        }
+        validateActivityNotBeforeClientOrGroupTransferDate(SavingsEvent.SAVINGS_ACTIVATE, activationDate);
+
+        final LocalDate approvalDate = getApprovedOnLocalDate();
+        if (activationDate.isBefore(approvalDate)) {
+
+            this.approvedOnDate = this.activatedOnDate;
+            this.approvedBy = currentUser;
+        }
+
+        final LocalDate submittedOnDate = getSubmittedOnLocalDate();
+        if (activationDate.isBefore(submittedOnDate)) {
+
+            this.submittedOnDate = this.activatedOnDate;
+            this.submittedBy = currentUser;
+        }
+
+        return actualChanges;
+    }
 }
