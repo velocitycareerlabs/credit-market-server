@@ -30,6 +30,7 @@ import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
+import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
 import org.apache.fineract.infrastructure.dataqueries.domain.Report;
 import org.apache.fineract.infrastructure.dataqueries.domain.ReportParameter;
 import org.apache.fineract.infrastructure.dataqueries.domain.ReportParameterRepository;
@@ -48,6 +49,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,12 +66,14 @@ public class ReportWritePlatformServiceImpl implements ReportWritePlatformServic
     private final ReportParameterRepository reportParameterRepository;
     private final PermissionRepository permissionRepository;
     private final ReportingProcessServiceProvider reportingProcessServiceProvider;
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
     public ReportWritePlatformServiceImpl(final PlatformSecurityContext context,
             final ReportCommandFromApiJsonDeserializer fromApiJsonDeserializer, final ReportRepository reportRepository,
             final ReportParameterRepository reportParameterRepository, final ReportParameterUsageRepository reportParameterUsageRepository,
-            final PermissionRepository permissionRepository, final ReportingProcessServiceProvider reportingProcessServiceProvider) {
+            final PermissionRepository permissionRepository, final ReportingProcessServiceProvider reportingProcessServiceProvider,
+            final RoutingDataSource dataSource) {
         this.context = context;
         this.fromApiJsonDeserializer = fromApiJsonDeserializer;
         this.reportRepository = reportRepository;
@@ -77,6 +81,7 @@ public class ReportWritePlatformServiceImpl implements ReportWritePlatformServic
         this.reportParameterUsageRepository = reportParameterUsageRepository;
         this.permissionRepository = permissionRepository;
         this.reportingProcessServiceProvider = reportingProcessServiceProvider;
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     @Transactional
@@ -95,7 +100,17 @@ public class ReportWritePlatformServiceImpl implements ReportWritePlatformServic
             this.reportRepository.save(report);
 
             final Permission permission = new Permission("report", report.getReportName(), "READ");
-            this.permissionRepository.save(permission);
+            // this.permissionRepository.save(permission); //got error while inserting below SQL because of grouping is
+            // keywork in MySQL 8
+            // INSERT INTO m_permission (action_name, can_maker_checker, code, entity_name, grouping)
+            // VALUES ('READ', 0, 'READ_Mifos Balance and Transactions Report', 'Mifos Balance and Transactions Report',
+            // 'report')
+
+            // Insert using jdbcTemplate instead repository due to above reason
+            String insertPermissionSQL = new String(
+                    "INSERT INTO `m_permission` (`action_name`, `can_maker_checker`, `code`,`entity_name`, `grouping`) VALUES (?, ?, ?, ?, ?)");
+            this.jdbcTemplate.update(insertPermissionSQL, permission.getActionName(), permission.isCanMakerChecker() ? 1 : 0,
+                    permission.getCode(), permission.getEntityName(), permission.getGrouping());
 
             return new CommandProcessingResultBuilder() //
                     .withCommandId(command.commandId()) //

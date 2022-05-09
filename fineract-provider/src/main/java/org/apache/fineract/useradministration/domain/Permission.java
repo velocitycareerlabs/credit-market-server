@@ -75,6 +75,18 @@ public class Permission extends AbstractPersistableCustom implements Serializabl
         return this.grouping;
     }
 
+    public String getEntityName() {
+        return entityName;
+    }
+
+    public String getActionName() {
+        return actionName;
+    }
+
+    public boolean isCanMakerChecker() {
+        return canMakerChecker;
+    }
+
     public boolean enableMakerChecker(final boolean canMakerChecker) {
         final boolean isUpdatedValueSame = this.canMakerChecker == canMakerChecker;
         this.canMakerChecker = canMakerChecker;
