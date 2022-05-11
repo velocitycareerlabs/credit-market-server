@@ -81,6 +81,7 @@ public class VoucherWriteServiceImpl implements VoucherWriteService {
         final Locale locale = command.extractLocale();
         final DateTimeFormatter fmt = DateTimeFormatter.ofPattern(command.dateFormat()).withLocale(locale);
         final LocalDate sumbittedDate = command.localDateValueOfParameterNamed(VoucherConstants.submittedOnDateParamName);
+        final Date expiryDate = Date.from(sumbittedDate.atStartOfDay(DateUtils.getDateTimeZoneOfTenant()).toInstant());
 
         final Integer requestedVoucherQuantity = command.integerValueOfParameterNamed(VoucherConstants.quantityParamName);
         VoucherBalanceDTO voucherBalance = voucherReadService.retrieveBalance(clientId);
@@ -92,7 +93,7 @@ public class VoucherWriteServiceImpl implements VoucherWriteService {
             throw new PlatformApiDataValidationException(errors);
         }
 
-        List<VoucherDTO> availableVouchers = voucherReadService.retrieveExpiringByDate(clientId, null);
+        List<VoucherDTO> availableVouchers = voucherReadService.retrieveExpiringByDate(clientId, expiryDate);
         Integer paidVouchers = 0;
         for (VoucherDTO voucher : availableVouchers) {
             if (paidVouchers.compareTo(requestedVoucherQuantity) == 0) {
