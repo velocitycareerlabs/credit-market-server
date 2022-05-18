@@ -191,4 +191,5 @@ public class SavingsApiConstants {
     public static final String gsimApplicationId = "applicationId";
     public static final String gsimLastApplication = "lastApplication";
     public static final String ERROR_MSG_SAVINGS_ACCOUNT_NOT_ACTIVE = "not.in.active.state";
+    public static final String autoApproveAndActivate = "autoApproveAndActivate";
 }
