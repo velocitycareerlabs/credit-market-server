@@ -615,7 +615,7 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
         CommandProcessingResult commandProcessingResult = CommandProcessingResult.empty();
         if (client.isActive() && client.savingsProductId() != null) {
             SavingsAccountDataDTO savingsAccountDataDTO = new SavingsAccountDataDTO(client, null, client.savingsProductId(),
-                    client.getActivationLocalDate(), client.activatedBy(), fmt);
+                    client.getActivationLocalDate(), client.activatedBy(), fmt, null);
             commandProcessingResult = this.savingsApplicationProcessWritePlatformService.createActiveApplication(savingsAccountDataDTO);
             if (commandProcessingResult.getSavingsId() != null) {
                 this.savingsRepositoryWrapper.findOneWithNotFoundDetection(commandProcessingResult.getSavingsId());

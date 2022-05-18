@@ -22,6 +22,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import org.apache.fineract.portfolio.client.domain.Client;
 import org.apache.fineract.portfolio.group.domain.Group;
+import org.apache.fineract.portfolio.savings.domain.SavingsAccount;
 import org.apache.fineract.useradministration.domain.AppUser;
 
 public class SavingsAccountDataDTO {
@@ -32,15 +33,17 @@ public class SavingsAccountDataDTO {
     private final LocalDate applicationDate;
     private final AppUser appliedBy;
     private final DateTimeFormatter fmt;
+    private final SavingsAccount account;
 
     public SavingsAccountDataDTO(final Client client, final Group group, final Long savingsProductId, final LocalDate applicationDate,
-            final AppUser appliedBy, final DateTimeFormatter fmt) {
+            final AppUser appliedBy, final DateTimeFormatter fmt, final SavingsAccount account) {
         this.client = client;
         this.group = group;
         this.savingsProductId = savingsProductId;
         this.applicationDate = applicationDate;
         this.appliedBy = appliedBy;
         this.fmt = fmt;
+        this.account = account;
     }
 
     public Client getClient() {
@@ -65,5 +68,9 @@ public class SavingsAccountDataDTO {
 
     public DateTimeFormatter getFmt() {
         return this.fmt;
+    }
+
+    public SavingsAccount getAccount() {
+        return account;
     }
 }
