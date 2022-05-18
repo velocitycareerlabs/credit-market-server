@@ -23,12 +23,14 @@ import static org.apache.fineract.portfolio.savings.SavingsApiConstants.SAVINGS_
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import java.math.BigDecimal;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import javax.persistence.PersistenceException;
@@ -219,6 +221,7 @@ public class SavingsApplicationProcessWritePlatformServiceJpaRepositoryImpl impl
             GroupSavingsIndividualMonitoring gsimAccount = null;
             BigDecimal applicationId = BigDecimal.ZERO;
             Boolean isLastChildApplication = false;
+            Boolean autoApproveAndActivate = command.booleanPrimitiveValueOfParameterNamed("autoApproveAndActivate");
 
             // gsim
             if (account.isAccountNumberRequiresAutoGeneration()) {
@@ -296,6 +299,16 @@ public class SavingsApplicationProcessWritePlatformServiceJpaRepositoryImpl impl
             }
             // end of gsim
             final Long savingsId = account.getId();
+
+            // auto approve and activate savings account
+            if (autoApproveAndActivate) {
+                final Locale locale = command.extractLocale();
+                final DateTimeFormatter fmt = DateTimeFormatter.ofPattern(command.dateFormat()).withLocale(locale);
+                SavingsAccountDataDTO savingsAccountDataDTO = new SavingsAccountDataDTO(account.getClient(), null,
+                        account.getClient().savingsProductId(), account.getSubmittedOnDate(), submittedBy, fmt, account);
+                this.createActiveApplication(savingsAccountDataDTO);
+                account.getClient().updateSavingsAccount(savingsId);
+            }
             if (command.parameterExists(SavingsApiConstants.datatables)) {
                 this.entityDatatableChecksWritePlatformService.saveDatatables(StatusEnum.CREATE.getCode().longValue(),
                         EntityTables.SAVING.getName(), savingsId, account.productId(),
@@ -731,9 +744,13 @@ public class SavingsApplicationProcessWritePlatformServiceJpaRepositoryImpl impl
         final CommandWrapper commandWrapper = new CommandWrapperBuilder().savingsAccountActivation(null).build();
         boolean rollbackTransaction = this.commandProcessingService.validateCommand(commandWrapper, savingsAccountDataDTO.getAppliedBy());
 
-        final SavingsAccount account = this.savingAccountAssembler.assembleFrom(savingsAccountDataDTO.getClient(),
-                savingsAccountDataDTO.getGroup(), savingsAccountDataDTO.getSavingsProduct(), savingsAccountDataDTO.getApplicationDate(),
-                savingsAccountDataDTO.getAppliedBy());
+        SavingsAccount account = savingsAccountDataDTO.getAccount();
+        if (savingsAccountDataDTO.getAccount() == null) {
+            account = this.savingAccountAssembler.assembleFrom(savingsAccountDataDTO.getClient(), savingsAccountDataDTO.getGroup(),
+                    savingsAccountDataDTO.getSavingsProduct(), savingsAccountDataDTO.getApplicationDate(),
+                    savingsAccountDataDTO.getAppliedBy());
+        }
+
         account.approveAndActivateApplication(
                 Date.from(savingsAccountDataDTO.getApplicationDate().atStartOfDay(DateUtils.getDateTimeZoneOfTenant()).toInstant()),
                 savingsAccountDataDTO.getAppliedBy());
@@ -749,7 +766,9 @@ public class SavingsApplicationProcessWritePlatformServiceJpaRepositoryImpl impl
                 existingReversedTransactionIds);
         this.savingAccountRepository.save(account);
 
-        generateAccountNumber(account);
+        if (savingsAccountDataDTO.getAccount() == null) {
+            generateAccountNumber(account);
+        }
         // post journal entries for activation charges
         this.savingsAccountDomainService.postJournalEntries(account, existingTransactionIds, existingReversedTransactionIds);
 
