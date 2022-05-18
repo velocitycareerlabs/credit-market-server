@@ -98,6 +98,9 @@ public class SavingsAccountTransactionDataValidator {
         final BigDecimal transactionAmount = this.fromApiJsonHelper.extractBigDecimalWithLocaleNamed(transactionAmountParamName, element);
         baseDataValidator.reset().parameter(transactionAmountParamName).value(transactionAmount).notNull().positiveAmount();
 
+        final String note = this.fromApiJsonHelper.extractStringNamed(noteParamName, element);
+        baseDataValidator.reset().parameter(noteParamName).value(note).notBlank().notExceedingLengthOf(200);
+
         validatePaymentTypeDetails(baseDataValidator, element);
 
         throwExceptionIfValidationWarningsExist(dataValidationErrors);
