@@ -481,13 +481,13 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
             final boolean withdrawalFeeForTransfers = rs.getBoolean("withdrawalFeeForTransfers");
 
             final boolean allowOverdraft = rs.getBoolean("allowOverdraft");
-            final BigDecimal overdraftLimit = JdbcSupport.getBigDecimalDefaultToNullIfZero(rs, "overdraftLimit");
+            final BigDecimal overdraftLimit = JdbcSupport.getBigDecimalDefaultToNullIfZero(rs, "overdraftLimit", currencyDigits);
             final BigDecimal nominalAnnualInterestRateOverdraft = JdbcSupport.getBigDecimalDefaultToNullIfZero(rs,
-                    "nominalAnnualInterestRateOverdraft");
+                    "nominalAnnualInterestRateOverdraft", currencyDigits);
             final BigDecimal minOverdraftForInterestCalculation = JdbcSupport.getBigDecimalDefaultToNullIfZero(rs,
-                    "minOverdraftForInterestCalculation");
+                    "minOverdraftForInterestCalculation", currencyDigits);
 
-            final BigDecimal minRequiredBalance = JdbcSupport.getBigDecimalDefaultToNullIfZero(rs, "minRequiredBalance");
+            final BigDecimal minRequiredBalance = JdbcSupport.getBigDecimalDefaultToNullIfZero(rs, "minRequiredBalance", currencyDigits);
             final boolean enforceMinRequiredBalance = rs.getBoolean("enforceMinRequiredBalance");
 
             /*
@@ -500,25 +500,25 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
              *
              * final LocalDate annualFeeNextDueDate = JdbcSupport.getLocalDate(rs, "annualFeeNextDueDate");
              */
-            final BigDecimal totalDeposits = JdbcSupport.getBigDecimalDefaultToNullIfZero(rs, "totalDeposits");
-            final BigDecimal totalWithdrawals = JdbcSupport.getBigDecimalDefaultToNullIfZero(rs, "totalWithdrawals");
-            final BigDecimal totalWithdrawalFees = JdbcSupport.getBigDecimalDefaultToNullIfZero(rs, "totalWithdrawalFees");
-            final BigDecimal totalAnnualFees = JdbcSupport.getBigDecimalDefaultToNullIfZero(rs, "totalAnnualFees");
+            final BigDecimal totalDeposits = JdbcSupport.getBigDecimalDefaultToNullIfZero(rs, "totalDeposits", currencyDigits);
+            final BigDecimal totalWithdrawals = JdbcSupport.getBigDecimalDefaultToNullIfZero(rs, "totalWithdrawals", currencyDigits);
+            final BigDecimal totalWithdrawalFees = JdbcSupport.getBigDecimalDefaultToNullIfZero(rs, "totalWithdrawalFees", currencyDigits);
+            final BigDecimal totalAnnualFees = JdbcSupport.getBigDecimalDefaultToNullIfZero(rs, "totalAnnualFees", currencyDigits);
 
-            final BigDecimal totalInterestEarned = JdbcSupport.getBigDecimalDefaultToNullIfZero(rs, "totalInterestEarned");
-            final BigDecimal totalInterestPosted = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "totalInterestPosted");
-            final BigDecimal accountBalance = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "accountBalance");
-            final BigDecimal totalFeeCharge = JdbcSupport.getBigDecimalDefaultToNullIfZero(rs, "totalFeeCharge");
-            final BigDecimal totalPenaltyCharge = JdbcSupport.getBigDecimalDefaultToNullIfZero(rs, "totalPenaltyCharge");
+            final BigDecimal totalInterestEarned = JdbcSupport.getBigDecimalDefaultToNullIfZero(rs, "totalInterestEarned", currencyDigits);
+            final BigDecimal totalInterestPosted = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "totalInterestPosted", currencyDigits);
+            final BigDecimal accountBalance = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "accountBalance", currencyDigits);
+            final BigDecimal totalFeeCharge = JdbcSupport.getBigDecimalDefaultToNullIfZero(rs, "totalFeeCharge", currencyDigits);
+            final BigDecimal totalPenaltyCharge = JdbcSupport.getBigDecimalDefaultToNullIfZero(rs, "totalPenaltyCharge", currencyDigits);
             final BigDecimal totalOverdraftInterestDerived = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs,
                     "totalOverdraftInterestDerived");
-            final BigDecimal totalWithholdTax = JdbcSupport.getBigDecimalDefaultToNullIfZero(rs, "totalWithholdTax");
+            final BigDecimal totalWithholdTax = JdbcSupport.getBigDecimalDefaultToNullIfZero(rs, "totalWithholdTax", currencyDigits);
 
             final BigDecimal minBalanceForInterestCalculation = JdbcSupport.getBigDecimalDefaultToNullIfZero(rs,
-                    "minBalanceForInterestCalculation");
-            final BigDecimal onHoldFunds = rs.getBigDecimal("onHoldFunds");
+                    "minBalanceForInterestCalculation" ,currencyDigits);
+            final BigDecimal onHoldFunds = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "onHoldFunds", currencyDigits);
 
-            final BigDecimal onHoldAmount = rs.getBigDecimal("onHoldAmount");
+            final BigDecimal onHoldAmount = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "onHoldAmount", currencyDigits);
 
             BigDecimal availableBalance = accountBalance;
             if (availableBalance != null && onHoldFunds != null) {
@@ -874,11 +874,12 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
             final int transactionTypeInt = JdbcSupport.getInteger(rs, "transactionType");
             final SavingsAccountTransactionEnumData transactionType = SavingsEnumerations.transactionType(transactionTypeInt);
 
+            final Integer currencyDigits = JdbcSupport.getInteger(rs, "currencyDigits");
             final LocalDate date = JdbcSupport.getLocalDate(rs, "transactionDate");
             final LocalDate submittedOnDate = JdbcSupport.getLocalDate(rs, "submittedOnDate");
-            final BigDecimal amount = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "transactionAmount");
+            final BigDecimal amount = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "transactionAmount", currencyDigits);
             final BigDecimal outstandingChargeAmount = null;
-            final BigDecimal runningBalance = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "runningBalance");
+            final BigDecimal runningBalance = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "runningBalance", currencyDigits);
             final boolean reversed = rs.getBoolean("reversed");
 
             final Long savingsId = rs.getLong("savingsId");
@@ -905,7 +906,6 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
             final String currencyName = rs.getString("currencyName");
             final String currencyNameCode = rs.getString("currencyNameCode");
             final String currencyDisplaySymbol = rs.getString("currencyDisplaySymbol");
-            final Integer currencyDigits = JdbcSupport.getInteger(rs, "currencyDigits");
             final Integer inMultiplesOf = JdbcSupport.getInteger(rs, "inMultiplesOf");
             final CurrencyData currency = new CurrencyData(currencyCode, currencyName, currencyDigits, inMultiplesOf, currencyDisplaySymbol,
                     currencyNameCode);
@@ -915,7 +915,7 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
             final Long toTransferId = JdbcSupport.getLong(rs, "toTransferId");
             if (fromTransferId != null) {
                 final LocalDate fromTransferDate = JdbcSupport.getLocalDate(rs, "fromTransferDate");
-                final BigDecimal fromTransferAmount = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "fromTransferAmount");
+                final BigDecimal fromTransferAmount = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "fromTransferAmount", currencyDigits);
                 final boolean fromTransferReversed = rs.getBoolean("fromTransferReversed");
                 final String fromTransferDescription = rs.getString("fromTransferDescription");
                 final Long toSavingsTransactionId = JdbcSupport.getLong(rs, "toSavingsTransactionId");
@@ -924,7 +924,7 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
                         fromTransferDescription, fromTransferReversed, null, toSavingsTransactionId);
             } else if (toTransferId != null) {
                 final LocalDate toTransferDate = JdbcSupport.getLocalDate(rs, "toTransferDate");
-                final BigDecimal toTransferAmount = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "toTransferAmount");
+                final BigDecimal toTransferAmount = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "toTransferAmount", currencyDigits);
                 final boolean toTransferReversed = rs.getBoolean("toTransferReversed");
                 final String toTransferDescription = rs.getString("toTransferDescription");
                 final Long fromSavingsTransactionId = JdbcSupport.getLong(rs, "fromSavingsTransactionId");
