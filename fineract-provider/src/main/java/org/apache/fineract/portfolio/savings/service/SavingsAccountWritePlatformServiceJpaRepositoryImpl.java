@@ -1730,7 +1730,13 @@ public class SavingsAccountWritePlatformServiceJpaRepositoryImpl implements Savi
 
         final SavingsAccount account = this.savingAccountAssembler.assembleFrom(savingsId);
         checkClientOrGroupActive(account);
-        final Map<String, Object> changes = account.changeActivationDate(user, command, DateUtils.getLocalDateOfTenant());
+
+        final Date activationDate = Date.from(command.localDateValueOfParameterNamed(SavingsApiConstants.activatedOnDateParamName)
+                .atStartOfDay(DateUtils.getDateTimeZoneOfTenant()).toInstant());
+
+        List<SavingsAccountTransaction> transactions = this.savingsAccountTransactionRepository
+                .findAllTransactionBetweenDates(account.getActivatedOnDate(), activationDate, account.getId());
+        final Map<String, Object> changes = account.changeActivationDate(user, command, DateUtils.getLocalDateOfTenant(), transactions);
 
         if (!changes.isEmpty()) {
             this.savingAccountRepositoryWrapper.saveAndFlush(account);
