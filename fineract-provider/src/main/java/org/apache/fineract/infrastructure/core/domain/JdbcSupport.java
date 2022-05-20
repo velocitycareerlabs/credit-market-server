@@ -114,9 +114,10 @@ public final class JdbcSupport {
         return defaultToZeroIfNull(value);
     }
 
-    public static BigDecimal getBigDecimalDefaultToZeroIfNull(final ResultSet rs, final String columnName, final int currencyDigitsAfterDecimal) throws SQLException {
+    public static BigDecimal getBigDecimalDefaultToZeroIfNull(final ResultSet rs, final String columnName,
+            final int currencyDigitsAfterDecimal) throws SQLException {
         BigDecimal value = rs.getBigDecimal(columnName);
-        if(value != null) {
+        if (value != null) {
             value = value.setScale(currencyDigitsAfterDecimal);
         }
         return defaultToZeroIfNull(value);
@@ -130,9 +131,10 @@ public final class JdbcSupport {
         return result;
     }
 
-    public static BigDecimal getBigDecimalDefaultToNullIfZero(final ResultSet rs, final String columnName, final int currencyDigitsAfterDecimal) throws SQLException {
+    public static BigDecimal getBigDecimalDefaultToNullIfZero(final ResultSet rs, final String columnName,
+            final int currencyDigitsAfterDecimal) throws SQLException {
         BigDecimal value = rs.getBigDecimal(columnName);
-        if(value != null) {
+        if (value != null) {
             value = value.setScale(currencyDigitsAfterDecimal);
         }
         return defaultToNullIfZero(value);

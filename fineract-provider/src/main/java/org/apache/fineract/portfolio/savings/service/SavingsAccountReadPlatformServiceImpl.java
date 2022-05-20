@@ -515,7 +515,7 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
             final BigDecimal totalWithholdTax = JdbcSupport.getBigDecimalDefaultToNullIfZero(rs, "totalWithholdTax", currencyDigits);
 
             final BigDecimal minBalanceForInterestCalculation = JdbcSupport.getBigDecimalDefaultToNullIfZero(rs,
-                    "minBalanceForInterestCalculation" ,currencyDigits);
+                    "minBalanceForInterestCalculation", currencyDigits);
             final BigDecimal onHoldFunds = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "onHoldFunds", currencyDigits);
 
             final BigDecimal onHoldAmount = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "onHoldAmount", currencyDigits);
@@ -915,7 +915,8 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
             final Long toTransferId = JdbcSupport.getLong(rs, "toTransferId");
             if (fromTransferId != null) {
                 final LocalDate fromTransferDate = JdbcSupport.getLocalDate(rs, "fromTransferDate");
-                final BigDecimal fromTransferAmount = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "fromTransferAmount", currencyDigits);
+                final BigDecimal fromTransferAmount = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "fromTransferAmount",
+                        currencyDigits);
                 final boolean fromTransferReversed = rs.getBoolean("fromTransferReversed");
                 final String fromTransferDescription = rs.getString("fromTransferDescription");
                 final Long toSavingsTransactionId = JdbcSupport.getLong(rs, "toSavingsTransactionId");

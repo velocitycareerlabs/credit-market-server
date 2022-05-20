@@ -103,7 +103,8 @@ public class SavingsAccountChargeReadPlatformServiceImpl implements SavingsAccou
             final BigDecimal amountPaid = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "amountPaid", currencyDecimalPlaces);
             final BigDecimal amountWaived = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "amountWaived", currencyDecimalPlaces);
             final BigDecimal amountWrittenOff = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "amountWrittenOff", currencyDecimalPlaces);
-            final BigDecimal amountOutstanding = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "amountOutstanding", currencyDecimalPlaces);
+            final BigDecimal amountOutstanding = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "amountOutstanding",
+                    currencyDecimalPlaces);
 
             final BigDecimal percentageOf = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "percentageOf");
             final BigDecimal amountPercentageAppliedTo = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "amountPercentageAppliedTo");
