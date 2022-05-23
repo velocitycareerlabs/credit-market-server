@@ -467,7 +467,7 @@ public class SavingsAccount extends AbstractPersistableCustom {
 
     public boolean isActivated() {
         boolean isActive = false;
-        if (this.activatedOnDate != null) {
+        if (this.getActivatedOnDate() != null) {
             isActive = true;
         }
         return isActive;
@@ -959,8 +959,8 @@ public class SavingsAccount extends AbstractPersistableCustom {
 
     public LocalDate getActivationLocalDate() {
         LocalDate activationLocalDate = null;
-        if (this.activatedOnDate != null) {
-            activationLocalDate = LocalDate.ofInstant(this.activatedOnDate.toInstant(), DateUtils.getDateTimeZoneOfTenant());
+        if (this.getActivatedOnDate() != null) {
+            activationLocalDate = LocalDate.ofInstant(this.getActivatedOnDate().toInstant(), DateUtils.getDateTimeZoneOfTenant());
         }
         return activationLocalDate;
     }
@@ -3297,8 +3297,8 @@ public class SavingsAccount extends AbstractPersistableCustom {
         return allowOverdraft;
     }
 
-    public Map<String, Object> changeActivationDate(final AppUser currentUser, final JsonCommand command,
-            final LocalDate tenantsTodayDate) {
+    public Map<String, Object> changeActivationDate(final AppUser currentUser, final JsonCommand command, final LocalDate tenantsTodayDate,
+            List<SavingsAccountTransaction> transactions) {
 
         final Map<String, Object> actualChanges = new LinkedHashMap<>();
 
@@ -3336,12 +3336,15 @@ public class SavingsAccount extends AbstractPersistableCustom {
 
         if (activationDate.isAfter(getActivationLocalDate())) {
 
-            baseDataValidator.reset().parameter(SavingsApiConstants.activatedOnDateParamName).value(activationDate)
-                    .failWithCodeNoParameterAddedToErrorCode("cannot.be.after.current.activation.date");
+            if (transactions.size() > 0) {
+                baseDataValidator.reset().parameter(SavingsApiConstants.activatedOnDateParamName).value(activationDate)
+                        .failWithCodeNoParameterAddedToErrorCode("cannot.be.after.current.activation.date");
 
-            if (!dataValidationErrors.isEmpty()) {
-                throw new PlatformApiDataValidationException(dataValidationErrors);
+                if (!dataValidationErrors.isEmpty()) {
+                    throw new PlatformApiDataValidationException(dataValidationErrors);
+                }
             }
+
         }
         this.activatedOnDate = Date.from(activationDate.atStartOfDay(DateUtils.getDateTimeZoneOfTenant()).toInstant());
         this.activatedBy = currentUser;
@@ -3384,17 +3387,21 @@ public class SavingsAccount extends AbstractPersistableCustom {
         final LocalDate approvalDate = getApprovedOnLocalDate();
         if (activationDate.isBefore(approvalDate)) {
 
-            this.approvedOnDate = this.activatedOnDate;
+            this.approvedOnDate = this.getActivatedOnDate();
             this.approvedBy = currentUser;
         }
 
         final LocalDate submittedOnDate = getSubmittedOnLocalDate();
         if (activationDate.isBefore(submittedOnDate)) {
 
-            this.submittedOnDate = this.activatedOnDate;
+            this.submittedOnDate = this.getActivatedOnDate();
             this.submittedBy = currentUser;
         }
 
         return actualChanges;
+    }
+
+    public Date getActivatedOnDate() {
+        return activatedOnDate;
     }
 }
