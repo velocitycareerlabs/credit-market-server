@@ -61,11 +61,6 @@ services:
       - FINERACT_SECURITY_AUTH0_DOMAIN=vnf-dev.us.auth0.com
       - FINERACT_SECURITY_AUTH0_ISSUER_URI=https://vnf-dev.us.auth0.com/
       - FINERACT_SECURITY_AUTH0_AUDIENCE=https://vnf-dev.us.auth0.com/userinfo
-      - FINERACT_SENTRY_DSN=
-      - FINERACT_SENTRY_EXCEPTION_RESOLVE_ORDER=-2147483647
-      - FINERACT_SENTRY_LOGGING_ENABLED=false
-      - FINERACT_SENTRY_LOGGING_MIN_EVENT_LEVEL=info
-      - FINERACT_SENTRY_LOGGING_MIN_BREADCRUMB_LEVEL=debug
     entrypoint:
       - "java"
       - "-agentlib:jdwp=transport=dt_socket,server=y,address=*:8000,suspend=n"
