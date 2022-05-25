@@ -1333,7 +1333,6 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
                 }
             }
 
-
             if (StringUtils.isNotBlank(searchParameters.getDescription())) {
                 String notesOrdesc = searchParameters.getDescription();
                 sqlBuilder.append(" and ( ( nt.note like ? ) or ");
