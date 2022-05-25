@@ -22,7 +22,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -33,7 +32,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.accounting.journalentry.api.DateParam;
 import org.apache.fineract.commands.domain.CommandWrapper;
@@ -221,7 +219,7 @@ public class SavingsAccountTransactionsApiResource {
             @QueryParam("toDate") @Parameter(description = "toDate") final DateParam toDateParam,
             @QueryParam("dateFormat") @Parameter(description = "dateFormat") final String dateFormat,
             @QueryParam("locale") @Parameter(description = "locale") final String locale,
-            @QueryParam("description") @Parameter(description = "description") final List<String> descriptions,
+            @QueryParam("description") @Parameter(description = "description") final String description,
             @QueryParam("transfersOnly") @Parameter(description = "transfersOnly") final Boolean transfersOnly) {
 
         this.context.authenticatedUser().validateHasReadPermission(SavingsApiConstants.SAVINGS_ACCOUNT_RESOURCE_NAME);
@@ -244,8 +242,8 @@ public class SavingsAccountTransactionsApiResource {
             searchParameters.addToDate(toDate);
         }
 
-        if (!CollectionUtils.isEmpty(descriptions)) {
-            searchParameters.setDescriptions(descriptions);
+        if (StringUtils.isNotBlank(description)) {
+            searchParameters.setDescription(description);
         }
 
         if (transfersOnly != null) {
