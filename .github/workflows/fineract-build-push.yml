@@ -155,6 +155,7 @@ jobs:
       - name: Checkout Repository monorepo
         uses: actions/checkout@v3
         with:
+           ref: 'dev' # ${{ github.ref }}
            token: ${{ secrets.GITHUB_TOKEN }}
            repository: velocitycareerlabs/monorepo
       # Set Slug
@@ -173,4 +174,6 @@ jobs:
         if: github.ref == 'refs/heads/staging'
       # debug
       - name: Debug
-        run: ls -lah
+        run: |
+           echo ${{ github.ref }}
+           ls -lah
