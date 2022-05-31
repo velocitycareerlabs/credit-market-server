@@ -154,10 +154,9 @@ jobs:
       # Checkout repository
       - name: Checkout Repository monorepo
         uses: actions/checkout@v3
+        with:
+           token: ${{ secrets.GITHUB_TOKEN }}
            repository: velocitycareerlabs/monorepo
-      # debug
-      - name: Debug
-        run: ls -lah
       # Set Slug
       - name: Inject slug/short variables
         uses: rlespinasse/github-slug-action@v3.x
@@ -172,3 +171,6 @@ jobs:
       - name: Set Staging Variables
         run: bash ./eng/environments/staging.sh
         if: github.ref == 'refs/heads/staging'
+      # debug
+      - name: Debug
+        run: ls -lah
