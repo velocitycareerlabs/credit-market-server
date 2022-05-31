@@ -6,6 +6,7 @@ on:
       - master
       - staging
       - dev
+      - VL-2331
 # TODO These jobs reuse the same first 7 steps. Replace with https://github.com/actions/runner/issues/438
 # TODO Instead of suffixing with sha's should suffix with file hashes. In pseudo code we want to => determine all package/server hashes => set versions => filter out existent packages => publish all missing packages/servers
 jobs:
@@ -41,41 +42,125 @@ jobs:
         run: |
           echo "GITHUB_MAIN_TAG=${{ env.TARGET_CONTAINER_REG }}/${{ env.CONTAINER_REPOSITORY_NAME }}:${{ env.CONTAINER_MAIN_TAG }}" >> $GITHUB_ENV
           echo "GITHUB_VER_TAG=${{ env.TARGET_CONTAINER_REG }}/${{ env.CONTAINER_REPOSITORY_NAME }}:${{ env.VER_NUM }}" >> $GITHUB_ENV
-      # Login to GitHub Packages Container Registry
-      - name: Login to GitHub Packages Container Registry
-        uses: docker/login-action@v1
-        with:
-          username: ${{ env.TARGET_ORG }}
-          password: ${{ secrets.VNF_GITHUB_TOKEN }}
-          registry: ${{ env.TARGET_CONTAINER_REG }}
-      # Build and Push to GitHub
-      - name: Build and Push to GitHub
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          push: true
-          tags: |
-            ${{ env.GITHUB_MAIN_TAG }}
-            ${{ env.GITHUB_VER_TAG }}
-          build-args: |
-            FINERACT_SECURITY_AUTH0_DOMAIN=${{ env.FINERACT_SECURITY_AUTH0_DOMAIN }}
-            FINERACT_SECURITY_AUTH0_ISSUER_URI=${{ env.FINERACT_SECURITY_AUTH0_ISSUER_URI }}
-            FINERACT_SECURITY_AUTH0_AUDIENCE=${{ env.FINERACT_SECURITY_AUTH0_AUDIENCE }}
+#      # Login to GitHub Packages Container Registry
+#      - name: Login to GitHub Packages Container Registry
+#        uses: docker/login-action@v1
+#        with:
+#          username: ${{ env.TARGET_ORG }}
+#          password: ${{ secrets.VNF_GITHUB_TOKEN }}
+#          registry: ${{ env.TARGET_CONTAINER_REG }}
+#      # Build and Push to GitHub
+#      - name: Build and Push to GitHub
+#        uses: docker/build-push-action@v2
+#        with:
+#          context: .
+#          push: true
+#          tags: |
+#            ${{ env.GITHUB_MAIN_TAG }}
+#            ${{ env.GITHUB_VER_TAG }}
+#          build-args: |
+#            FINERACT_SECURITY_AUTH0_DOMAIN=${{ env.FINERACT_SECURITY_AUTH0_DOMAIN }}
+#            FINERACT_SECURITY_AUTH0_ISSUER_URI=${{ env.FINERACT_SECURITY_AUTH0_ISSUER_URI }}
+#            FINERACT_SECURITY_AUTH0_AUDIENCE=${{ env.FINERACT_SECURITY_AUTH0_AUDIENCE }}
 
-  push-to-ecr:
-    needs: build-server-images
-    name: Push to ECR
+#  push-to-ecr:
+#    needs: build-server-images
+#    name: Push to ECR
+#    runs-on: ubuntu-latest
+#    steps:
+#      # Checkout Repository
+#      - name: Checkout Repository
+#        uses: actions/checkout@v2
+#      # Set Slug
+#      - name: Inject slug/short variables
+#        uses: rlespinasse/github-slug-action@v2.x
+#      # Set Server Name
+#      - name: Set Server Name
+#        run: echo 'SERVER_NAME=fineract' >> $GITHUB_ENV
+#      # Set Common Variables
+#      - name: Set Common Variables
+#        run: bash ./eng/environments/common.sh
+#      # Set Dev Variables
+#      - name: Set Dev Variables
+#        run: bash ./eng/environments/dev.sh
+#        if: github.ref == 'refs/heads/dev'
+#      # Set Staging Variables
+#      - name: Set Staging Variables
+#        run: bash ./eng/environments/staging.sh
+#        if: github.ref == 'refs/heads/staging'
+#      # Set Prod Variables
+#      - name: Set Prod Variables
+#        run: bash ./eng/environments/prod.sh
+#        if: github.ref == 'refs/heads/master'
+#      # Create GitHub Container Tags
+#      - name: Create GitHub Container Tags
+#        run: |
+#          echo "GITHUB_VER_TAG=${{ env.TARGET_CONTAINER_REG }}/${{ env.CONTAINER_REPOSITORY_NAME }}:${{ env.VER_NUM }}" >> $GITHUB_ENV
+#      # Login to GitHub Packages Container Registry
+#      - name: Login to GitHub Packages Container Registry
+#        uses: docker/login-action@v1
+#        with:
+#          username: ${{ env.TARGET_ORG }}
+#          password: ${{ secrets.VNF_GITHUB_TOKEN }}
+#          registry: ${{ env.TARGET_CONTAINER_REG }}
+#      # Pull from GitHub
+#      - name: Pull from GitHub
+#        run: docker pull $GITHUB_VER_TAG
+#      # Configure AWS credentials
+#      - name: Configure AWS credentials
+#        uses: aws-actions/configure-aws-credentials@v1
+#        with:
+#          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#          aws-region: ${{ env.AWS_REGION }}
+#      # Login to Amazon ECR
+#      - name: Login to Amazon ECR
+#        id: ecr-login
+#        uses: aws-actions/amazon-ecr-login@v1
+#      # Create AWS Container Tags
+#      - name: Create GitHub Container Tags
+#        env:
+#            ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
+#        run: |
+#          echo "AWS_MAIN_TAG=${{ env.ECR_REGISTRY }}/${{ env.SERVER_NAME }}:${{ env.CONTAINER_MAIN_TAG }}" >> $GITHUB_ENV
+#          echo "AWS_VER_TAG=${{ env.ECR_REGISTRY }}/${{ env.SERVER_NAME }}:${{ env.VER_NUM }}" >> $GITHUB_ENV
+#      # Tag Image
+#      - name: Tag Image
+#        env:
+#          ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
+#        run: |
+#          docker tag $GITHUB_VER_TAG $AWS_MAIN_TAG
+#          docker tag $GITHUB_VER_TAG $AWS_VER_TAG
+#      # Push to Amazon ECR
+#      - name: Push Image
+#        id: push-image
+#        env:
+#          ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
+#        run: |
+#          docker push $AWS_MAIN_TAG
+#          docker push $AWS_VER_TAG
+
+  update-tfenv-versions:
+    needs:
+      - build-server-images
+#      - push-to-ecr
+    name: Update tfvars
     runs-on: ubuntu-latest
+#    env:
+#      credentialagent: ${{ needs.build-server-images.outputs.credentialagent }}
+#      mockvendor: ${{ needs.build-server-images.outputs.mockvendor }}
+#      oracle: ${{ needs.build-server-images.outputs.oracle }}
     steps:
-      # Checkout Repository
-      - name: Checkout Repository
-        uses: actions/checkout@v2
+      # Checkout repository
+      - name: Checkout Repository monorepo
+        uses: actions/checkout@v3
+           repository: velocitycareerlabs/monorepo
+      # debug
+      - name: Debug
+        run: ls -lah
       # Set Slug
       - name: Inject slug/short variables
-        uses: rlespinasse/github-slug-action@v2.x
-      # Set Server Name
-      - name: Set Server Name
-        run: echo 'SERVER_NAME=fineract' >> $GITHUB_ENV
+        uses: rlespinasse/github-slug-action@v3.x
       # Set Common Variables
       - name: Set Common Variables
         run: bash ./eng/environments/common.sh
@@ -87,54 +172,3 @@ jobs:
       - name: Set Staging Variables
         run: bash ./eng/environments/staging.sh
         if: github.ref == 'refs/heads/staging'
-      # Set Prod Variables
-      - name: Set Prod Variables
-        run: bash ./eng/environments/prod.sh
-        if: github.ref == 'refs/heads/master'
-      # Create GitHub Container Tags
-      - name: Create GitHub Container Tags
-        run: |
-          echo "GITHUB_VER_TAG=${{ env.TARGET_CONTAINER_REG }}/${{ env.CONTAINER_REPOSITORY_NAME }}:${{ env.VER_NUM }}" >> $GITHUB_ENV
-      # Login to GitHub Packages Container Registry
-      - name: Login to GitHub Packages Container Registry
-        uses: docker/login-action@v1
-        with:
-          username: ${{ env.TARGET_ORG }}
-          password: ${{ secrets.VNF_GITHUB_TOKEN }}
-          registry: ${{ env.TARGET_CONTAINER_REG }}
-      # Pull from GitHub
-      - name: Pull from GitHub
-        run: docker pull $GITHUB_VER_TAG
-      # Configure AWS credentials
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-      # Login to Amazon ECR
-      - name: Login to Amazon ECR
-        id: ecr-login
-        uses: aws-actions/amazon-ecr-login@v1
-      # Create AWS Container Tags
-      - name: Create GitHub Container Tags
-        env:
-            ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
-        run: |
-          echo "AWS_MAIN_TAG=${{ env.ECR_REGISTRY }}/${{ env.SERVER_NAME }}:${{ env.CONTAINER_MAIN_TAG }}" >> $GITHUB_ENV
-          echo "AWS_VER_TAG=${{ env.ECR_REGISTRY }}/${{ env.SERVER_NAME }}:${{ env.VER_NUM }}" >> $GITHUB_ENV
-      # Tag Image
-      - name: Tag Image
-        env:
-          ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
-        run: |
-          docker tag $GITHUB_VER_TAG $AWS_MAIN_TAG
-          docker tag $GITHUB_VER_TAG $AWS_VER_TAG
-      # Push to Amazon ECR
-      - name: Push Image
-        id: push-image
-        env:
-          ECR_REGISTRY: ${{ steps.ecr-login.outputs.registry }}
-        run: |
-          docker push $AWS_MAIN_TAG
-          docker push $AWS_VER_TAG
