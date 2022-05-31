@@ -1333,14 +1333,21 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
                 }
             }
 
-            if (StringUtils.isNotBlank(searchParameters.getDescription())) {
-                String notesOrdesc = searchParameters.getDescription();
-                sqlBuilder.append(" and ( ( nt.note like ? ) or ");
-                sqlBuilder.append(" ( fromtran.description like  ? )  or ");
-                sqlBuilder.append(" ( totran.description like ? ) ) ");
-                paramList.add("%" + notesOrdesc + "%");
-                paramList.add("%" + notesOrdesc + "%");
-                paramList.add("%" + notesOrdesc + "%");
+            if (!org.apache.commons.collections4.CollectionUtils.isEmpty(searchParameters.getDescriptions())) {
+                sqlBuilder.append(" and ( ");
+                List<String> descriptions = searchParameters.getDescriptions();
+                for (int i = 0; i < descriptions.size(); i++) {
+                    String notesOrdesc = descriptions.get(i);
+                    String notesOrdescLikeValue = "'%" + notesOrdesc + "%'";
+                    sqlBuilder.append(" ( nt.note like " + notesOrdescLikeValue + " ) or ");
+                    sqlBuilder.append(" ( fromtran.description like  " + notesOrdescLikeValue + " ) or ");
+                    if (i == descriptions.size() - 1) {
+                        sqlBuilder.append(" ( totran.description like " + notesOrdescLikeValue + " ) ");
+                    } else {
+                        sqlBuilder.append(" ( totran.description like " + notesOrdescLikeValue + " ) or ");
+                    }
+                }
+                sqlBuilder.append(" ) ");
             }
 
             if (searchParameters.isTransfersOnly()) {
