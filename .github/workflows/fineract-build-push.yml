@@ -14,6 +14,8 @@ jobs:
   build-server-images:
     name: Build Server Images
     runs-on: ubuntu-latest
+    outputs:
+      fineract: ${{ env.fineract }}
     steps:
       # Checkout Repository
       - name: Checkout Repository
@@ -42,26 +44,29 @@ jobs:
         run: |
           echo "GITHUB_MAIN_TAG=${{ env.TARGET_CONTAINER_REG }}/${{ env.CONTAINER_REPOSITORY_NAME }}:${{ env.CONTAINER_MAIN_TAG }}" >> $GITHUB_ENV
           echo "GITHUB_VER_TAG=${{ env.TARGET_CONTAINER_REG }}/${{ env.CONTAINER_REPOSITORY_NAME }}:${{ env.VER_NUM }}" >> $GITHUB_ENV
-#      # Login to GitHub Packages Container Registry
-#      - name: Login to GitHub Packages Container Registry
-#        uses: docker/login-action@v1
-#        with:
-#          username: ${{ env.TARGET_ORG }}
-#          password: ${{ secrets.VNF_GITHUB_TOKEN }}
-#          registry: ${{ env.TARGET_CONTAINER_REG }}
-#      # Build and Push to GitHub
-#      - name: Build and Push to GitHub
-#        uses: docker/build-push-action@v2
-#        with:
-#          context: .
-#          push: true
-#          tags: |
-#            ${{ env.GITHUB_MAIN_TAG }}
-#            ${{ env.GITHUB_VER_TAG }}
-#          build-args: |
-#            FINERACT_SECURITY_AUTH0_DOMAIN=${{ env.FINERACT_SECURITY_AUTH0_DOMAIN }}
-#            FINERACT_SECURITY_AUTH0_ISSUER_URI=${{ env.FINERACT_SECURITY_AUTH0_ISSUER_URI }}
-#            FINERACT_SECURITY_AUTH0_AUDIENCE=${{ env.FINERACT_SECURITY_AUTH0_AUDIENCE }}
+      # Login to GitHub Packages Container Registry
+      - name: Login to GitHub Packages Container Registry
+        uses: docker/login-action@v1
+        with:
+          username: ${{ env.TARGET_ORG }}
+          password: ${{ secrets.VNF_GITHUB_TOKEN }}
+          registry: ${{ env.TARGET_CONTAINER_REG }}
+      # Build and Push to GitHub
+      - name: Build and Push to GitHub
+        id: github-build-stage
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: false
+          tags: |
+            ${{ env.GITHUB_MAIN_TAG }}
+            ${{ env.GITHUB_VER_TAG }}
+          build-args: |
+            FINERACT_SECURITY_AUTH0_DOMAIN=${{ env.FINERACT_SECURITY_AUTH0_DOMAIN }}
+            FINERACT_SECURITY_AUTH0_ISSUER_URI=${{ env.FINERACT_SECURITY_AUTH0_ISSUER_URI }}
+            FINERACT_SECURITY_AUTH0_AUDIENCE=${{ env.FINERACT_SECURITY_AUTH0_AUDIENCE }}
+      - name: Image id as env
+        run: echo "fineract=${{ steps.github-build-stage.outputs.digest }}" >> $GITHUB_ENV
 
 #  push-to-ecr:
 #    needs: build-server-images
@@ -146,18 +151,17 @@ jobs:
 #      - push-to-ecr
     name: Update tfvars
     runs-on: ubuntu-latest
-#    env:
-#      credentialagent: ${{ needs.build-server-images.outputs.credentialagent }}
-#      mockvendor: ${{ needs.build-server-images.outputs.mockvendor }}
-#      oracle: ${{ needs.build-server-images.outputs.oracle }}
+    env:
+      fineract: ${{ needs.build-server-images.outputs.fineract }}
     steps:
       # Checkout repository
+      # Required question about what GITHUB_TOKEN you should use
       - name: Checkout Repository monorepo
         uses: actions/checkout@v3
         with:
-           ref: 'dev' # ${{ github.ref }}
-           token: ${{ secrets.GITHUB_TOKEN }}
+           token: ${{ secrets.VNF_GITHUB_TOKEN }}
            repository: velocitycareerlabs/monorepo
+           ref: ${{ github.ref }}
       # Set Slug
       - name: Inject slug/short variables
         uses: rlespinasse/github-slug-action@v3.x
@@ -172,8 +176,43 @@ jobs:
       - name: Set Staging Variables
         run: bash ./eng/environments/staging.sh
         if: github.ref == 'refs/heads/staging'
-      # debug
-      - name: Debug
-        run: |
-           echo ${{ github.ref }}
-           ls -lah
+#      # Cleaup Old PRs
+#      - name: Cleaup Old PRs
+#        run: |
+#          gh pr list --repo velocitycareerlabs/monorepo --json number --jq '.[] | .number' --label ${{ env.VER_PR_LABEL }} | \
+#          while read pr; do gh pr close $pr --repo velocitycareerlabs/monorepo --delete-branch; done
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Update fineract image versions
+      - name: Update fineract image versions
+        run: bash ./eng/scripts/update-image-version.sh fineract
+#      # Create new branch and PR to origin branch
+#      - name: Create new branch and PR to origin branch
+#        id: cpr
+#        uses: peter-evans/create-pull-request@v3
+#        with:
+#           token: ${{ secrets.VNF_GITHUB_TOKEN }}
+#           branch: 'chore/image-ver-${{ env.VER_NUM }}'
+#           commit-message: 'chore/image-ver-${{ env.VER_NUM }}'
+#           delete-branch: true
+#           title: 'chore/image-ver-${{ env.VER_NUM }}'
+#           body: |
+#              Automated image version update PR
+#              - chore/image-ver-${{ env.VER_NUM }}
+#           labels: |
+#             ${{ env.VER_PR_LABEL }}
+#           draft: false
+#      # Autoapprove
+#      - name: Autoapprove
+#        run: gh pr review ${{ steps.cpr.outputs.pull-request-number }} --approve
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # User cannot approve own PR
+#      # Automerge
+#      - name: Automerge
+#        run: |
+#          git checkout ${{ env.GITHUB_REF_NAME }}
+#          gh pr merge $PR_NUM --subject $SUBJECT --squash --delete-branch --auto
+#        env:
+#          PR_NUM: ${{ steps.cpr.outputs.pull-request-number }}
+#          SUBJECT: 'chore/image-ver-${{ env.VER_NUM }}'
+#          GITHUB_TOKEN: ${{ secrets.VNF_GITHUB_TOKEN }}
