@@ -46,3 +46,42 @@ currency_code = 'VCR';
 UPDATE acc_gl_journal_entry
 set
 currency_code = 'VCR';
+
+-- The below tables has currency_code but there are no data in those tables in dev
+-- updating these table also for safer side
+
+UPDATE m_charge
+set
+currency_code = 'VCR';
+
+UPDATE m_interest_rate_slab
+set
+currency_code = 'VCR';
+
+UPDATE m_savings_account_interest_rate_slab
+set
+currency_code = 'VCR';
+
+UPDATE m_office_transaction
+set
+currency_code = 'VCR';
+
+UPDATE m_product_loan
+set
+currency_code = 'VCR';
+
+UPDATE m_cashier_transactions
+set
+currency_code = 'VCR';
+
+UPDATE m_client_transaction
+set
+currency_code = 'VCR';
+
+UPDATE m_loanproduct_provisioning_entry
+set
+currency_code = 'VCR';
+
+UPDATE m_share_product
+set
+currency_code = 'VCR';
