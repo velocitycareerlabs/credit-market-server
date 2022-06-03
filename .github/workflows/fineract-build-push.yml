@@ -149,6 +149,7 @@ jobs:
   update-tfenv-versions:
     needs:
       - build-server-images
+      - push-to-ecr
     name: Update tfvars
     runs-on: ubuntu-latest
     env:
