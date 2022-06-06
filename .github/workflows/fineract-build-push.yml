@@ -155,7 +155,7 @@ jobs:
     env:
       fineract: ${{ needs.build-server-images.outputs.fineract }}
     steps:
-      # Checkout repository
+      # Checkout monorepo repository
       #!!!! QUESTION. what GITHUB_TOKEN should be used?
       - name: Checkout Repository monorepo
         uses: actions/checkout@v3
@@ -163,19 +163,24 @@ jobs:
            token: ${{ secrets.GITHUB_TOKEN }}
            repository: velocitycareerlabs/monorepo
            ref: ${{ github.ref }}
+      # Checkout credit-marget-server Repository
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+           path: credit-market-server
       # Set Slug
       - name: Inject slug/short variables
         uses: rlespinasse/github-slug-action@v3.x
       # Set Common Variables
       - name: Set Common Variables
-        run: bash ./eng/environments/common.sh
+        run: bash ./credit-market-server/eng/environments/common.sh
       # Set Dev Variables
       - name: Set Dev Variables
-        run: bash ./eng/environments/dev.sh
+        run: bash ./credit-market-server/eng/environments/dev.sh
         if: github.ref == 'refs/heads/dev'
       # Set Staging Variables
       - name: Set Staging Variables
-        run: bash ./eng/environments/staging.sh
+        run: bash ./credit-market-server/eng/environments/staging.sh
         if: github.ref == 'refs/heads/staging'
       # Cleaup Old PRs
       #!!!! QUESTION. is this step require?
@@ -186,7 +191,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # Update fineract image versions
-      #!!!! QUESTION. version of fineract doesn't contain '1' like in monorepo
       - name: Update fineract image versions
         run: bash ./eng/scripts/update-image-version.sh fineract
       # Create new branch and PR to origin branch
