@@ -97,7 +97,7 @@ public class Auth0UserImportService {
         Set<Role> fineractRoles = resolveRolesFromAuthorities(authorities);
 
         if (CollectionUtils.isEmpty(fineractRoles)) {
-            throw new RuntimeException("Auth0 user has no fineract-recognisable role, please check this to login again");
+            throw new NoAuthorizationException("Auth0 user has no fineract-recognisable role, please check this to login again");
         }
 
         final Collection<Client> clients = Collections.emptyList();
