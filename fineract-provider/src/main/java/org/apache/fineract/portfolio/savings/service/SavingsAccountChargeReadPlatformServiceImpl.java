@@ -96,11 +96,15 @@ public class SavingsAccountChargeReadPlatformServiceImpl implements SavingsAccou
             final Long chargeId = rs.getLong("chargeId");
             final Long accountId = rs.getLong("accountId");
             final String name = rs.getString("name");
-            final BigDecimal amount = rs.getBigDecimal("amountDue");
-            final BigDecimal amountPaid = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "amountPaid");
-            final BigDecimal amountWaived = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "amountWaived");
-            final BigDecimal amountWrittenOff = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "amountWrittenOff");
-            final BigDecimal amountOutstanding = rs.getBigDecimal("amountOutstanding");
+
+            final Integer currencyDecimalPlaces = JdbcSupport.getInteger(rs, "currencyDecimalPlaces");
+
+            final BigDecimal amount = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "amountDue", currencyDecimalPlaces);
+            final BigDecimal amountPaid = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "amountPaid", currencyDecimalPlaces);
+            final BigDecimal amountWaived = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "amountWaived", currencyDecimalPlaces);
+            final BigDecimal amountWrittenOff = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "amountWrittenOff", currencyDecimalPlaces);
+            final BigDecimal amountOutstanding = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "amountOutstanding",
+                    currencyDecimalPlaces);
 
             final BigDecimal percentageOf = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "percentageOf");
             final BigDecimal amountPercentageAppliedTo = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "amountPercentageAppliedTo");
@@ -109,7 +113,6 @@ public class SavingsAccountChargeReadPlatformServiceImpl implements SavingsAccou
             final String currencyName = rs.getString("currencyName");
             final String currencyNameCode = rs.getString("currencyNameCode");
             final String currencyDisplaySymbol = rs.getString("currencyDisplaySymbol");
-            final Integer currencyDecimalPlaces = JdbcSupport.getInteger(rs, "currencyDecimalPlaces");
             final Integer inMultiplesOf = JdbcSupport.getInteger(rs, "inMultiplesOf");
 
             final CurrencyData currency = new CurrencyData(currencyCode, currencyName, currencyDecimalPlaces, inMultiplesOf,

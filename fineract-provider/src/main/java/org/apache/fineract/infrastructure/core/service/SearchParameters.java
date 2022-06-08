@@ -18,7 +18,6 @@
  */
 package org.apache.fineract.infrastructure.core.service;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
@@ -641,7 +640,7 @@ public final class SearchParameters {
         this.transfersOnly = transfersOnly;
     }
 
-    public Collection<String> getDescriptions() {
+    public List<String> getDescriptions() {
         return descriptions;
     }
 

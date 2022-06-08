@@ -83,7 +83,7 @@ public class VoucherReadServiceImpl implements VoucherReadService {
         sql.append(
                 "SELECT `id`, `client_id`, `couponBundleId`, `symbol`, `quantity`, `used`, (`quantity` - `used`) as balance, `expiry`, `updatedAt`, `createdAt` FROM Voucher where `used` < `quantity` AND `client_id` = ? ");
         if (date != null) {
-            sql.append(" and `expiry` <= ?");
+            sql.append(" and `expiry` >= ?");
 
             String dateString = df.format(date);
             paramList.add(dateString);

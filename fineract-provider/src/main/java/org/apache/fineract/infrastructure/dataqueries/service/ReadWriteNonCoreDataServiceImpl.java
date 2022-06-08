@@ -367,7 +367,11 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
     @Transactional
     @Override
     public CommandProcessingResult createNewDatatableEntry(final String dataTableName, final Long appTableId, final JsonCommand command) {
-        return createNewDatatableEntry(dataTableName, appTableId, command.json());
+        if (!dataTableName.equals("Voucher_Transaction")) {
+            return createNewDatatableEntry(dataTableName, appTableId, command.json());
+        } else {
+            return CommandProcessingResult.empty();
+        }
     }
 
     @Transactional

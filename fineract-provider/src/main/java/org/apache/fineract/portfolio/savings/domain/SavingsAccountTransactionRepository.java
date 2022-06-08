@@ -18,6 +18,8 @@
  */
 package org.apache.fineract.portfolio.savings.domain;
 
+import java.util.Date;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -29,5 +31,9 @@ public interface SavingsAccountTransactionRepository
     @Query("select sat from SavingsAccountTransaction sat where sat.id = :transactionId and sat.savingsAccount.id = :savingsId")
     SavingsAccountTransaction findOneByIdAndSavingsAccountId(@Param("transactionId") Long transactionId,
             @Param("savingsId") Long savingsId);
+
+    @Query("select sat from SavingsAccountTransaction sat where sat.dateOf between :currentActivationDate and :newActivationDate and sat.savingsAccount.id = :savingsId")
+    List<SavingsAccountTransaction> findAllTransactionBetweenDates(@Param("currentActivationDate") Date currentActivationDate,
+            @Param("newActivationDate") Date newActivationDate, @Param("savingsId") Long savingsId);
 
 }
