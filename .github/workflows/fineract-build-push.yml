@@ -6,6 +6,9 @@ on:
       - master
       - staging
       - dev
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 # TODO These jobs reuse the same first 7 steps. Replace with https://github.com/actions/runner/issues/438
 # TODO Instead of suffixing with sha's should suffix with file hashes. In pseudo code we want to => determine all package/server hashes => set versions => filter out existent packages => publish all missing packages/servers
 jobs:
@@ -156,7 +159,6 @@ jobs:
       fineract: ${{ needs.build-server-images.outputs.fineract }}
     steps:
       # Checkout monorepo repository
-      #!!!! QUESTION. what GITHUB_TOKEN should be used?
       - name: Checkout Repository monorepo
         uses: actions/checkout@v3
         with:
@@ -183,7 +185,6 @@ jobs:
         run: bash ./credit-market-server/eng/environments/staging.sh
         if: github.ref == 'refs/heads/staging'
       # Cleaup Old PRs
-      #!!!! QUESTION. is this step require?
       - name: Cleaup Old PRs
         run: |
           gh pr list --repo velocitycareerlabs/monorepo --json number --jq '.[] | .number' --label ${{ env.VER_PR_LABEL }} | \
@@ -194,7 +195,6 @@ jobs:
       - name: Update fineract image versions
         run: bash ./eng/scripts/update-image-version.sh fineract
       # Create new branch and PR to origin branch
-      #!!!! QUESTION. What branch prefix will be 'chore/image-ver' or another one?
       - name: Create new branch and PR to origin branch
         id: cpr
         uses: peter-evans/create-pull-request@v3
