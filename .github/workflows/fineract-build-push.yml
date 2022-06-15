@@ -165,25 +165,24 @@ jobs:
            token: ${{ secrets.GITHUB_TOKEN }}
            repository: velocitycareerlabs/monorepo
            ref: ${{ github.ref }}
-      # Checkout credit-marget-server Repository
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-        with:
-           path: credit-market-server
       # Set Slug
       - name: Inject slug/short variables
         uses: rlespinasse/github-slug-action@v3.x
       # Set Common Variables
       - name: Set Common Variables
-        run: bash ./credit-market-server/eng/environments/common.sh
+        run: bash ./eng/environments/common.sh
       # Set Dev Variables
       - name: Set Dev Variables
-        run: bash ./credit-market-server/eng/environments/dev.sh
+        run: bash ./eng/environments/dev.sh
         if: github.ref == 'refs/heads/dev'
       # Set Staging Variables
       - name: Set Staging Variables
-        run: bash ./credit-market-server/eng/environments/staging.sh
+        run: bash ./eng/environments/staging.sh
         if: github.ref == 'refs/heads/staging'
+      # Set Prod Variables
+      - name: Set Prod Variables
+        run: bash ./eng/environments/prod.sh
+        if: github.ref == 'refs/heads/master'
       # Cleaup Old PRs
       - name: Cleaup Old PRs
         run: |

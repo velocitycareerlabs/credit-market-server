@@ -1,5 +1,4 @@
 #!/bin/bash
-CLOUD_ENV="prod"
 VER_NUM="$CURR_VERSION"
 CONTAINER_MAIN_TAG="latest"
 FINERACT_SECURITY_AUTH0_DOMAIN="velocitynetwork.us.auth0.com"
