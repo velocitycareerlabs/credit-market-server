@@ -162,7 +162,7 @@ jobs:
       - name: Checkout Repository monorepo
         uses: actions/checkout@v3
         with:
-           token: ${{ secrets.GITHUB_TOKEN }}
+           token: ${{ secrets.VNF_GITHUB_TOKEN }}
            repository: velocitycareerlabs/monorepo
            ref: ${{ github.ref }}
       # Set Slug
