@@ -17,7 +17,7 @@ jobs:
     name: Build Server Images
     runs-on: ubuntu-latest
     outputs:
-      image_sha: ${{ env.image_sha }}
+      fineract: ${{ env.fineract }}
     steps:
       # Checkout Repository
       - name: Checkout Repository
@@ -69,9 +69,9 @@ jobs:
             FINERACT_SECURITY_AUTH0_DOMAIN=${{ env.FINERACT_SECURITY_AUTH0_DOMAIN }}
             FINERACT_SECURITY_AUTH0_ISSUER_URI=${{ env.FINERACT_SECURITY_AUTH0_ISSUER_URI }}
             FINERACT_SECURITY_AUTH0_AUDIENCE=${{ env.FINERACT_SECURITY_AUTH0_AUDIENCE }}
-      # SHA digest used for Prod env
       - name: Image id as env
-        run: echo "image_sha=${{ steps.github-build-stage.outputs.digest }}" >> $GITHUB_ENV
+        run: echo "fineract=${{ steps.github-build-stage.outputs.digest }}" >> $GITHUB_ENV
+
   push-to-ecr:
     needs: build-server-images
     name: Push to ECR
@@ -148,6 +148,7 @@ jobs:
         run: |
           docker push $AWS_MAIN_TAG
           docker push $AWS_VER_TAG
+
   update-tfenv-versions:
     needs:
       - build-server-images
@@ -155,10 +156,10 @@ jobs:
     name: Update tfvars
     runs-on: ubuntu-latest
     env:
-      image_sha: ${{ needs.build-server-images.outputs.image_sha }}
+      fineract: ${{ needs.build-server-images.outputs.fineract }}
     steps:
       # Checkout monorepo repository
-      - name: Checkout Repository
+      - name: Checkout Repository monorepo
         uses: actions/checkout@v3
         with:
            token: ${{ secrets.VNF_GITHUB_TOKEN }}
@@ -182,22 +183,43 @@ jobs:
       - name: Set Prod Variables
         run: bash ./eng/environments/prod.sh
         if: github.ref == 'refs/heads/master'
-      # Run worflow update tf in monorepo
-      - name: Run worflow update tf in monorepo
-        uses: actions/github-script@v6
+      # Cleaup Old PRs
+      - name: Cleaup Old PRs
+        run: |
+          gh pr list --repo velocitycareerlabs/monorepo --json number --jq '.[] | .number' --label ${{ env.VER_PR_LABEL }} | \
+          while read pr; do gh pr close $pr --repo velocitycareerlabs/monorepo --delete-branch; done
         env:
-          UPDATE_SERVICE_NAME: 'fineract'
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Update fineract image versions
+      - name: Update fineract image versions
+        run: bash ./eng/scripts/update-image-version.sh fineract
+      # Create new branch and PR to origin branch
+      - name: Create new branch and PR to origin branch
+        id: cpr
+        uses: peter-evans/create-pull-request@v3
         with:
-          github-token: ${{ secrets.VNF_GITHUB_TOKEN }}
-          script: |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: 'velocitycareerlabs',
-              repo: 'monorepo',
-              workflow_id: 'external-version-update.yml',
-              ref: '${{ github.ref }}',
-              inputs: {
-                version: '${{ env.VER_NUM }}',
-                service_name: '${{ env.UPDATE_SERVICE_NAME }}',
-                image_sha: '${{ env.image_sha }}'
-              }
-            })
+           token: ${{ secrets.VNF_GITHUB_TOKEN }}
+           branch: 'chore/image-ver-${{ env.VER_NUM }}'
+           commit-message: 'chore/image-ver-${{ env.VER_NUM }}'
+           delete-branch: true
+           title: 'chore/image-ver-${{ env.VER_NUM }}'
+           body: |
+              Automated image version update PR
+              - chore/image-ver-${{ env.VER_NUM }}
+           labels: |
+             ${{ env.VER_PR_LABEL }}
+           draft: false
+      # Autoapprove
+      - name: Autoapprove
+        run: gh pr review ${{ steps.cpr.outputs.pull-request-number }} --approve
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # User cannot approve own PR
+      # Automerge
+      - name: Automerge
+        run: |
+          git checkout ${{ env.GITHUB_REF_NAME }}
+          gh pr merge $PR_NUM --subject $SUBJECT --squash --delete-branch --auto
+        env:
+          PR_NUM: ${{ steps.cpr.outputs.pull-request-number }}
+          SUBJECT: 'chore/image-ver-${{ env.VER_NUM }}'
+          GITHUB_TOKEN: ${{ secrets.VNF_GITHUB_TOKEN }}
