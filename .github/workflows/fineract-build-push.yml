@@ -17,11 +17,7 @@ jobs:
     name: Build Server Images
     runs-on: ubuntu-latest
     outputs:
-<<<<<<< HEAD
       image_sha: ${{ env.image_sha }}
-=======
-      fineract: ${{ env.fineract }}
->>>>>>> dev
     steps:
       # Checkout Repository
       - name: Checkout Repository
@@ -73,15 +69,9 @@ jobs:
             FINERACT_SECURITY_AUTH0_DOMAIN=${{ env.FINERACT_SECURITY_AUTH0_DOMAIN }}
             FINERACT_SECURITY_AUTH0_ISSUER_URI=${{ env.FINERACT_SECURITY_AUTH0_ISSUER_URI }}
             FINERACT_SECURITY_AUTH0_AUDIENCE=${{ env.FINERACT_SECURITY_AUTH0_AUDIENCE }}
-<<<<<<< HEAD
       # SHA digest used for Prod env
       - name: Image id as env
         run: echo "image_sha=${{ steps.github-build-stage.outputs.digest }}" >> $GITHUB_ENV
-=======
-      - name: Image id as env
-        run: echo "fineract=${{ steps.github-build-stage.outputs.digest }}" >> $GITHUB_ENV
-
->>>>>>> dev
   push-to-ecr:
     needs: build-server-images
     name: Push to ECR
@@ -158,10 +148,6 @@ jobs:
         run: |
           docker push $AWS_MAIN_TAG
           docker push $AWS_VER_TAG
-<<<<<<< HEAD
-=======
-
->>>>>>> dev
   update-tfenv-versions:
     needs:
       - build-server-images
@@ -169,17 +155,10 @@ jobs:
     name: Update tfvars
     runs-on: ubuntu-latest
     env:
-<<<<<<< HEAD
       image_sha: ${{ needs.build-server-images.outputs.image_sha }}
     steps:
       # Checkout monorepo repository
       - name: Checkout Repository
-=======
-      fineract: ${{ needs.build-server-images.outputs.fineract }}
-    steps:
-      # Checkout monorepo repository
-      - name: Checkout Repository monorepo
->>>>>>> dev
         uses: actions/checkout@v3
         with:
            token: ${{ secrets.VNF_GITHUB_TOKEN }}
@@ -203,7 +182,6 @@ jobs:
       - name: Set Prod Variables
         run: bash ./eng/environments/prod.sh
         if: github.ref == 'refs/heads/master'
-<<<<<<< HEAD
       # Run worflow update tf in monorepo
       - name: Run worflow update tf in monorepo
         uses: actions/github-script@v6
@@ -223,45 +201,3 @@ jobs:
                 image_sha: '${{ env.image_sha }}'
               }
             })
-=======
-      # Cleaup Old PRs
-      - name: Cleaup Old PRs
-        run: |
-          gh pr list --repo velocitycareerlabs/monorepo --json number --jq '.[] | .number' --label ${{ env.VER_PR_LABEL }} | \
-          while read pr; do gh pr close $pr --repo velocitycareerlabs/monorepo --delete-branch; done
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      # Update fineract image versions
-      - name: Update fineract image versions
-        run: bash ./eng/scripts/update-image-version.sh fineract
-      # Create new branch and PR to origin branch
-      - name: Create new branch and PR to origin branch
-        id: cpr
-        uses: peter-evans/create-pull-request@v3
-        with:
-           token: ${{ secrets.VNF_GITHUB_TOKEN }}
-           branch: 'chore/image-ver-${{ env.VER_NUM }}'
-           commit-message: 'chore/image-ver-${{ env.VER_NUM }}'
-           delete-branch: true
-           title: 'chore/image-ver-${{ env.VER_NUM }}'
-           body: |
-              Automated image version update PR
-              - chore/image-ver-${{ env.VER_NUM }}
-           labels: |
-             ${{ env.VER_PR_LABEL }}
-           draft: false
-      # Autoapprove
-      - name: Autoapprove
-        run: gh pr review ${{ steps.cpr.outputs.pull-request-number }} --approve
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # User cannot approve own PR
-      # Automerge
-      - name: Automerge
-        run: |
-          git checkout ${{ env.GITHUB_REF_NAME }}
-          gh pr merge $PR_NUM --subject $SUBJECT --squash --delete-branch --auto
-        env:
-          PR_NUM: ${{ steps.cpr.outputs.pull-request-number }}
-          SUBJECT: 'chore/image-ver-${{ env.VER_NUM }}'
-          GITHUB_TOKEN: ${{ secrets.VNF_GITHUB_TOKEN }}
->>>>>>> dev
