@@ -6,6 +6,9 @@ on:
       - master
       - staging
       - dev
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 # TODO These jobs reuse the same first 7 steps. Replace with https://github.com/actions/runner/issues/438
 # TODO Instead of suffixing with sha's should suffix with file hashes. In pseudo code we want to => determine all package/server hashes => set versions => filter out existent packages => publish all missing packages/servers
 jobs:
@@ -13,6 +16,8 @@ jobs:
   build-server-images:
     name: Build Server Images
     runs-on: ubuntu-latest
+    outputs:
+      image_sha: ${{ env.image_sha }}
     steps:
       # Checkout Repository
       - name: Checkout Repository
@@ -23,8 +28,10 @@ jobs:
       # Set Server Name
       - name: Set Server Name
         run: echo 'SERVER_NAME=fineract' >> $GITHUB_ENV
+      # Set Common Variables
       - name: Set Common Variables
         run: bash ./eng/environments/common.sh
+      # Set Dev Variables
       - name: Set Dev Variables
         run: bash ./eng/environments/dev.sh
         if: github.ref == 'refs/heads/dev'
@@ -50,6 +57,7 @@ jobs:
           registry: ${{ env.TARGET_CONTAINER_REG }}
       # Build and Push to GitHub
       - name: Build and Push to GitHub
+        id: github-build-stage
         uses: docker/build-push-action@v2
         with:
           context: .
@@ -61,7 +69,9 @@ jobs:
             FINERACT_SECURITY_AUTH0_DOMAIN=${{ env.FINERACT_SECURITY_AUTH0_DOMAIN }}
             FINERACT_SECURITY_AUTH0_ISSUER_URI=${{ env.FINERACT_SECURITY_AUTH0_ISSUER_URI }}
             FINERACT_SECURITY_AUTH0_AUDIENCE=${{ env.FINERACT_SECURITY_AUTH0_AUDIENCE }}
-
+      # SHA digest used for Prod env
+      - name: Image id as env
+        run: echo "image_sha=${{ steps.github-build-stage.outputs.digest }}" >> $GITHUB_ENV
   push-to-ecr:
     needs: build-server-images
     name: Push to ECR
@@ -138,3 +148,56 @@ jobs:
         run: |
           docker push $AWS_MAIN_TAG
           docker push $AWS_VER_TAG
+  update-tfenv-versions:
+    needs:
+      - build-server-images
+      - push-to-ecr
+    name: Update tfvars
+    runs-on: ubuntu-latest
+    env:
+      image_sha: ${{ needs.build-server-images.outputs.image_sha }}
+    steps:
+      # Checkout monorepo repository
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+           token: ${{ secrets.VNF_GITHUB_TOKEN }}
+           repository: velocitycareerlabs/monorepo
+           ref: ${{ github.ref }}
+      # Set Slug
+      - name: Inject slug/short variables
+        uses: rlespinasse/github-slug-action@v3.x
+      # Set Common Variables
+      - name: Set Common Variables
+        run: bash ./eng/environments/common.sh
+      # Set Dev Variables
+      - name: Set Dev Variables
+        run: bash ./eng/environments/dev.sh
+        if: github.ref == 'refs/heads/dev'
+      # Set Staging Variables
+      - name: Set Staging Variables
+        run: bash ./eng/environments/staging.sh
+        if: github.ref == 'refs/heads/staging'
+      # Set Prod Variables
+      - name: Set Prod Variables
+        run: bash ./eng/environments/prod.sh
+        if: github.ref == 'refs/heads/master'
+      # Run worflow update tf in monorepo
+      - name: Run worflow update tf in monorepo
+        uses: actions/github-script@v6
+        env:
+          UPDATE_SERVICE_NAME: 'fineract'
+        with:
+          github-token: ${{ secrets.VNF_GITHUB_TOKEN }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: 'velocitycareerlabs',
+              repo: 'monorepo',
+              workflow_id: 'external-version-update.yml',
+              ref: '${{ github.ref }}',
+              inputs: {
+                version: '${{ env.VER_NUM }}',
+                service_name: '${{ env.UPDATE_SERVICE_NAME }}',
+                image_sha: '${{ env.image_sha }}'
+              }
+            })
