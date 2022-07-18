@@ -1056,7 +1056,7 @@ public class DepositAccountReadPlatformServiceImpl implements DepositAccountRead
                 final String fromTransferDescription = rs.getString("fromTransferDescription");
 
                 transfer = AccountTransferData.transferBasicDetails(fromTransferId, currency, fromTransferAmount, fromTransferDate,
-                        fromTransferDescription, fromTransferReversed, null, null, null , null);
+                        fromTransferDescription, fromTransferReversed, null, null, null, null);
             } else if (toTransferId != null) {
                 final LocalDate toTransferDate = JdbcSupport.getLocalDate(rs, "toTransferDate");
                 final BigDecimal toTransferAmount = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "toTransferAmount");

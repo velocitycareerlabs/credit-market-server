@@ -859,8 +859,10 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
             sqlBuilder.append("join m_currency curr on curr.code = sa.currency_code ");
             sqlBuilder.append("left join m_account_transfer_transaction fromtran on fromtran.from_savings_transaction_id = tr.id ");
             sqlBuilder.append("left join m_account_transfer_transaction totran on totran.to_savings_transaction_id = tr.id ");
-            sqlBuilder.append("left join m_account_transfer_details fromtrandetails on fromtrandetails.id = fromtran.account_transfer_details_id ");
-            sqlBuilder.append("left join m_account_transfer_details totrandetails on totrandetails.id = totran.account_transfer_details_id ");
+            sqlBuilder.append(
+                    "left join m_account_transfer_details fromtrandetails on fromtrandetails.id = fromtran.account_transfer_details_id ");
+            sqlBuilder
+                    .append("left join m_account_transfer_details totrandetails on totrandetails.id = totran.account_transfer_details_id ");
             sqlBuilder.append("left join m_payment_detail pd on tr.payment_detail_id = pd.id ");
             sqlBuilder.append("left join m_payment_type pt on pd.payment_type_id = pt.id ");
             sqlBuilder.append(" left join m_appuser au on au.id=tr.appuser_id ");
@@ -927,7 +929,7 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
                 final Long toSavingsAccountId = JdbcSupport.getLong(rs, "toSavingsAccountId");
 
                 transfer = AccountTransferData.transferBasicDetails(fromTransferId, currency, fromTransferAmount, fromTransferDate,
-                        fromTransferDescription, fromTransferReversed, null, toSavingsTransactionId, null , toSavingsAccountId);
+                        fromTransferDescription, fromTransferReversed, null, toSavingsTransactionId, null, toSavingsAccountId);
             } else if (toTransferId != null) {
                 final LocalDate toTransferDate = JdbcSupport.getLocalDate(rs, "toTransferDate");
                 final BigDecimal toTransferAmount = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "toTransferAmount", currencyDigits);

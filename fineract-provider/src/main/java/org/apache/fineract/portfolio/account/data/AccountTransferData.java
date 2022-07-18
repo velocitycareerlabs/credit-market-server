@@ -97,8 +97,8 @@ public final class AccountTransferData implements Serializable {
     }
 
     public static AccountTransferData transferBasicDetails(final Long id, final CurrencyData currency, final BigDecimal transferAmount,
-                                                           final LocalDate transferDate, final String description, final Boolean reversed, final Long fromSavingsTransactionId,
-                                                           final Long toSavingsTransactionId, Long fromSavingsAccountId, Long toSavingsAccountId) {
+            final LocalDate transferDate, final String description, final Boolean reversed, final Long fromSavingsTransactionId,
+            final Long toSavingsTransactionId, Long fromSavingsAccountId, Long toSavingsAccountId) {
 
         final EnumOptionData fromAccountType = null;
         final EnumOptionData toAccountType = null;
@@ -116,7 +116,8 @@ public final class AccountTransferData implements Serializable {
             final Collection<EnumOptionData> fromAccountTypeOptions, final Collection<PortfolioAccountData> fromAccountOptions,
             final Collection<OfficeData> toOfficeOptions, final Collection<ClientData> toClientOptions,
             final Collection<EnumOptionData> toAccountTypeOptions, final Collection<PortfolioAccountData> toAccountOptions,
-            final Long fromSavingsTransactionId, final Long toSavingsTransactionId, final Long fromSavingsAccountId, final Long toSavingsAccountId) {
+            final Long fromSavingsTransactionId, final Long toSavingsTransactionId, final Long fromSavingsAccountId,
+            final Long toSavingsAccountId) {
         this.id = id;
         this.reversed = reversed;
         this.fromOffice = fromOffice;

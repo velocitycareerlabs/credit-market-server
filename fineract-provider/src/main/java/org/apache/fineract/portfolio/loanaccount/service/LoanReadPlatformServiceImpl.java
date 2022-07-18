@@ -1343,7 +1343,7 @@ public class LoanReadPlatformServiceImpl implements LoanReadPlatformService {
                 final String toTransferDescription = rs.getString("toTransferDescription");
 
                 transfer = AccountTransferData.transferBasicDetails(toTransferId, currencyData, toTransferAmount, toTransferDate,
-                        toTransferDescription, toTransferReversed, null, null, null , null);
+                        toTransferDescription, toTransferReversed, null, null, null, null);
             }
             return new LoanTransactionData(id, officeId, officeName, transactionType, paymentDetailData, currencyData, date, totalAmount,
                     principalPortion, interestPortion, feeChargesPortion, penaltyChargesPortion, overPaymentPortion,
