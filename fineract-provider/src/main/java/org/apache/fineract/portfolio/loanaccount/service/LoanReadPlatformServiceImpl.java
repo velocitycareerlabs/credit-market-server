@@ -1335,7 +1335,7 @@ public class LoanReadPlatformServiceImpl implements LoanReadPlatformService {
                 final String fromTransferDescription = rs.getString("fromTransferDescription");
 
                 transfer = AccountTransferData.transferBasicDetails(fromTransferId, currencyData, fromTransferAmount, fromTransferDate,
-                        fromTransferDescription, fromTransferReversed, null, null);
+                        fromTransferDescription, fromTransferReversed, null, null, null, null);
             } else if (toTransferId != null) {
                 final LocalDate toTransferDate = JdbcSupport.getLocalDate(rs, "toTransferDate");
                 final BigDecimal toTransferAmount = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "toTransferAmount");
@@ -1343,7 +1343,7 @@ public class LoanReadPlatformServiceImpl implements LoanReadPlatformService {
                 final String toTransferDescription = rs.getString("toTransferDescription");
 
                 transfer = AccountTransferData.transferBasicDetails(toTransferId, currencyData, toTransferAmount, toTransferDate,
-                        toTransferDescription, toTransferReversed, null, null);
+                        toTransferDescription, toTransferReversed, null, null, null , null);
             }
             return new LoanTransactionData(id, officeId, officeName, transactionType, paymentDetailData, currencyData, date, totalAmount,
                     principalPortion, interestPortion, feeChargesPortion, penaltyChargesPortion, overPaymentPortion,

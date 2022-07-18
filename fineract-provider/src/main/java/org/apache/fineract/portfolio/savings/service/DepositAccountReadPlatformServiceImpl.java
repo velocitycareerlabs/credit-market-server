@@ -1056,7 +1056,7 @@ public class DepositAccountReadPlatformServiceImpl implements DepositAccountRead
                 final String fromTransferDescription = rs.getString("fromTransferDescription");
 
                 transfer = AccountTransferData.transferBasicDetails(fromTransferId, currency, fromTransferAmount, fromTransferDate,
-                        fromTransferDescription, fromTransferReversed, null, null);
+                        fromTransferDescription, fromTransferReversed, null, null, null , null);
             } else if (toTransferId != null) {
                 final LocalDate toTransferDate = JdbcSupport.getLocalDate(rs, "toTransferDate");
                 final BigDecimal toTransferAmount = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "toTransferAmount");
@@ -1064,7 +1064,7 @@ public class DepositAccountReadPlatformServiceImpl implements DepositAccountRead
                 final String toTransferDescription = rs.getString("toTransferDescription");
 
                 transfer = AccountTransferData.transferBasicDetails(toTransferId, currency, toTransferAmount, toTransferDate,
-                        toTransferDescription, toTransferReversed, null, null);
+                        toTransferDescription, toTransferReversed, null, null, null, null);
             }
             final boolean postInterestAsOn = false;
             final String submittedByUsername = rs.getString("submittedByUsername");

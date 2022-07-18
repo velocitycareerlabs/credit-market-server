@@ -839,10 +839,12 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
             sqlBuilder.append("fromtran.transaction_date as fromTransferDate, fromtran.amount as fromTransferAmount,");
             sqlBuilder.append("fromtran.description as fromTransferDescription,");
             sqlBuilder.append("fromtran.to_savings_transaction_id as toSavingsTransactionId,");
+            sqlBuilder.append("fromtrandetails.to_savings_account_id as toSavingsAccountId,");
             sqlBuilder.append("totran.id as toTransferId, totran.is_reversed as toTransferReversed,");
             sqlBuilder.append("totran.transaction_date as toTransferDate, totran.amount as toTransferAmount,");
             sqlBuilder.append("totran.description as toTransferDescription,");
             sqlBuilder.append("totran.from_savings_transaction_id as fromSavingsTransactionId,");
+            sqlBuilder.append("totrandetails.from_savings_account_id as fromSavingsAccountId,");
             sqlBuilder.append("sa.id as savingsId, sa.account_no as accountNo,");
             sqlBuilder.append("pd.payment_type_id as paymentType,pd.account_number as accountNumber,pd.check_number as checkNumber, ");
             sqlBuilder.append("pd.receipt_number as receiptNumber, pd.bank_number as bankNumber,pd.routing_code as routingCode, ");
@@ -857,6 +859,8 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
             sqlBuilder.append("join m_currency curr on curr.code = sa.currency_code ");
             sqlBuilder.append("left join m_account_transfer_transaction fromtran on fromtran.from_savings_transaction_id = tr.id ");
             sqlBuilder.append("left join m_account_transfer_transaction totran on totran.to_savings_transaction_id = tr.id ");
+            sqlBuilder.append("left join m_account_transfer_details fromtrandetails on fromtrandetails.id = fromtran.account_transfer_details_id ");
+            sqlBuilder.append("left join m_account_transfer_details totrandetails on totrandetails.id = totran.account_transfer_details_id ");
             sqlBuilder.append("left join m_payment_detail pd on tr.payment_detail_id = pd.id ");
             sqlBuilder.append("left join m_payment_type pt on pd.payment_type_id = pt.id ");
             sqlBuilder.append(" left join m_appuser au on au.id=tr.appuser_id ");
@@ -920,18 +924,20 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
                 final boolean fromTransferReversed = rs.getBoolean("fromTransferReversed");
                 final String fromTransferDescription = rs.getString("fromTransferDescription");
                 final Long toSavingsTransactionId = JdbcSupport.getLong(rs, "toSavingsTransactionId");
+                final Long toSavingsAccountId = JdbcSupport.getLong(rs, "toSavingsAccountId");
 
                 transfer = AccountTransferData.transferBasicDetails(fromTransferId, currency, fromTransferAmount, fromTransferDate,
-                        fromTransferDescription, fromTransferReversed, null, toSavingsTransactionId);
+                        fromTransferDescription, fromTransferReversed, null, toSavingsTransactionId, null , toSavingsAccountId);
             } else if (toTransferId != null) {
                 final LocalDate toTransferDate = JdbcSupport.getLocalDate(rs, "toTransferDate");
                 final BigDecimal toTransferAmount = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "toTransferAmount", currencyDigits);
                 final boolean toTransferReversed = rs.getBoolean("toTransferReversed");
                 final String toTransferDescription = rs.getString("toTransferDescription");
                 final Long fromSavingsTransactionId = JdbcSupport.getLong(rs, "fromSavingsTransactionId");
+                final Long fromSavingsAccountId = JdbcSupport.getLong(rs, "fromSavingsAccountId");
 
                 transfer = AccountTransferData.transferBasicDetails(toTransferId, currency, toTransferAmount, toTransferDate,
-                        toTransferDescription, toTransferReversed, fromSavingsTransactionId, null);
+                        toTransferDescription, toTransferReversed, fromSavingsTransactionId, null, fromSavingsAccountId, null);
             }
             final String submittedByUsername = rs.getString("submittedByUsername");
             final String note = rs.getString("transactionNote");
