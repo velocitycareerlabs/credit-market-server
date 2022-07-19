@@ -21,7 +21,7 @@ jobs:
     steps:
       # Checkout Repository
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       # Set Slug
       - name: Inject slug/short variables
         uses: rlespinasse/github-slug-action@v2.x
@@ -79,7 +79,7 @@ jobs:
     steps:
       # Checkout Repository
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       # Set Slug
       - name: Inject slug/short variables
         uses: rlespinasse/github-slug-action@v2.x
@@ -155,15 +155,12 @@ jobs:
     name: Update tfvars
     runs-on: ubuntu-latest
     env:
-      image_sha: ${{ needs.build-server-images.outputs.image_sha }}
+      IMAGE_SHA: ${{ needs.build-server-images.outputs.image_sha }}
+      UPDATE_SERVICE_NAME: 'fineract'
     steps:
       # Checkout monorepo repository
       - name: Checkout Repository
         uses: actions/checkout@v3
-        with:
-           token: ${{ secrets.VNF_GITHUB_TOKEN }}
-           repository: velocitycareerlabs/monorepo
-           ref: ${{ github.ref }}
       # Set Slug
       - name: Inject slug/short variables
         uses: rlespinasse/github-slug-action@v3.x
@@ -185,8 +182,6 @@ jobs:
       # Run worflow update tf in monorepo
       - name: Run worflow update tf in monorepo
         uses: actions/github-script@v6
-        env:
-          UPDATE_SERVICE_NAME: 'fineract'
         with:
           github-token: ${{ secrets.VNF_GITHUB_TOKEN }}
           script: |
@@ -198,6 +193,6 @@ jobs:
               inputs: {
                 version: '${{ env.VER_NUM }}',
                 service_name: '${{ env.UPDATE_SERVICE_NAME }}',
-                image_sha: '${{ env.image_sha }}'
+                image_sha: '${{ env.IMAGE_SHA }}'
               }
             })
