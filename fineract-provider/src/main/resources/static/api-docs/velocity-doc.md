@@ -828,3 +828,171 @@ it is a withdrawal transaction for fromAccount and it is a deposit transaction f
 response will be only transaction 2 and 3 which involved in transfers between accounts.
 > 
 > But when you just call GET /savingsaccounts/1/transactions - it will returns all the transactions from account 1.
+
+### 12. Get Voucher for client
+> GET /fineract-provider/api/v1/vouchers/{client_id}/expiring/{days} HTTP/1.1<br>
+> Host: devcredits.velocitycareerlabs.io<br>
+> fineract-platform-tenantid: default<br>
+> Authorization: Basic bWlmb3M6cGFzc3dvcmQ=
+>
+>
+```json
+Response
+[
+  {
+    "id": 89,
+    "clientId": 104,
+    "couponBundleId": "0x3ea2e47f88d006b6a45aa59a9339e5cda87919767c9613a3147e887789ff8b64",
+    "symbol": "VVO",
+    "quantity": 500,
+    "used": 2,
+    "expiryDate": {
+      "year": 2022,
+      "month": "MAY",
+      "leapYear": false,
+      "dayOfWeek": "WEDNESDAY",
+      "dayOfYear": 124,
+      "chronology": {
+        "calendarType": "iso8601",
+        "id": "ISO"
+      },
+      "era": "CE",
+      "monthValue": 5,
+      "dayOfMonth": 4
+    },
+    "updatedAt": {
+      "year": 2022,
+      "month": "APRIL",
+      "leapYear": false,
+      "dayOfWeek": "THURSDAY",
+      "dayOfYear": 118,
+      "chronology": {
+        "calendarType": "iso8601",
+        "id": "ISO"
+      },
+      "era": "CE",
+      "monthValue": 4,
+      "dayOfMonth": 28
+    },
+    "createdAt": {
+      "year": 2022,
+      "month": "FEBRUARY",
+      "leapYear": false,
+      "dayOfWeek": "THURSDAY",
+      "dayOfYear": 34,
+      "chronology": {
+        "calendarType": "iso8601",
+        "id": "ISO"
+      },
+      "era": "CE",
+      "monthValue": 2,
+      "dayOfMonth": 3
+    },
+    "balance": 498
+  },
+  {
+    "id": 90,
+    "clientId": 104,
+    "couponBundleId": "0x0d2470e7722087fd877734929f11c9495a1bb84223474c1e793b621e63a2dd31",
+    "symbol": "VVO",
+    "quantity": 500,
+    "used": 11,
+    "expiryDate": {
+      "year": 2022,
+      "month": "MAY",
+      "leapYear": false,
+      "dayOfWeek": "WEDNESDAY",
+      "dayOfYear": 124,
+      "chronology": {
+        "calendarType": "iso8601",
+        "id": "ISO"
+      },
+      "era": "CE",
+      "monthValue": 5,
+      "dayOfMonth": 4
+    },
+    "updatedAt": {
+      "year": 2022,
+      "month": "MAY",
+      "leapYear": false,
+      "dayOfWeek": "THURSDAY",
+      "dayOfYear": 132,
+      "chronology": {
+        "calendarType": "iso8601",
+        "id": "ISO"
+      },
+      "era": "CE",
+      "monthValue": 5,
+      "dayOfMonth": 12
+    },
+    "createdAt": {
+      "year": 2022,
+      "month": "FEBRUARY",
+      "leapYear": false,
+      "dayOfWeek": "THURSDAY",
+      "dayOfYear": 34,
+      "chronology": {
+        "calendarType": "iso8601",
+        "id": "ISO"
+      },
+      "era": "CE",
+      "monthValue": 2,
+      "dayOfMonth": 3
+    },
+    "balance": 489
+  },
+  {
+    "id": 91,
+    "clientId": 104,
+    "couponBundleId": "0x45cdb901b8bd1f24b94abfa645344f652bc2e892677fd91e66a50804b7a26658",
+    "symbol": "VVO",
+    "quantity": 500,
+    "used": 0,
+    "expiryDate": {
+      "year": 2022,
+      "month": "MAY",
+      "leapYear": false,
+      "dayOfWeek": "WEDNESDAY",
+      "dayOfYear": 124,
+      "chronology": {
+        "calendarType": "iso8601",
+        "id": "ISO"
+      },
+      "era": "CE",
+      "monthValue": 5,
+      "dayOfMonth": 4
+    },
+    "updatedAt": {
+      "year": 2022,
+      "month": "FEBRUARY",
+      "leapYear": false,
+      "dayOfWeek": "THURSDAY",
+      "dayOfYear": 34,
+      "chronology": {
+        "calendarType": "iso8601",
+        "id": "ISO"
+      },
+      "era": "CE",
+      "monthValue": 2,
+      "dayOfMonth": 3
+    },
+    "createdAt": {
+      "year": 2022,
+      "month": "FEBRUARY",
+      "leapYear": false,
+      "dayOfWeek": "THURSDAY",
+      "dayOfYear": 34,
+      "chronology": {
+        "calendarType": "iso8601",
+        "id": "ISO"
+      },
+      "era": "CE",
+      "monthValue": 2,
+      "dayOfMonth": 3
+    },
+    "balance": 500
+  }
+]
+```
+> This api returns all the vouchers for particular client which are going to be expired in next specified days.
+> For Example, fineract-provider/api/v1/vouchers/104/expiring/8 will returns all the vouchers for the client which are going to be expired in next 8 days
