@@ -628,3 +628,203 @@ Response
     "resourceId": 3
 }
 ```
+### 11. Get transactions for saving account
+> GET /fineract-provider/api/v1/savingsaccounts/{account_id}/transactions HTTP/1.1<br>
+> Host: devcredits.velocitycareerlabs.io<br>
+> fineract-platform-tenantid: default<br>
+> Authorization: Basic bWlmb3M6cGFzc3dvcmQ=
+>
+>
+```json
+Response
+{
+  "totalFilteredRecords": 3,
+  "pageItems": [
+    {
+      "id": 1432,
+      "transactionType": {
+        "id": 2,
+        "code": "savingsAccountTransactionType.withdrawal",
+        "value": "Withdrawal",
+        "deposit": false,
+        "dividendPayout": false,
+        "withdrawal": true,
+        "interestPosting": false,
+        "feeDeduction": false,
+        "initiateTransfer": false,
+        "approveTransfer": false,
+        "withdrawTransfer": false,
+        "rejectTransfer": false,
+        "overdraftInterest": false,
+        "writtenoff": false,
+        "overdraftFee": true,
+        "withholdTax": false,
+        "escheat": false,
+        "amountHold": false,
+        "amountRelease": false
+      },
+      "accountId": 249,
+      "accountNo": "000000249",
+      "date": [
+        2022,
+        7,
+        1
+      ],
+      "currency": {
+        "code": "VCR",
+        "name": "Velocity Credits",
+        "decimalPlaces": 6,
+        "inMultiplesOf": 1,
+        "nameCode": "currency.VCR",
+        "displayLabel": "Velocity Credits [VCR]"
+      },
+      "amount": 200.000000,
+      "runningBalance": 12300.456789,
+      "reversed": false,
+      "transfer": {
+        "id": 685,
+        "reversed": false,
+        "currency": {
+          "code": "VCR",
+          "name": "Velocity Credits",
+          "decimalPlaces": 6,
+          "inMultiplesOf": 1,
+          "nameCode": "currency.VCR",
+          "displayLabel": "Velocity Credits [VCR]"
+        },
+        "transferAmount": 200.000000,
+        "transferDate": [
+          2022,
+          7,
+          1
+        ],
+        "transferDescription": "fadfad",
+        "toSavingsTransactionId": 1433
+      },
+      "submittedOnDate": [
+        2022,
+        7,
+        12
+      ],
+      "interestedPostedAsOn": false,
+      "submittedByUsername": "auth0|61fa6c6eb6467400698c7871"
+    },
+    {
+      "id": 1431,
+      "transactionType": {
+        "id": 2,
+        "code": "savingsAccountTransactionType.withdrawal",
+        "value": "Withdrawal",
+        "deposit": false,
+        "dividendPayout": false,
+        "withdrawal": true,
+        "interestPosting": false,
+        "feeDeduction": false,
+        "initiateTransfer": false,
+        "approveTransfer": false,
+        "withdrawTransfer": false,
+        "rejectTransfer": false,
+        "overdraftInterest": false,
+        "writtenoff": false,
+        "overdraftFee": true,
+        "withholdTax": false,
+        "escheat": false,
+        "amountHold": false,
+        "amountRelease": false
+      },
+      "accountId": 249,
+      "accountNo": "000000249",
+      "date": [
+        2022,
+        7,
+        1
+      ],
+      "currency": {
+        "code": "VCR",
+        "name": "Velocity Credits",
+        "decimalPlaces": 6,
+        "inMultiplesOf": 1,
+        "nameCode": "currency.VCR",
+        "displayLabel": "Velocity Credits [VCR]"
+      },
+      "amount": 900.000000,
+      "runningBalance": 12500.456789,
+      "reversed": false,
+      "submittedOnDate": [
+        2022,
+        7,
+        12
+      ],
+      "interestedPostedAsOn": false,
+      "submittedByUsername": "auth0|61fa6c6eb6467400698c7871"
+    },
+    {
+      "id": 894,
+      "transactionType": {
+        "id": 1,
+        "code": "savingsAccountTransactionType.deposit",
+        "value": "Deposit",
+        "deposit": true,
+        "dividendPayout": false,
+        "withdrawal": false,
+        "interestPosting": false,
+        "feeDeduction": false,
+        "initiateTransfer": false,
+        "approveTransfer": false,
+        "withdrawTransfer": false,
+        "rejectTransfer": false,
+        "overdraftInterest": false,
+        "writtenoff": false,
+        "overdraftFee": true,
+        "withholdTax": false,
+        "escheat": false,
+        "amountHold": false,
+        "amountRelease": false
+      },
+      "accountId": 249,
+      "accountNo": "000000249",
+      "date": [
+        2022,
+        5,
+        23
+      ],
+      "currency": {
+        "code": "VCR",
+        "name": "Velocity Credits",
+        "decimalPlaces": 6,
+        "inMultiplesOf": 1,
+        "nameCode": "currency.VCR",
+        "displayLabel": "Velocity Credits [VCR]"
+      },
+      "amount": 13400.456789,
+      "runningBalance": 13400.456789,
+      "reversed": false,
+      "submittedOnDate": [
+        2022,
+        5,
+        24
+      ],
+      "interestedPostedAsOn": false,
+      "submittedByUsername": "auth0|61fa6c6eb6467400698c7871"
+    }
+  ]
+}
+```
+> This api returns all the trasactions for particular account.
+> When used with ?transferOnly=true, we get transactions that have transfers in them
+> 
+>  In Fineract, account transfer between fromAcccount to toAccount means,
+it is a withdrawal transaction for fromAccount and it is a deposit transaction for toAccount.
+>
+>So if we have have transfersOnly set to true in GET api call, then API will only fetch the transactions which are involved in transfer between accounts.
+> 
+>For example we have account 1 and account 2. And transactions for account 1 are
+>* normal deposit - not via transfer
+>* withdrawal - which a transfer to account 2
+>* deposit - which a transfer from account 2
+>* normal withdrawal - not via transfer
+>
+>So when we call GET /savingsaccounts/1/transactions?transfersOnly=true
+response will be only transaction 2 and 3 which involved in transfers between accounts.
+> 
+> But when you just call GET /savingsaccounts/1/transactions - it will returns all the transactions from account 1.
