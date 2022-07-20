@@ -15,7 +15,7 @@ Products can be created at once from back-office and always fetched/referenced p
 >API for fetching these products is as also available in the swagger descriptor below [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Product/retrieveAll_34</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Product/retrieveAll_34)
 >Request URL: [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/api/v1/savingsproducts</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/api/v1/savingsproducts)
 >**Request Method:** GET
->**Authorization:** Basic bWlmb3M6cGFzc3dvcmQ=
+>**Authorization:** Bearer bWlmb3M6cGFzc3dvcmQ=
 >**fineract-platform-tenantid:** default
 >**Response**
 ```json
@@ -87,7 +87,7 @@ In the use-cases provided below, copy payloads, make minimal recommended changes
 > POST /fineract-provider/api/v1/clients HTTP/1.1
 > Host: devcredits.velocitycareerlabs.io
 > fineract-platform-tenantid: default
-> Authorization: Basic bWlmb3M6cGFzc3dvcmQ=
+> Authorization: Bearer bWlmb3M6cGFzc3dvcmQ=
 ```json
 Payload
 {
@@ -123,7 +123,7 @@ Response
 > [<u>/fineract-provider/api/v1/clients/12?command=close</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/api/v1/clients/12?command=close)
 > Request Method: POST
 > Status Code: 200 <br>
-> authorization: Basic bWlmb3M6cGFzc3dvcmQ=<br>
+> authorization: Bearer bWlmb3M6cGFzc3dvcmQ=<br>
 > fineract-platform-tenantid: default
 ```json
 Payload
@@ -149,7 +149,7 @@ Response
 > [<u>/fineract-provider/api/v1/savingsaccounts/8?command=close</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/api/v1/clients/12?command=close)
 > Request Method: POST
 > Status Code: 200
-> authorization: Basic bWlmb3M6cGFzc3dvcmQ=
+> authorization: Bearer bWlmb3M6cGFzc3dvcmQ=
 > fineract-platform-tenantid: default
 >
 ```json
@@ -183,7 +183,7 @@ Response
 > /fineract-provider/api/v1/datatables/Voucher/3?genericResultSet=true
 > Host: devcredits.velocitycareerlabs.io
 > Status Code: 200 <br>
-> authorization: Basic bWlmb3M6cGFzc3dvcmQ= <br>
+> authorization: Bearer bWlmb3M6cGFzc3dvcmQ= <br>
 > fineract-platform-tenantid: default
 >
 ```json
@@ -215,7 +215,7 @@ Response
 > POST /fineract-provider/api/v1/savingsaccounts HTTP/1.1
 > Host: devcredits.velocitycareerlabs.io
 > fineract-platform-tenantid: default
-> Authorization: Basic bWlmb3M6cGFzc3dvcmQ=
+> Authorization: Bearer bWlmb3M6cGFzc3dvcmQ=
 ```json
 Payload
 {
@@ -257,7 +257,7 @@ Response
 > HTTP/1.1<br>
 > Host: devcredits.velocitycareerlabs.io<br>
 > fineract-platform-tenantid: default<br>
-> Authorization: Basic bWlmb3M6cGFzc3dvcmQ=
+> Authorization: Bearer bWlmb3M6cGFzc3dvcmQ=
 >
 ```json
 {
@@ -476,7 +476,7 @@ Response
 >
 > Host: devcredits.velocitycareerlabs.io<br>
 > fineract-platform-tenantid: default<br>
-> Authorization: Basic bWlmb3M6cGFzc3dvcmQ=
+> Authorization: Bearer bWlmb3M6cGFzc3dvcmQ=
 ```json
 Payload
 {
@@ -527,7 +527,7 @@ Response
 >
 > Host: devcredits.velocitycareerlabs.io<br>
 > fineract-platform-tenantid: default<br>
-> Authorization: Basic bWlmb3M6cGFzc3dvcmQ=
+> Authorization: Bearer bWlmb3M6cGFzc3dvcmQ=
 >
 ```json
 Payload
@@ -575,7 +575,7 @@ Response
 >
 > Host: devcredits.velocitycareerlabs.io<br>
 > fineract-platform-tenantid: default<br>
-> Authorization: Basic bWlmb3M6cGFzc3dvcmQ=
+> Authorization: Bearer bWlmb3M6cGFzc3dvcmQ=
 ```json
 Payload
 {
@@ -601,7 +601,7 @@ Response
 > POST /fineract-provider/api/v1/accounttransfers HTTP/1.1<br>
 > Host: devcredits.velocitycareerlabs.io<br>
 > fineract-platform-tenantid: default<br>
-> Authorization: Basic bWlmb3M6cGFzc3dvcmQ=
+> Authorization: Bearer bWlmb3M6cGFzc3dvcmQ=
 >
 >
 ```json
@@ -628,3 +628,371 @@ Response
     "resourceId": 3
 }
 ```
+### 11. Get transactions for saving account
+> GET /fineract-provider/api/v1/savingsaccounts/{account_id}/transactions HTTP/1.1<br>
+> Host: devcredits.velocitycareerlabs.io<br>
+> fineract-platform-tenantid: default<br>
+> Authorization: Bearer bWlmb3M6cGFzc3dvcmQ=
+>
+>
+```json
+Response
+{
+  "totalFilteredRecords": 3,
+  "pageItems": [
+    {
+      "id": 1432,
+      "transactionType": {
+        "id": 2,
+        "code": "savingsAccountTransactionType.withdrawal",
+        "value": "Withdrawal",
+        "deposit": false,
+        "dividendPayout": false,
+        "withdrawal": true,
+        "interestPosting": false,
+        "feeDeduction": false,
+        "initiateTransfer": false,
+        "approveTransfer": false,
+        "withdrawTransfer": false,
+        "rejectTransfer": false,
+        "overdraftInterest": false,
+        "writtenoff": false,
+        "overdraftFee": true,
+        "withholdTax": false,
+        "escheat": false,
+        "amountHold": false,
+        "amountRelease": false
+      },
+      "accountId": 249,
+      "accountNo": "000000249",
+      "date": [
+        2022,
+        7,
+        1
+      ],
+      "currency": {
+        "code": "VCR",
+        "name": "Velocity Credits",
+        "decimalPlaces": 6,
+        "inMultiplesOf": 1,
+        "nameCode": "currency.VCR",
+        "displayLabel": "Velocity Credits [VCR]"
+      },
+      "amount": 200.000000,
+      "runningBalance": 12300.456789,
+      "reversed": false,
+      "transfer": {
+        "id": 685,
+        "reversed": false,
+        "currency": {
+          "code": "VCR",
+          "name": "Velocity Credits",
+          "decimalPlaces": 6,
+          "inMultiplesOf": 1,
+          "nameCode": "currency.VCR",
+          "displayLabel": "Velocity Credits [VCR]"
+        },
+        "transferAmount": 200.000000,
+        "transferDate": [
+          2022,
+          7,
+          1
+        ],
+        "transferDescription": "fadfad",
+        "toSavingsTransactionId": 1433
+      },
+      "submittedOnDate": [
+        2022,
+        7,
+        12
+      ],
+      "interestedPostedAsOn": false,
+      "submittedByUsername": "auth0|61fa6c6eb6467400698c7871"
+    },
+    {
+      "id": 1431,
+      "transactionType": {
+        "id": 2,
+        "code": "savingsAccountTransactionType.withdrawal",
+        "value": "Withdrawal",
+        "deposit": false,
+        "dividendPayout": false,
+        "withdrawal": true,
+        "interestPosting": false,
+        "feeDeduction": false,
+        "initiateTransfer": false,
+        "approveTransfer": false,
+        "withdrawTransfer": false,
+        "rejectTransfer": false,
+        "overdraftInterest": false,
+        "writtenoff": false,
+        "overdraftFee": true,
+        "withholdTax": false,
+        "escheat": false,
+        "amountHold": false,
+        "amountRelease": false
+      },
+      "accountId": 249,
+      "accountNo": "000000249",
+      "date": [
+        2022,
+        7,
+        1
+      ],
+      "currency": {
+        "code": "VCR",
+        "name": "Velocity Credits",
+        "decimalPlaces": 6,
+        "inMultiplesOf": 1,
+        "nameCode": "currency.VCR",
+        "displayLabel": "Velocity Credits [VCR]"
+      },
+      "amount": 900.000000,
+      "runningBalance": 12500.456789,
+      "reversed": false,
+      "submittedOnDate": [
+        2022,
+        7,
+        12
+      ],
+      "interestedPostedAsOn": false,
+      "submittedByUsername": "auth0|61fa6c6eb6467400698c7871"
+    },
+    {
+      "id": 894,
+      "transactionType": {
+        "id": 1,
+        "code": "savingsAccountTransactionType.deposit",
+        "value": "Deposit",
+        "deposit": true,
+        "dividendPayout": false,
+        "withdrawal": false,
+        "interestPosting": false,
+        "feeDeduction": false,
+        "initiateTransfer": false,
+        "approveTransfer": false,
+        "withdrawTransfer": false,
+        "rejectTransfer": false,
+        "overdraftInterest": false,
+        "writtenoff": false,
+        "overdraftFee": true,
+        "withholdTax": false,
+        "escheat": false,
+        "amountHold": false,
+        "amountRelease": false
+      },
+      "accountId": 249,
+      "accountNo": "000000249",
+      "date": [
+        2022,
+        5,
+        23
+      ],
+      "currency": {
+        "code": "VCR",
+        "name": "Velocity Credits",
+        "decimalPlaces": 6,
+        "inMultiplesOf": 1,
+        "nameCode": "currency.VCR",
+        "displayLabel": "Velocity Credits [VCR]"
+      },
+      "amount": 13400.456789,
+      "runningBalance": 13400.456789,
+      "reversed": false,
+      "submittedOnDate": [
+        2022,
+        5,
+        24
+      ],
+      "interestedPostedAsOn": false,
+      "submittedByUsername": "auth0|61fa6c6eb6467400698c7871"
+    }
+  ]
+}
+```
+> This api returns all the trasactions for particular account.
+> When used with ?transferOnly=true, we get transactions that have transfers in them
+> 
+>  In Fineract, account transfer between fromAcccount to toAccount means,
+it is a withdrawal transaction for fromAccount and it is a deposit transaction for toAccount.
+>
+>So if we have have transfersOnly set to true in GET api call, then API will only fetch the transactions which are involved in transfer between accounts.
+> 
+>For example we have account 1 and account 2. And transactions for account 1 are
+>* normal deposit - not via transfer
+>* withdrawal - which a transfer to account 2
+>* deposit - which a transfer from account 2
+>* normal withdrawal - not via transfer
+>
+>So when we call GET /savingsaccounts/1/transactions?transfersOnly=true
+response will be only transaction 2 and 3 which involved in transfers between accounts.
+> 
+> But when you just call GET /savingsaccounts/1/transactions - it will returns all the transactions from account 1.
+
+### 12. Get Voucher for client
+> GET /fineract-provider/api/v1/vouchers/{client_id}/expiring/{days} HTTP/1.1<br>
+> Host: devcredits.velocitycareerlabs.io<br>
+> fineract-platform-tenantid: default<br>
+> Authorization: Bearer bWlmb3M6cGFzc3dvcmQ=
+>
+>
+```json
+Response
+[
+  {
+    "id": 89,
+    "clientId": 104,
+    "couponBundleId": "0x3ea2e47f88d006b6a45aa59a9339e5cda87919767c9613a3147e887789ff8b64",
+    "symbol": "VVO",
+    "quantity": 500,
+    "used": 2,
+    "expiryDate": {
+      "year": 2022,
+      "month": "MAY",
+      "leapYear": false,
+      "dayOfWeek": "WEDNESDAY",
+      "dayOfYear": 124,
+      "chronology": {
+        "calendarType": "iso8601",
+        "id": "ISO"
+      },
+      "era": "CE",
+      "monthValue": 5,
+      "dayOfMonth": 4
+    },
+    "updatedAt": {
+      "year": 2022,
+      "month": "APRIL",
+      "leapYear": false,
+      "dayOfWeek": "THURSDAY",
+      "dayOfYear": 118,
+      "chronology": {
+        "calendarType": "iso8601",
+        "id": "ISO"
+      },
+      "era": "CE",
+      "monthValue": 4,
+      "dayOfMonth": 28
+    },
+    "createdAt": {
+      "year": 2022,
+      "month": "FEBRUARY",
+      "leapYear": false,
+      "dayOfWeek": "THURSDAY",
+      "dayOfYear": 34,
+      "chronology": {
+        "calendarType": "iso8601",
+        "id": "ISO"
+      },
+      "era": "CE",
+      "monthValue": 2,
+      "dayOfMonth": 3
+    },
+    "balance": 498
+  },
+  {
+    "id": 90,
+    "clientId": 104,
+    "couponBundleId": "0x0d2470e7722087fd877734929f11c9495a1bb84223474c1e793b621e63a2dd31",
+    "symbol": "VVO",
+    "quantity": 500,
+    "used": 11,
+    "expiryDate": {
+      "year": 2022,
+      "month": "MAY",
+      "leapYear": false,
+      "dayOfWeek": "WEDNESDAY",
+      "dayOfYear": 124,
+      "chronology": {
+        "calendarType": "iso8601",
+        "id": "ISO"
+      },
+      "era": "CE",
+      "monthValue": 5,
+      "dayOfMonth": 4
+    },
+    "updatedAt": {
+      "year": 2022,
+      "month": "MAY",
+      "leapYear": false,
+      "dayOfWeek": "THURSDAY",
+      "dayOfYear": 132,
+      "chronology": {
+        "calendarType": "iso8601",
+        "id": "ISO"
+      },
+      "era": "CE",
+      "monthValue": 5,
+      "dayOfMonth": 12
+    },
+    "createdAt": {
+      "year": 2022,
+      "month": "FEBRUARY",
+      "leapYear": false,
+      "dayOfWeek": "THURSDAY",
+      "dayOfYear": 34,
+      "chronology": {
+        "calendarType": "iso8601",
+        "id": "ISO"
+      },
+      "era": "CE",
+      "monthValue": 2,
+      "dayOfMonth": 3
+    },
+    "balance": 489
+  },
+  {
+    "id": 91,
+    "clientId": 104,
+    "couponBundleId": "0x45cdb901b8bd1f24b94abfa645344f652bc2e892677fd91e66a50804b7a26658",
+    "symbol": "VVO",
+    "quantity": 500,
+    "used": 0,
+    "expiryDate": {
+      "year": 2022,
+      "month": "MAY",
+      "leapYear": false,
+      "dayOfWeek": "WEDNESDAY",
+      "dayOfYear": 124,
+      "chronology": {
+        "calendarType": "iso8601",
+        "id": "ISO"
+      },
+      "era": "CE",
+      "monthValue": 5,
+      "dayOfMonth": 4
+    },
+    "updatedAt": {
+      "year": 2022,
+      "month": "FEBRUARY",
+      "leapYear": false,
+      "dayOfWeek": "THURSDAY",
+      "dayOfYear": 34,
+      "chronology": {
+        "calendarType": "iso8601",
+        "id": "ISO"
+      },
+      "era": "CE",
+      "monthValue": 2,
+      "dayOfMonth": 3
+    },
+    "createdAt": {
+      "year": 2022,
+      "month": "FEBRUARY",
+      "leapYear": false,
+      "dayOfWeek": "THURSDAY",
+      "dayOfYear": 34,
+      "chronology": {
+        "calendarType": "iso8601",
+        "id": "ISO"
+      },
+      "era": "CE",
+      "monthValue": 2,
+      "dayOfMonth": 3
+    },
+    "balance": 500
+  }
+]
+```
+> This api returns all the vouchers for particular client which are going to be expired in next specified days.
+> For Example, fineract-provider/api/v1/vouchers/104/expiring/8 will returns all the vouchers for the client which are going to be expired in next 8 days
