@@ -812,12 +812,12 @@ Response
 ```
 > This api returns all the trasactions for particular account.
 > When used with ?transferOnly=true, we get transactions that have transfers in them
-> 
+>
 >  In Fineract, account transfer between fromAcccount to toAccount means,
 it is a withdrawal transaction for fromAccount and it is a deposit transaction for toAccount.
 >
 >So if we have have transfersOnly set to true in GET api call, then API will only fetch the transactions which are involved in transfer between accounts.
-> 
+>
 >For example we have account 1 and account 2. And transactions for account 1 are
 >* normal deposit - not via transfer
 >* withdrawal - which a transfer to account 2
@@ -826,7 +826,7 @@ it is a withdrawal transaction for fromAccount and it is a deposit transaction f
 >
 >So when we call GET /savingsaccounts/1/transactions?transfersOnly=true
 response will be only transaction 2 and 3 which involved in transfers between accounts.
-> 
+>
 > But when you just call GET /savingsaccounts/1/transactions - it will returns all the transactions from account 1.
 
 ### 12. Get Voucher for client
