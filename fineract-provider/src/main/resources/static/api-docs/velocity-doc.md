@@ -15,7 +15,7 @@ Products can be created at once from back-office and always fetched/referenced p
 >API for fetching these products is as also available in the swagger descriptor below [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Product/retrieveAll_34</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Savings%20Product/retrieveAll_34)
 >Request URL: [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/api/v1/savingsproducts</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/api/v1/savingsproducts)
 >**Request Method:** GET
->**Authorization:** Basic bWlmb3M6cGFzc3dvcmQ=
+>**Authorization:** Bearer bWlmb3M6cGFzc3dvcmQ=
 >**fineract-platform-tenantid:** default
 >**Response**
 ```json
@@ -87,7 +87,7 @@ In the use-cases provided below, copy payloads, make minimal recommended changes
 > POST /fineract-provider/api/v1/clients HTTP/1.1
 > Host: devcredits.velocitycareerlabs.io
 > fineract-platform-tenantid: default
-> Authorization: Basic bWlmb3M6cGFzc3dvcmQ=
+> Authorization: Bearer bWlmb3M6cGFzc3dvcmQ=
 ```json
 Payload
 {
@@ -123,7 +123,7 @@ Response
 > [<u>/fineract-provider/api/v1/clients/12?command=close</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/api/v1/clients/12?command=close)
 > Request Method: POST
 > Status Code: 200 <br>
-> authorization: Basic bWlmb3M6cGFzc3dvcmQ=<br>
+> authorization: Bearer bWlmb3M6cGFzc3dvcmQ=<br>
 > fineract-platform-tenantid: default
 ```json
 Payload
@@ -149,7 +149,7 @@ Response
 > [<u>/fineract-provider/api/v1/savingsaccounts/8?command=close</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/api/v1/clients/12?command=close)
 > Request Method: POST
 > Status Code: 200
-> authorization: Basic bWlmb3M6cGFzc3dvcmQ=
+> authorization: Bearer bWlmb3M6cGFzc3dvcmQ=
 > fineract-platform-tenantid: default
 >
 ```json
@@ -183,7 +183,7 @@ Response
 > /fineract-provider/api/v1/datatables/Voucher/3?genericResultSet=true
 > Host: devcredits.velocitycareerlabs.io
 > Status Code: 200 <br>
-> authorization: Basic bWlmb3M6cGFzc3dvcmQ= <br>
+> authorization: Bearer bWlmb3M6cGFzc3dvcmQ= <br>
 > fineract-platform-tenantid: default
 >
 ```json
@@ -215,7 +215,7 @@ Response
 > POST /fineract-provider/api/v1/savingsaccounts HTTP/1.1
 > Host: devcredits.velocitycareerlabs.io
 > fineract-platform-tenantid: default
-> Authorization: Basic bWlmb3M6cGFzc3dvcmQ=
+> Authorization: Bearer bWlmb3M6cGFzc3dvcmQ=
 ```json
 Payload
 {
@@ -257,7 +257,7 @@ Response
 > HTTP/1.1<br>
 > Host: devcredits.velocitycareerlabs.io<br>
 > fineract-platform-tenantid: default<br>
-> Authorization: Basic bWlmb3M6cGFzc3dvcmQ=
+> Authorization: Bearer bWlmb3M6cGFzc3dvcmQ=
 >
 ```json
 {
@@ -476,7 +476,7 @@ Response
 >
 > Host: devcredits.velocitycareerlabs.io<br>
 > fineract-platform-tenantid: default<br>
-> Authorization: Basic bWlmb3M6cGFzc3dvcmQ=
+> Authorization: Bearer bWlmb3M6cGFzc3dvcmQ=
 ```json
 Payload
 {
@@ -527,7 +527,7 @@ Response
 >
 > Host: devcredits.velocitycareerlabs.io<br>
 > fineract-platform-tenantid: default<br>
-> Authorization: Basic bWlmb3M6cGFzc3dvcmQ=
+> Authorization: Bearer bWlmb3M6cGFzc3dvcmQ=
 >
 ```json
 Payload
@@ -575,7 +575,7 @@ Response
 >
 > Host: devcredits.velocitycareerlabs.io<br>
 > fineract-platform-tenantid: default<br>
-> Authorization: Basic bWlmb3M6cGFzc3dvcmQ=
+> Authorization: Bearer bWlmb3M6cGFzc3dvcmQ=
 ```json
 Payload
 {
@@ -601,7 +601,7 @@ Response
 > POST /fineract-provider/api/v1/accounttransfers HTTP/1.1<br>
 > Host: devcredits.velocitycareerlabs.io<br>
 > fineract-platform-tenantid: default<br>
-> Authorization: Basic bWlmb3M6cGFzc3dvcmQ=
+> Authorization: Bearer bWlmb3M6cGFzc3dvcmQ=
 >
 >
 ```json
@@ -632,7 +632,7 @@ Response
 > GET /fineract-provider/api/v1/savingsaccounts/{account_id}/transactions HTTP/1.1<br>
 > Host: devcredits.velocitycareerlabs.io<br>
 > fineract-platform-tenantid: default<br>
-> Authorization: Basic bWlmb3M6cGFzc3dvcmQ=
+> Authorization: Bearer bWlmb3M6cGFzc3dvcmQ=
 >
 >
 ```json
@@ -833,7 +833,7 @@ response will be only transaction 2 and 3 which involved in transfers between ac
 > GET /fineract-provider/api/v1/vouchers/{client_id}/expiring/{days} HTTP/1.1<br>
 > Host: devcredits.velocitycareerlabs.io<br>
 > fineract-platform-tenantid: default<br>
-> Authorization: Basic bWlmb3M6cGFzc3dvcmQ=
+> Authorization: Bearer bWlmb3M6cGFzc3dvcmQ=
 >
 >
 ```json
