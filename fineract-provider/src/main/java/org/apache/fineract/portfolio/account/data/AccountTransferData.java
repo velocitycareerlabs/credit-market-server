@@ -49,6 +49,8 @@ public final class AccountTransferData implements Serializable {
     private final PortfolioAccountData toAccount;
     private final Long fromSavingsTransactionId;
     private final Long toSavingsTransactionId;
+    private final Long fromSavingsAccountId;
+    private final Long toSavingsAccountId;
 
     // template
     private final Collection<OfficeData> fromOfficeOptions;
@@ -81,7 +83,7 @@ public final class AccountTransferData implements Serializable {
         return new AccountTransferData(id, reversed, fromOffice, fromClient, fromAccountType, fromAccount, currency, transferAmount,
                 transferDate, transferDescription, toOffice, toClient, toAccountType, toAccount, fromOfficeOptions, fromClientOptions,
                 fromAccountTypeOptions, fromAccountOptions, toOfficeOptions, toClientOptions, toAccountTypeOptions, toAccountOptions, null,
-                null);
+                null, null, null);
     }
 
     public static AccountTransferData instance(final Long id, final Boolean reversed, final LocalDate transferDate,
@@ -91,19 +93,19 @@ public final class AccountTransferData implements Serializable {
 
         return new AccountTransferData(id, reversed, fromOffice, fromClient, fromAccountType, fromAccount, currency, transferAmount,
                 transferDate, transferDescription, toOffice, toClient, toAccountType, toAccount, null, null, null, null, null, null, null,
-                null, null, null);
+                null, null, null, null, null);
     }
 
     public static AccountTransferData transferBasicDetails(final Long id, final CurrencyData currency, final BigDecimal transferAmount,
             final LocalDate transferDate, final String description, final Boolean reversed, final Long fromSavingsTransactionId,
-            final Long toSavingsTransactionId) {
+            final Long toSavingsTransactionId, Long fromSavingsAccountId, Long toSavingsAccountId) {
 
         final EnumOptionData fromAccountType = null;
         final EnumOptionData toAccountType = null;
 
         return new AccountTransferData(id, reversed, null, null, fromAccountType, null, currency, transferAmount, transferDate, description,
                 null, null, toAccountType, null, null, null, null, null, null, null, null, null, fromSavingsTransactionId,
-                toSavingsTransactionId);
+                toSavingsTransactionId, fromSavingsAccountId, toSavingsAccountId);
     }
 
     private AccountTransferData(final Long id, final Boolean reversed, final OfficeData fromOffice, final ClientData fromClient,
@@ -114,7 +116,8 @@ public final class AccountTransferData implements Serializable {
             final Collection<EnumOptionData> fromAccountTypeOptions, final Collection<PortfolioAccountData> fromAccountOptions,
             final Collection<OfficeData> toOfficeOptions, final Collection<ClientData> toClientOptions,
             final Collection<EnumOptionData> toAccountTypeOptions, final Collection<PortfolioAccountData> toAccountOptions,
-            final Long fromSavingsTransactionId, final Long toSavingsTransactionId) {
+            final Long fromSavingsTransactionId, final Long toSavingsTransactionId, final Long fromSavingsAccountId,
+            final Long toSavingsAccountId) {
         this.id = id;
         this.reversed = reversed;
         this.fromOffice = fromOffice;
@@ -141,5 +144,7 @@ public final class AccountTransferData implements Serializable {
         this.toAccountOptions = toAccountOptions;
         this.fromSavingsTransactionId = fromSavingsTransactionId;
         this.toSavingsTransactionId = toSavingsTransactionId;
+        this.fromSavingsAccountId = fromSavingsAccountId;
+        this.toSavingsAccountId = toSavingsAccountId;
     }
 }
