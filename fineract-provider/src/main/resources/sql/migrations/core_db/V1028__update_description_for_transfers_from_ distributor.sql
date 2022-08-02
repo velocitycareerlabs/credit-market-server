@@ -28,6 +28,7 @@ join m_savings_product to_pr on to_pr.id = to_msa.product_id
 set tr.description = CONCAT('ISSUER_ISSUING_REWARD - ', tr.description)
 where from_mc.id = 4
 and to_mc.fullname = 'Yoti'
+and tr.description like 'REWARD%'
 and from_pr.id = 1
 and to_pr.id = 1;
 
@@ -42,6 +43,7 @@ join m_savings_product to_pr on to_pr.id = to_msa.product_id
 set tr.description = CONCAT('ISSUER_ISSUING_REWARD - ', tr.description)
 where from_mc.id = 4
 and to_mc.fullname = 'Velocity Career Labs'
+and tr.description like 'REWARD%'
 and from_pr.id = 1
 and to_pr.id = 1
 and tr.amount != 13392857.1;
@@ -58,6 +60,7 @@ set tr.description = CONCAT('NODE_OPERATOR_REWARD - ', tr.description)
 where from_mc.id = 4
 and to_mc.id > 6
 and to_mc.fullname not in ( 'Velocity Career Labs' , 'Yoti')
+and tr.description like 'REWARD%'
 and from_pr.id = 1
 and to_pr.id = 1;
 
@@ -72,6 +75,7 @@ join m_savings_product to_pr on to_pr.id = to_msa.product_id
 set tr.description = CONCAT('NODE_OPERATOR_REWARD - ', tr.description)
 where from_mc.id = 4
 and to_mc.fullname = 'Velocity Career Labs'
+and tr.description like 'REWARD%'
 and from_pr.id = 1
 and to_pr.id = 1
 and tr.amount = 13392857.1;
