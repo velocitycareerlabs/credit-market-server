@@ -1153,7 +1153,9 @@ Response
 > [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Data%20Tables/createDatatableEntry</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Data%20Tables/createDatatableEntry)
 >
 > With id 3 as the client Id, we can get voucher transacton to it in the
-> following way
+> following way. You can also sort the records with order by. For that you need to pass parameter called order.
+> For Example, datatables/Voucher/99?order=expiry asc this will returns records in ascending order of expiry date.
+> One thing that the caller should know that column/field should exists for this particular datatable
 >
 > GET
 > 	/fineract-provider/api/v1/datatables/Voucher_Transaction/3
