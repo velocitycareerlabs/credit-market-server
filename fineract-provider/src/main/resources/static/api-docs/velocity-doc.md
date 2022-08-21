@@ -996,3 +996,258 @@ Response
 ```
 > This api returns all the vouchers for particular client which are going to be expired in next specified days.
 > For Example, fineract-provider/api/v1/vouchers/104/expiring/8 will returns all the vouchers for the client which are going to be expired in next 8 days
+
+### 13.  GET coupons/vouchers
+> This uses the concept of data tables, check out swagger
+> documentation for more details
+> [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Data%20Tables/createDatatableEntry</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Data%20Tables/createDatatableEntry)
+>
+> With id 3 as the client Id, we can get coupons/vouchers for it in the
+> following way
+>
+> GET
+> /fineract-provider/api/v1/datatables/Voucher/3?genericResultSet=true
+> Host: devcredits.velocitycareerlabs.io
+> Status Code: 200 <br>
+> authorization: Bearer bWlmb3M6cGFzc3dvcmQ= <br>
+> fineract-platform-tenantid: default
+>
+```json
+Response
+{
+  "columnHeaders": [
+    {
+      "columnName": "id",
+      "columnType": "bigint",
+      "columnLength": 0,
+      "columnDisplayType": "INTEGER",
+      "isColumnNullable": false,
+      "isColumnPrimaryKey": true,
+      "columnValues": []
+    },
+    {
+      "columnName": "client_id",
+      "columnType": "bigint",
+      "columnLength": 0,
+      "columnDisplayType": "INTEGER",
+      "isColumnNullable": false,
+      "isColumnPrimaryKey": false,
+      "columnValues": []
+    },
+    {
+      "columnName": "couponBundleId",
+      "columnType": "varchar",
+      "columnLength": 255,
+      "columnDisplayType": "STRING",
+      "isColumnNullable": true,
+      "isColumnPrimaryKey": false,
+      "columnValues": []
+    },
+    {
+      "columnName": "symbol",
+      "columnType": "varchar",
+      "columnLength": 100,
+      "columnDisplayType": "STRING",
+      "isColumnNullable": true,
+      "isColumnPrimaryKey": false,
+      "columnValues": []
+    },
+    {
+      "columnName": "quantity",
+      "columnType": "bigint",
+      "columnLength": 0,
+      "columnDisplayType": "INTEGER",
+      "isColumnNullable": true,
+      "isColumnPrimaryKey": false,
+      "columnValues": []
+    },
+    {
+      "columnName": "used",
+      "columnType": "bigint",
+      "columnLength": 0,
+      "columnDisplayType": "INTEGER",
+      "isColumnNullable": true,
+      "isColumnPrimaryKey": false,
+      "columnValues": []
+    },
+    {
+      "columnName": "expiry",
+      "columnType": "date",
+      "columnLength": 0,
+      "columnDisplayType": "DATE",
+      "isColumnNullable": true,
+      "isColumnPrimaryKey": false,
+      "columnValues": []
+    },
+    {
+      "columnName": "updatedAt",
+      "columnType": "datetime",
+      "columnLength": 0,
+      "columnDisplayType": "DATETIME",
+      "isColumnNullable": true,
+      "isColumnPrimaryKey": false,
+      "columnValues": []
+    },
+    {
+      "columnName": "createdAt",
+      "columnType": "datetime",
+      "columnLength": 0,
+      "columnDisplayType": "DATETIME",
+      "isColumnNullable": true,
+      "isColumnPrimaryKey": false,
+      "columnValues": []
+    }
+  ],
+  "data": [
+    {
+      "row": [
+        "318",
+        "135",
+        "0xd3",
+        "VVO",
+        "100",
+        "2",
+        "2022-10-19",
+        "2022-07-21T00:00",
+        "2022-07-21T06:49:23"
+      ]
+    }
+  ]
+}
+```
+
+### 14.  POST voucher transactions
+> This uses the concept of data tables, check out swagger
+> documentation for more details
+> [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Data%20Tables/createDatatableEntry</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Data%20Tables/createDatatableEntry)
+>
+> With id 3 as the client Id, we can add voucher transacton to it in the
+> following way
+>
+> POST
+> /fineract-provider/api/v1/datatables/Voucher_Transaction/3
+> Host: devcredits.velocitycareerlabs.io
+> Status Code: 200 <br>
+> authorization: Bearer bWlmb3M6cGFzc3dvcmQ= <br>
+> fineract-platform-tenantid: default
+>
+```json
+Payload
+{
+  "quantity": "1",
+  "locale": "en",
+  "dateFormat": "dd MMMM yyyy HH:mm",
+  "updatedAt": "22 July 2022 12:14",
+  "createdAt": "22 July 2022 12:14"
+}
+
+Response
+{
+  "resourceId": 135
+}
+```
+
+### 15.  GET voucher transactions
+> This uses the concept of data tables, check out swagger
+> documentation for more details
+> [<u>https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Data%20Tables/createDatatableEntry</u>](https://devcredits.velocitycareerlabs.io/fineract-provider/swagger-ui/index.html#/Data%20Tables/createDatatableEntry)
+>
+> With id 3 as the client Id, we can get voucher transacton to it in the
+> following way. You can also sort the records with order by. For that you need to pass parameter called order.
+> For Example, datatables/Voucher/99?order=expiry asc this will returns records in ascending order of expiry date.
+> One thing that the caller should know that column/field should exists for this particular datatable
+>
+> GET
+> 	/fineract-provider/api/v1/datatables/Voucher_Transaction/3
+> Host: devcredits.velocitycareerlabs.io
+> Status Code: 200 <br>
+> authorization: Bearer bWlmb3M6cGFzc3dvcmQ= <br>
+> fineract-platform-tenantid: default
+>
+```json
+Response
+{
+  "columnHeaders": [
+    {
+      "columnName": "id",
+      "columnType": "bigint",
+      "columnLength": 0,
+      "columnDisplayType": "INTEGER",
+      "isColumnNullable": false,
+      "isColumnPrimaryKey": true,
+      "columnValues": []
+    },
+    {
+      "columnName": "client_id",
+      "columnType": "bigint",
+      "columnLength": 0,
+      "columnDisplayType": "INTEGER",
+      "isColumnNullable": false,
+      "isColumnPrimaryKey": false,
+      "columnValues": []
+    },
+    {
+      "columnName": "quantity",
+      "columnType": "bigint",
+      "columnLength": 0,
+      "columnDisplayType": "INTEGER",
+      "isColumnNullable": true,
+      "isColumnPrimaryKey": false,
+      "columnValues": []
+    },
+    {
+      "columnName": "updatedAt",
+      "columnType": "datetime",
+      "columnLength": 0,
+      "columnDisplayType": "DATETIME",
+      "isColumnNullable": true,
+      "isColumnPrimaryKey": false,
+      "columnValues": []
+    },
+    {
+      "columnName": "createdAt",
+      "columnType": "datetime",
+      "columnLength": 0,
+      "columnDisplayType": "DATETIME",
+      "isColumnNullable": true,
+      "isColumnPrimaryKey": false,
+      "columnValues": []
+    }
+  ],
+  "data": [
+    {
+      "row": [
+        "253",
+        "135",
+        "1",
+        "2022-07-21T00:00",
+        "2022-07-21T00:00"
+      ]
+    },
+    {
+      "row": [
+        "254",
+        "135",
+        "1",
+        "2022-07-21T00:00",
+        "2022-07-21T00:00"
+      ]
+    }
+  ]
+}
+```
+
+### 16. Get Voucher Balance for client
+> GET /fineract-provider/api/v1/vouchers/{client_id}/balance HTTP/1.1<br>
+> Host: devcredits.velocitycareerlabs.io<br>
+> fineract-platform-tenantid: default<br>
+> Authorization: Bearer bWlmb3M6cGFzc3dvcmQ=
+>
+>
+```json
+Response
+{
+  "balance": 48675
+}
+```
+> This api returns voucher balance for particular client.
