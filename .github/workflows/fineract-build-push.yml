@@ -18,7 +18,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       image_sha: ${{ env.image_sha }}
-      ver_num: ${{ env.VER_NUM }}
     steps:
       # Checkout Repository
       - name: Checkout Repository
@@ -149,39 +148,51 @@ jobs:
         run: |
           docker push $AWS_MAIN_TAG
           docker push $AWS_VER_TAG
-  update-tfenv-versions-dev:
-    if: github.ref == 'refs/heads/dev'
+  update-tfenv-versions:
     needs:
       - build-server-images
       - push-to-ecr
-    name: Update tfvars Dev
-    uses: velocitycareerlabs/monorepo/.github/workflows/external-version-update.yml@dev
-    with:
-      image_sha: ${{ needs.build-server-images.outputs.image_sha }}
-      version: ${{ needs.build-server-images.outputs.ver_num }}
-      service_name: fineract
-    secrets: inherit
-  update-tfenv-versions-staging:
-    if: github.ref == 'refs/heads/staging'
-    needs:
-      - build-server-images
-      - push-to-ecr
-    name: Update tfvars Staging
-    uses: velocitycareerlabs/monorepo/.github/workflows/external-version-update.yml@staging
-    with:
-      image_sha: ${{ needs.build-server-images.outputs.image_sha }}
-      version: ${{ needs.build-server-images.outputs.ver_num }}
-      service_name: fineract
-    secrets: inherit
-  update-tfenv-versions-master:
-    if: github.ref == 'refs/heads/master'
-    needs:
-      - build-server-images
-      - push-to-ecr
-    name: Update tfvars Master
-    uses: velocitycareerlabs/monorepo/.github/workflows/external-version-update.yml@master
-    with:
-      image_sha: ${{ needs.build-server-images.outputs.image_sha }}
-      version: ${{ needs.build-server-images.outputs.ver_num }}
-      service_name: fineract
-    secrets: inherit
+    name: Update tfvars
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_SHA: ${{ needs.build-server-images.outputs.image_sha }}
+      UPDATE_SERVICE_NAME: 'fineract'
+    steps:
+      # Checkout monorepo repository
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      # Set Slug
+      - name: Inject slug/short variables
+        uses: rlespinasse/github-slug-action@v3.x
+      # Set Common Variables
+      - name: Set Common Variables
+        run: bash ./eng/environments/common.sh
+      # Set Dev Variables
+      - name: Set Dev Variables
+        run: bash ./eng/environments/dev.sh
+        if: github.ref == 'refs/heads/dev'
+      # Set Staging Variables
+      - name: Set Staging Variables
+        run: bash ./eng/environments/staging.sh
+        if: github.ref == 'refs/heads/staging'
+      # Set Prod Variables
+      - name: Set Prod Variables
+        run: bash ./eng/environments/prod.sh
+        if: github.ref == 'refs/heads/master'
+      # Run worflow update tf in monorepo
+      - name: Run worflow update tf in monorepo
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.VNF_GITHUB_TOKEN }}
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: 'velocitycareerlabs',
+              repo: 'monorepo',
+              workflow_id: 'external-version-update.yml',
+              ref: '${{ github.ref }}',
+              inputs: {
+                version: '${{ env.VER_NUM }}',
+                service_name: '${{ env.UPDATE_SERVICE_NAME }}',
+                image_sha: '${{ env.IMAGE_SHA }}'
+              }
+            })
