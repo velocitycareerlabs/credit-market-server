@@ -1,5 +1,6 @@
 #!/bin/bash
-CURR_VERSION="1.1.0"
+
+CURR_VERSION="1.7.0"
 TARGET_CONTAINER_REG="ghcr.io"
 TARGET_ORG="velocitynetworkfoundation"
 TARGET_REPO="packages"

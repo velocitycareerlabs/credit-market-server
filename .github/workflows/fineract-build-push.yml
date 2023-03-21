@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - staging
+      - qa
       - dev
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -35,6 +36,10 @@ jobs:
       - name: Set Dev Variables
         run: bash ./eng/environments/dev.sh
         if: github.ref == 'refs/heads/dev'
+      # Set QA Variables
+      - name: Set QA Variables
+        run: bash ./eng/environments/qa.sh
+        if: github.ref == 'refs/heads/qa'
       # Set Staging Variables
       - name: Set Staging Variables
         run: bash ./eng/environments/staging.sh
@@ -93,6 +98,10 @@ jobs:
       - name: Set Dev Variables
         run: bash ./eng/environments/dev.sh
         if: github.ref == 'refs/heads/dev'
+      # Set QA Variables
+      - name: Set QA Variables
+        run: bash ./eng/environments/qa.sh
+        if: github.ref == 'refs/heads/qa'
       # Set Staging Variables
       - name: Set Staging Variables
         run: bash ./eng/environments/staging.sh
@@ -171,6 +180,10 @@ jobs:
       - name: Set Dev Variables
         run: bash ./eng/environments/dev.sh
         if: github.ref == 'refs/heads/dev'
+      # Set QA Variables
+      - name: Set QA Variables
+        run: bash ./eng/environments/qa.sh
+        if: github.ref == 'refs/heads/qa'
       # Set Staging Variables
       - name: Set Staging Variables
         run: bash ./eng/environments/staging.sh
