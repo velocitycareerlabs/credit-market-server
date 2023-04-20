@@ -26,6 +26,8 @@ jobs:
       # Set Slug
       - name: Inject slug/short variables
         uses: rlespinasse/github-slug-action@v4
+        with:
+          short-length: 8
       # Set Server Name
       - name: Set Server Name
         run: echo 'SERVER_NAME=fineract' >> $GITHUB_ENV
@@ -88,6 +90,8 @@ jobs:
       # Set Slug
       - name: Inject slug/short variables
         uses: rlespinasse/github-slug-action@v4
+        with:
+          short-length: 8
       # Set Server Name
       - name: Set Server Name
         run: echo 'SERVER_NAME=fineract' >> $GITHUB_ENV
@@ -173,6 +177,8 @@ jobs:
       # Set Slug
       - name: Inject slug/short variables
         uses: rlespinasse/github-slug-action@v4
+        with:
+          short-length: 8
       # Set Common Variables
       - name: Set Common Variables
         run: bash ./eng/environments/common.sh
