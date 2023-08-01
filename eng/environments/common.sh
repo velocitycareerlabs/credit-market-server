@@ -2,7 +2,7 @@
 
 CURR_VERSION="1.7.0"
 TARGET_CONTAINER_REG="ghcr.io"
-TARGET_ORG="velocitynetworkfoundation"
+TARGET_ORG="velocitycareerlabs"
 TARGET_REPO="packages"
 CONTAINER_REPOSITORY_NAME="$TARGET_ORG/$SERVER_NAME"
 AWS_REGION="us-east-1"
