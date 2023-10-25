@@ -206,10 +206,11 @@ jobs:
           script: |
             await github.rest.actions.createWorkflowDispatch({
               owner: 'velocitycareerlabs',
-              repo: 'monorepo',
+              repo: 'engineering',
               workflow_id: 'external-version-update.yml',
-              ref: '${{ github.ref }}',
+              ref: 'main',
               inputs: {
+                config-env: '${{ github.ref_name }}'
                 version: '${{ env.VER_NUM }}',
                 service_name: '${{ env.UPDATE_SERVICE_NAME }}',
                 image_sha: '${{ env.IMAGE_SHA }}'
