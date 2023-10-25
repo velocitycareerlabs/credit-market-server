@@ -210,7 +210,7 @@ jobs:
               workflow_id: 'external-version-update.yml',
               ref: 'main',
               inputs: {
-                config-env: '${{ github.ref_name }}'
+                config-env: '${{ github.ref_name }}',
                 version: '${{ env.VER_NUM }}',
                 service_name: '${{ env.UPDATE_SERVICE_NAME }}',
                 image_sha: '${{ env.IMAGE_SHA }}'
