@@ -90,7 +90,7 @@ public final class SavingsAccountTransaction extends AbstractPersistableCustom {
     @Column(name = "running_balance_derived", scale = 6, precision = 19, nullable = true)
     private BigDecimal runningBalance;
 
-    @Column(name = "cumulative_balance_derived", scale = 6, precision = 19, nullable = true)
+    @Column(name = "cumulative_balance_derived", scale = 6, precision = 30, nullable = true)
     private BigDecimal cumulativeBalance;
 
     @Temporal(TemporalType.DATE)
