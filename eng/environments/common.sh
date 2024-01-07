@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CURR_VERSION="1.7.0"
+CURR_VERSION="1.14.0"
 TARGET_CONTAINER_REG="ghcr.io"
 TARGET_ORG="velocitycareerlabs"
 TARGET_REPO="packages"
