@@ -1,12 +1,21 @@
 name: Publish Packages and Images
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        description: Choose environment
+        default: 'dev'
+        options: 
+        - dev
+        - qa    
+        - staging
+        - prod
   push:
     branches:
-      - master
-      - staging
-      - qa
-      - dev
+      - main
+env:
+  GLOBAL_ENV: ${{ github.event_name == 'push' && format('{0}', 'dev') || inputs.environment }}
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -34,22 +43,9 @@ jobs:
       # Set Common Variables
       - name: Set Common Variables
         run: bash ./eng/environments/common.sh
-      # Set Dev Variables
-      - name: Set Dev Variables
-        run: bash ./eng/environments/dev.sh
-        if: github.ref == 'refs/heads/dev'
-      # Set QA Variables
-      - name: Set QA Variables
-        run: bash ./eng/environments/qa.sh
-        if: github.ref == 'refs/heads/qa'
-      # Set Staging Variables
-      - name: Set Staging Variables
-        run: bash ./eng/environments/staging.sh
-        if: github.ref == 'refs/heads/staging'
-      # Set Prod Variables
-      - name: Set Prod Variables
-        run: bash ./eng/environments/prod.sh
-        if: github.ref == 'refs/heads/master'
+      # Set Env Variables
+      - name: Set Env Variables
+        run: bash ./eng/environments/${{ env.GLOBAL_ENV }}.sh
       # Create GitHub Container Tags
       - name: Create GitHub Container Tags
         run: |
@@ -98,22 +94,9 @@ jobs:
       # Set Common Variables
       - name: Set Common Variables
         run: bash ./eng/environments/common.sh
-      # Set Dev Variables
-      - name: Set Dev Variables
-        run: bash ./eng/environments/dev.sh
-        if: github.ref == 'refs/heads/dev'
-      # Set QA Variables
-      - name: Set QA Variables
-        run: bash ./eng/environments/qa.sh
-        if: github.ref == 'refs/heads/qa'
-      # Set Staging Variables
-      - name: Set Staging Variables
-        run: bash ./eng/environments/staging.sh
-        if: github.ref == 'refs/heads/staging'
-      # Set Prod Variables
-      - name: Set Prod Variables
-        run: bash ./eng/environments/prod.sh
-        if: github.ref == 'refs/heads/master'
+      # Set Env Variables
+      - name: Set Env Variables
+        run: bash ./eng/environments/${{ env.GLOBAL_ENV }}.sh
       # Create GitHub Container Tags
       - name: Create GitHub Container Tags
         run: |
@@ -139,6 +122,8 @@ jobs:
       - name: Login to Amazon ECR
         id: ecr-login
         uses: aws-actions/amazon-ecr-login@v1
+        with:
+          mask-password: 'true'
       # Create AWS Container Tags
       - name: Create GitHub Container Tags
         env:
@@ -182,24 +167,11 @@ jobs:
       # Set Common Variables
       - name: Set Common Variables
         run: bash ./eng/environments/common.sh
-      # Set Dev Variables
-      - name: Set Dev Variables
-        run: bash ./eng/environments/dev.sh
-        if: github.ref == 'refs/heads/dev'
-      # Set QA Variables
-      - name: Set QA Variables
-        run: bash ./eng/environments/qa.sh
-        if: github.ref == 'refs/heads/qa'
-      # Set Staging Variables
-      - name: Set Staging Variables
-        run: bash ./eng/environments/staging.sh
-        if: github.ref == 'refs/heads/staging'
-      # Set Prod Variables
-      - name: Set Prod Variables
-        run: bash ./eng/environments/prod.sh
-        if: github.ref == 'refs/heads/master'
-      # Run worflow update tf in monorepo
-      - name: Run worflow update tf in monorepo
+      # Set Env Variables
+      - name: Set Env Variables
+        run: bash ./eng/environments/${{ env.GLOBAL_ENV }}.sh
+      # Run worflow update tf in deployment repo
+      - name: Run worflow update tf in deployment repo
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.VNF_GITHUB_TOKEN }}
@@ -210,7 +182,7 @@ jobs:
               workflow_id: 'external-version-update.yml',
               ref: 'main',
               inputs: {
-                'config-env': '${{ github.ref_name == 'master' && format('{0}', 'prod') || github.ref_name }}',
+                'config-env': '${{ env.GLOBAL_ENV }}',
                 'version': '${{ env.VER_NUM }}',
                 'service_name': '${{ env.UPDATE_SERVICE_NAME }}',
                 'image_sha': '${{ env.IMAGE_SHA }}'
