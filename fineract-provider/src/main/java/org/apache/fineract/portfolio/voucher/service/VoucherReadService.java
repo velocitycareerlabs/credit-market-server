@@ -28,11 +28,11 @@ import org.apache.fineract.portfolio.voucher.data.VoucherTransactionDTO;
 
 public interface VoucherReadService {
 
-    VoucherBalanceDTO retrieveBalance(final Long clientId);
+    VoucherBalanceDTO retrieveBalance(Long clientId);
 
-    public List<VoucherDTO> retrieveExpiringInDays(Long clientId, Integer days);
+    List<VoucherDTO> retrieveExpiringInDays(Long clientId, Integer days);
 
-    List<VoucherDTO> retrieveExpiringByDate(final Long clientId, final Date date);
+    List<VoucherDTO> retrieveExpiringByDate(Long clientId, Date date);
 
     Page<VoucherTransactionDTO> retrieveAllVoucherTransactions(Long clientId, SearchParameters searchParameters);
 }
