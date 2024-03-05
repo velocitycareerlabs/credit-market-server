@@ -19,7 +19,7 @@
 #
 
 
-CURR_VERSION="1.14.0"
+CURR_VERSION="1.15.0"
 TARGET_CONTAINER_REG="ghcr.io"
 TARGET_ORG="velocitycareerlabs"
 TARGET_REPO="packages"
