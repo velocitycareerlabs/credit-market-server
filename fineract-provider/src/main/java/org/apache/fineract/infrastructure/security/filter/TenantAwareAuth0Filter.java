@@ -142,7 +142,7 @@ public class TenantAwareAuth0Filter extends OncePerRequestFilter {
                         // update user authorities if they're changed
                         SecurityContextHolder.getContext().setAuthentication(authentication);
                     } catch (UsernameNotFoundException ex) {
-                        LOG.error(ex.getMessage());
+                        LOG.error("User not found", ex);
 
                         AppUser appUser = auth0UserImportService.importPrincipal(jwt);
                         Authentication authentication = new UsernamePasswordAuthenticationToken(appUser, appUser.getPassword(),
@@ -163,7 +163,7 @@ public class TenantAwareAuth0Filter extends OncePerRequestFilter {
                         // update user authorities if they're changed
                         SecurityContextHolder.getContext().setAuthentication(authentication);
                     } catch (UsernameNotFoundException ex) {
-                        LOG.error(ex.getMessage());
+                        LOG.error("Username not found", ex);
 
                         AppUser appUser = auth0UserImportService.importPrincipal((OidcUser) auth0Authentication.getPrincipal());
                         Authentication authentication = new UsernamePasswordAuthenticationToken(appUser, appUser.getPassword(),

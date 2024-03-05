@@ -51,6 +51,10 @@ public class VoucherTransaction extends AbstractPersistableCustom {
         this.createdAt = createdAt;
     }
 
+    public VoucherTransaction() {
+
+    }
+
     public Long getClientId() {
         return clientId;
     }

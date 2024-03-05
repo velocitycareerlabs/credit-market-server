@@ -181,7 +181,7 @@ public class VoucherWriteServiceImpl implements VoucherWriteService {
     }
 
     private void updateVoucherBundle(Long id, Integer usedVouchers) {
-        Voucher voucher = voucherRepository.getOne(id);
+        Voucher voucher = voucherRepository.getById(id);
         voucher.setUsed(usedVouchers);
         voucher.setUpdatedAt(DateUtils.getDateOfTenant());
         voucherRepository.saveAndFlush(voucher);
