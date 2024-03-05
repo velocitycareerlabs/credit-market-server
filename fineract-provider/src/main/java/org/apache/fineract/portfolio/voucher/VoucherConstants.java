@@ -18,7 +18,11 @@
  */
 package org.apache.fineract.portfolio.voucher;
 
-public class VoucherConstants {
+public final class VoucherConstants {
+
+    private VoucherConstants() {
+
+    }
 
     public static final String VOUCHER_RESOURCE_NAME = "Voucher";
 

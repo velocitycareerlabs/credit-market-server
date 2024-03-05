@@ -18,7 +18,7 @@
  */
 description = 'Fineract Provider'
 
-apply plugin: 'rebel'
+apply plugin: 'org.zeroturnaround.gradle.jrebel'
 apply plugin: 'war'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'openjpa'
@@ -63,6 +63,7 @@ task prepareInputYaml(dependsOn: 'generateGitProperties') {
     }
 }
 
+rat.dependsOn prepareInputYaml
 
 resolve {
     logging.captureStandardOutput LogLevel.INFO
@@ -263,19 +264,21 @@ bootRun {
 }
 
 springBoot {
-    mainClassName = 'org.apache.fineract.ServerApplication'
+    mainClass = 'org.apache.fineract.ServerApplication'
 }
 
 bootJar {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
-        attributes 'Main-Class': 'org.springframework.boot.loader.PropertiesLauncher'
+        attributes 'Main-Class': 'org.springframework.boot.loader.PropertiesLauncher', 'Implementation-Title':   'Apache Fineract', 'Implementation-Version': archiveVersion
     }
+    dependsOn resolve
     dependsOn deployPentahoReports
 }
 
 bootWar {
     it.dependsOn deployPentahoReports
+    it.dependsOn resolve
     enabled = false
 }
 
@@ -286,7 +289,7 @@ tasks.withType(Tar) {
 
 distributions {
     binary {
-        baseName "apache-fineract-$releaseVersion-binary"
+        distributionBaseName = "apache-fineract-$version-binary"
         contents {
             from bootJar
             from war
@@ -304,7 +307,7 @@ distributions {
         }
     }
     src {
-        baseName "apache-fineract-$releaseVersion-src"
+        distributionBaseName = "apache-fineract-$version-src"
         contents {
             from "$rootDir/"
             exclude '**/build' , '.git', '.gradle', '.github', '.settings', '.project', '.classpath', '.idea', 'out', '._.DS_Store', '.DS_Store', 'WebContent', '.externalToolbuilders', '.theia', '.gitpod.yml', '.travis.yml', 'LICENSE_RELEASE', 'NOTICE_RELEASE', '**/licenses/binary'
@@ -353,7 +356,7 @@ if( project.hasProperty("fineract.release") ) {
 // Configuration for git properties gradle plugin
 // https://github.com/n0mer/gradle-git-properties
 gitProperties {
-    gitPropertiesResourceDir = "$buildDir/classes/java/main/resources"
+    gitPropertiesResourceDir = file("$buildDir/classes/java/main")
     dateFormat = "yyyy-MM-dd'T'HH:mmZ"
     dateFormatTimeZone = "GMT"
     failOnNoGitDirectory = false
@@ -362,3 +365,16 @@ gitProperties {
 
 // make sure the generateGitProperties task always executes (even when git.properties is not changed)
 generateGitProperties.outputs.upToDateWhen { false }
+
+test {
+    environment "FINERACT_SECURITY_AUTH0_DOMAIN", "https://example.com"
+    environment "FINERACT_SECURITY_AUTH0_AUDIENCE", "https://aud.example.com"
+    environment "FINERACT_SECURITY_AUTH0_ISSUER_URI", "https://iss.example.com/"
+}
+
+// Gradle 7.x asks for explicit dependencies between tasks
+checkstyleMain.dependsOn resolve
+checkstyleTest.dependsOn resolve
+licenseMain.dependsOn processResources, generateGitProperties
+spotbugsTest.dependsOn resolve
+test.dependsOn resolve

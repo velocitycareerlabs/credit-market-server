@@ -83,7 +83,7 @@ public class Auth0UserImportService {
         String firstname = jwt.getSubject();
         String lastname = jwt.getSubject();
 
-        Long officeId = 1l; // TODO: make this configurable
+        Long officeId = 1L; // TODO: make this configurable
         final Office userOffice = officeRepositoryWrapper.findOneWithNotFoundDetection(officeId);
         Staff linkedStaff = null;
         boolean isSelfServiceUser = false;
@@ -128,7 +128,7 @@ public class Auth0UserImportService {
         // validate mandatory
         // validateManadatories(email, firstname, lastname);
 
-        Long officeId = 1l; // TODO: make this configurable
+        Long officeId = 1L; // TODO: make this configurable
         final Office userOffice = officeRepositoryWrapper.findOneWithNotFoundDetection(officeId);
         Staff linkedStaff = null;
         boolean isSelfServiceUser = false;
