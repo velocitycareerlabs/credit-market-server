@@ -87,6 +87,8 @@ spec:
           value: jdbc
         - name: SUB_PROTOCOL
           value: mysql
+        - name: node_id
+          value: 1
         - name: fineract_tenants_driver
           value: com.mysql.cj.jdbc.Driver
         - name: fineract_tenants_url
