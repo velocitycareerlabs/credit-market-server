@@ -16,29 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.fineract.scheduledjobs.service;
 
-import org.apache.fineract.infrastructure.jobs.exception.JobExecutionException;
+package org.apache.fineract.infrastructure.jobs.exception;
 
-public interface ScheduledJobRunnerService {
+import org.apache.fineract.infrastructure.core.exception.AbstractPlatformDomainRuleException;
 
-    void updateLoanSummaryDetails();
+public class JobNodeIdMismatchingException extends AbstractPlatformDomainRuleException {
 
-    void updateLoanPaidInAdvance();
+    public JobNodeIdMismatchingException(final String nodeId, final String nodeIdProvided) {
+        super("error.msg.job.cannot.execute.on.node." + nodeIdProvided,
+                "The node id provided `" + nodeIdProvided + "`" + "` does not match with the configured nodeId.", new Object[] { nodeId });
+    }
 
-    void applyAnnualFeeForSavings();
-
-    void applyDueChargesForSavings() throws JobExecutionException;
-
-    void updateNPA();
-
-    void updateMaturityDetailsOfDepositAccounts();
-
-    void generateRDSchedule();
-
-    void postDividends() throws JobExecutionException;
-
-    void updateTrialBalanceDetails() throws JobExecutionException;
-
-    void executeMissMatchedJobs() throws JobExecutionException;
 }

@@ -46,6 +46,7 @@ services:
     environment:
       - DRIVERCLASS_NAME=com.mysql.cj.jdbc.Driver
       - PROTOCOL=jdbc
+      - node_id=1
       - SUB_PROTOCOL=mysql
       - fineract_tenants_driver=com.mysql.cj.jdbc.Driver
       - fineract_tenants_url=jdbc:mysql://fineractmysql:3306/fineract_tenants

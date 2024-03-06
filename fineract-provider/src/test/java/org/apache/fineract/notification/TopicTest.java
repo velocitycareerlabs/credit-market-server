@@ -65,12 +65,12 @@ public class TopicTest {
 
     @Test
     public void testTopicStorage() {
-        Office office = officeRepository.getById(1L);
+        Office office = officeRepository.getReferenceById(1L);
         Role role = new Role("New Member_Type", "Testing topic creation");
-        Topic topic = topicRepository.getById(1L);
+        Topic topic = topicRepository.getReferenceById(1L);
 
-        lenient().when(this.officeRepository.getById(1L)).thenReturn(office);
-        lenient().when(this.topicRepository.getById(1L)).thenReturn(topic);
+        lenient().when(this.officeRepository.getReferenceById(1L)).thenReturn(office);
+        lenient().when(this.topicRepository.getReferenceById(1L)).thenReturn(topic);
         when(this.roleRepository.save(role)).thenReturn(role);
         when(this.topicWritePltfService.create(refEq(topic))).thenReturn(1L);
 
@@ -85,13 +85,13 @@ public class TopicTest {
 
     @Test
     public void testTopicSubscriberStorage() {
-        AppUser user = appUserRepository.getById(1L);
-        Topic topic = topicRepository.getById(1L);
+        AppUser user = appUserRepository.getReferenceById(1L);
+        Topic topic = topicRepository.getReferenceById(1L);
 
         TopicSubscriber topicSubscriber = new TopicSubscriber(topic, user, new Date());
 
-        lenient().when(this.appUserRepository.getById(1L)).thenReturn(user);
-        lenient().when(this.topicRepository.getById(1L)).thenReturn(topic);
+        lenient().when(this.appUserRepository.getReferenceById(1L)).thenReturn(user);
+        lenient().when(this.topicRepository.getReferenceById(1L)).thenReturn(topic);
         when(this.topicSubscriberWritePltfService.create(refEq(topicSubscriber))).thenReturn(1L);
 
         Long subscriberId = this.topicSubscriberWritePltfService.create(topicSubscriber);

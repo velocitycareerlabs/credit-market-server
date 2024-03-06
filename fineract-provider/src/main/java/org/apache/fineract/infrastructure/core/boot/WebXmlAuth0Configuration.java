@@ -33,11 +33,11 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -46,7 +46,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebSecurity(debug = true)
 @EnableGlobalMethodSecurity(jsr250Enabled = true)
 @Order(SecurityProperties.BASIC_AUTH_ORDER)
-public class WebXmlAuth0Configuration extends WebSecurityConfigurerAdapter {
+public class WebXmlAuth0Configuration {
 
     @Bean
     public ServletRegistrationBean jersey() {
@@ -86,11 +86,13 @@ public class WebXmlAuth0Configuration extends WebSecurityConfigurerAdapter {
         return registrationBean;
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .httpBasic(AbstractHttpConfigurer::disable).csrf(AbstractHttpConfigurer::disable).authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS).permitAll().antMatchers("/api/**").authenticated().and().oauth2ResourceServer()
                 .jwt(Customizer.withDefaults());
+
+        return http.build();
     }
 }
